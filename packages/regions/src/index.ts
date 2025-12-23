@@ -1,0 +1,2 @@
+// @sveltopia/regions - placeholder
+export {};

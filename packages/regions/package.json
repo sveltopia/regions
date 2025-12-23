@@ -1,0 +1,37 @@
+{
+  "name": "@sveltopia/regions",
+  "version": "0.1.0",
+  "description": "Layout regions for SvelteKit - pass per-page content to layout regions",
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "src",
+    "!src/**/*.test.*",
+    "!src/**/*.spec.*"
+  ],
+  "scripts": {
+    "check": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "peerDependencies": {
+    "@sveltejs/kit": "^2.0.0",
+    "svelte": "^5.0.0"
+  },
+  "devDependencies": {
+    "@sveltejs/kit": "^2.9.0",
+    "svelte": "^5.11.0",
+    "typescript": "^5.7.2"
+  },
+  "keywords": ["svelte", "sveltekit", "layout", "regions"],
+  "author": "Sveltopia",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sveltopia/regions.git",
+    "directory": "packages/regions"
+  }
+}
