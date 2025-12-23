@@ -4,18 +4,29 @@
   "description": "Layout regions for SvelteKit - pass per-page content to layout regions",
   "type": "module",
   "main": "./src/index.ts",
+  "bin": {
+    "regions": "./cli/index.js"
+  },
   "exports": {
     ".": "./src/index.ts",
     "./package.json": "./package.json"
   },
   "files": [
     "src",
+    "cli",
     "!src/**/*.test.*",
     "!src/**/*.spec.*"
   ],
   "scripts": {
     "check": "tsc --noEmit",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:unit": "vitest run cli/__tests__/templates.test.ts",
+    "test:e2e": "vitest run cli/__tests__/cli.e2e.test.ts"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "commander": "^14.0.2"
   },
   "peerDependencies": {
     "@sveltejs/kit": "^2.0.0",
@@ -23,15 +34,19 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "^2.9.0",
+    "@types/node": "^22.0.0",
     "svelte": "^5.11.0",
-    "typescript": "^5.7.2"
+    "tsx": "^4.20.6",
+    "typescript": "^5.7.2",
+    "vitest": "^3.2.3"
   },
-  "keywords": ["svelte", "sveltekit", "layout", "regions"],
+  "keywords": ["svelte", "sveltekit", "layout", "regions", "cli"],
   "author": "Sveltopia",
   "license": "MIT",
   "repository": {
     "type": "git",
     "url": "https://github.com/sveltopia/regions.git",
     "directory": "packages/regions"
-  }
+  },
+  "homepage": "https://regions.sveltopia.dev"
 }
