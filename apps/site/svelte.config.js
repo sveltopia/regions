@@ -7,7 +7,16 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 
-	kit: { adapter: adapter() }
+	kit: {
+		// Use static adapter to prerender all pages for documentation site
+		adapter: adapter({
+			pages: 'build',
+			assets: 'build',
+			fallback: undefined,
+			precompress: false,
+			strict: true
+		})
+	}
 };
 
 export default config;

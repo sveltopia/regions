@@ -1,0 +1,43 @@
+<script lang="ts">
+  import { Lightbulb } from "lucide-svelte";
+
+  interface Props {
+    variant?: "indigo" | "neutral" | "slate" | "orange";
+    icon?: any;
+    noMargin?: boolean;
+    children: any;
+  }
+
+  let { variant = "indigo", icon, noMargin = false, children }: Props = $props();
+
+  const variants = {
+    indigo: {
+      bg: "bg-indigo-500/5",
+      iconColor: "text-indigo-600 dark:text-indigo-400"
+    },
+    neutral: {
+      bg: "bg-muted",
+      iconColor: "text-muted-foreground"
+    },
+    slate: {
+      bg: "bg-slate-500/5",
+      iconColor: "text-slate-600 dark:text-slate-400"
+    },
+    orange: {
+      bg: "bg-orange-500/5",
+      iconColor: "text-orange-600 dark:text-orange-400"
+    }
+  };
+
+  const currentVariant = $derived(variants[variant]);
+  const IconComponent = $derived(icon || Lightbulb);
+</script>
+
+<div class="not-prose rounded-lg {currentVariant.bg} p-6" class:my-6={!noMargin}>
+  <div class="flex items-start gap-3">
+    <IconComponent class="mt-0.5 h-5 w-5 shrink-0 {currentVariant.iconColor}" />
+    <div class="text-sm leading-relaxed text-foreground">
+      {@render children()}
+    </div>
+  </div>
+</div>

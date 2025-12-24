@@ -1,0 +1,87 @@
+{
+  "name": "Sveltopia Pastel Dark",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1e293b",
+    "editor.foreground": "#e2e8f0",
+    "editorLineNumber.foreground": "#64748b",
+    "editorCursor.foreground": "#c084fc",
+    "editor.selectionBackground": "#334155",
+    "editor.lineHighlightBackground": "#334155"
+  },
+  "tokenColors": [
+    {
+      "scope": ["comment", "punctuation.definition.comment"],
+      "settings": {
+        "foreground": "#94a3b8",
+        "fontStyle": "italic"
+      }
+    },
+    {
+      "scope": ["keyword", "storage.type", "storage.modifier"],
+      "settings": {
+        "foreground": "#c084fc"
+      }
+    },
+    {
+      "scope": ["string", "string.quoted", "string.template"],
+      "settings": {
+        "foreground": "#34d399"
+      }
+    },
+    {
+      "scope": ["constant.numeric", "constant.language"],
+      "settings": {
+        "foreground": "#fb923c"
+      }
+    },
+    {
+      "scope": ["entity.name.function", "support.function", "meta.function-call"],
+      "settings": {
+        "foreground": "#38bdf8"
+      }
+    },
+    {
+      "scope": ["entity.name.type", "support.type", "support.class"],
+      "settings": {
+        "foreground": "#818cf8"
+      }
+    },
+    {
+      "scope": ["constant.other", "variable.other.constant"],
+      "settings": {
+        "foreground": "#f472b6"
+      }
+    },
+    {
+      "scope": ["variable", "meta.object-literal.key", "support.variable"],
+      "settings": {
+        "foreground": "#cbd5e1"
+      }
+    },
+    {
+      "scope": ["punctuation", "meta.brace", "meta.delimiter"],
+      "settings": {
+        "foreground": "#64748b"
+      }
+    },
+    {
+      "scope": ["entity.name.tag", "meta.tag"],
+      "settings": {
+        "foreground": "#38bdf8"
+      }
+    },
+    {
+      "scope": ["entity.other.attribute-name"],
+      "settings": {
+        "foreground": "#818cf8"
+      }
+    },
+    {
+      "scope": ["invalid", "invalid.illegal"],
+      "settings": {
+        "foreground": "#ef4444"
+      }
+    }
+  ]
+}
