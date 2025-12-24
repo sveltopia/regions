@@ -1,18 +1,18 @@
 <script lang="ts">
-  import { page } from "$app/state";
-  import { X } from "lucide-svelte";
-  import { onMount } from "svelte";
-  import { LayoutRegion } from "@sveltopia/regions";
-  import PageHeaderRegion from "$lib/regions/page-header/PageHeaderRegion.svelte";
-  import ProductHeaderRegion from "$lib/regions/product-header/ProductHeaderRegion.svelte";
-  import ArticleHeaderRegion from "$lib/regions/article-header/ArticleHeaderRegion.svelte";
-  import DashboardHeaderRegion from "$lib/regions/dashboard-header/DashboardHeaderRegion.svelte";
-  import CatalogHeaderRegion from "$lib/regions/catalog-header/CatalogHeaderRegion.svelte";
-  import GalleryHeaderRegion from "$lib/regions/gallery-header/GalleryHeaderRegion.svelte";
-  import ProfileHeaderRegion from "$lib/regions/profile-header/ProfileHeaderRegion.svelte";
-  import SidebarRegion from "$lib/regions/sidebar/SidebarRegion.svelte";
-  import FooterRegion from "$lib/regions/footer/FooterRegion.svelte";
-  import BreadcrumbsRegion from "$lib/regions/breadcrumbs/BreadcrumbsRegion.svelte";
+  import { page } from '$app/state';
+  import { X } from 'lucide-svelte';
+  import { onMount } from 'svelte';
+  import { LayoutRegion } from '@sveltopia/regions';
+  import PageHeaderRegion from '$lib/regions/page-header/PageHeaderRegion.svelte';
+  import ProductHeaderRegion from '$lib/regions/product-header/ProductHeaderRegion.svelte';
+  import ArticleHeaderRegion from '$lib/regions/article-header/ArticleHeaderRegion.svelte';
+  import DashboardHeaderRegion from '$lib/regions/dashboard-header/DashboardHeaderRegion.svelte';
+  import CatalogHeaderRegion from '$lib/regions/catalog-header/CatalogHeaderRegion.svelte';
+  import GalleryHeaderRegion from '$lib/regions/gallery-header/GalleryHeaderRegion.svelte';
+  import ProfileHeaderRegion from '$lib/regions/profile-header/ProfileHeaderRegion.svelte';
+  import SidebarRegion from '$lib/regions/sidebar/SidebarRegion.svelte';
+  import FooterRegion from '$lib/regions/footer/FooterRegion.svelte';
+  import BreadcrumbsRegion from '$lib/regions/breadcrumbs/BreadcrumbsRegion.svelte';
 
   let { children } = $props();
 
@@ -28,9 +28,9 @@
     function handleToggle() {
       mobileMenuOpen = !mobileMenuOpen;
     }
-    window.addEventListener("toggle-mobile-menu", handleToggle);
+    window.addEventListener('toggle-mobile-menu', handleToggle);
     return () => {
-      window.removeEventListener("toggle-mobile-menu", handleToggle);
+      window.removeEventListener('toggle-mobile-menu', handleToggle);
     };
   });
 </script>
@@ -40,11 +40,11 @@
   <div
     class="fixed inset-0 z-40 bg-black/50 lg:hidden"
     onclick={closeMobileMenu}
-    onkeydown={(e) => e.key === "Escape" && closeMobileMenu()}
+    onkeydown={(e) => e.key === 'Escape' && closeMobileMenu()}
     role="button"
     tabindex="-1"
-    aria-label="Close mobile menu">
-  </div>
+    aria-label="Close mobile menu"
+  ></div>
 {/if}
 
 <!-- Examples Container with Visual Indicators -->
@@ -52,27 +52,28 @@
   <div class="flex flex-col gap-6 lg:flex-row">
     <!-- Sidebar Navigation (Left) -->
     <aside
-      class="fixed inset-y-0 left-0 z-50 lg:z-0 w-64 overflow-y-auto border-r bg-background p-4 transition-transform lg:static lg:block lg:w-64 lg:shrink-0 lg:border-r-0 lg:p-0 {mobileMenuOpen
+      class="fixed inset-y-0 left-0 z-50 w-64 overflow-y-auto border-r bg-background p-4 transition-transform lg:static lg:z-0 lg:block lg:w-64 lg:shrink-0 lg:border-r-0 lg:p-0 {mobileMenuOpen
         ? 'translate-x-0'
-        : '-translate-x-full lg:translate-x-0'}">
+        : '-translate-x-full lg:translate-x-0'}"
+    >
       <!-- Close button (mobile only, inside sidebar) -->
       <div class="mb-4 flex items-center justify-between lg:hidden">
         <h3 class="text-lg font-semibold">Menu</h3>
         <button
           onclick={closeMobileMenu}
           class="rounded-md p-2 hover:bg-muted"
-          aria-label="Close menu">
+          aria-label="Close menu"
+        >
           <X class="h-5 w-5" />
         </button>
       </div>
 
-      <div class="lg:sticky lg:top-20 space-y-4">
+      <div class="space-y-4 lg:sticky lg:top-20">
         <!-- Navigation Menu -->
         <div>
-          <a
-            href="/examples"
-            class="mb-4 text-lg font-semibold lg:block hidden hover:text-primary"
-            >Examples</a>
+          <a href="/examples" class="mb-4 hidden text-lg font-semibold hover:text-primary lg:block"
+            >Examples</a
+          >
           <nav class="space-y-3">
             <!-- Load Function Strategy -->
             <div>
@@ -83,35 +84,39 @@
                   '/examples/load-function'
                 )
                   ? 'bg-muted font-semibold'
-                  : ''}">
+                  : ''}"
+              >
                 Load Function
               </a>
-              <div class="ml-3 mt-1 space-y-1 border-l-2 border-muted pl-3">
+              <div class="mt-1 ml-3 space-y-1 border-l-2 border-muted pl-3">
                 <a
                   href="/examples/load-function/valibot"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/load-function/valibot'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/load-function/valibot'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   Valibot
                 </a>
                 <a
                   href="/examples/load-function/zod"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/load-function/zod'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/load-function/zod'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   Zod
                 </a>
                 <a
                   href="/examples/load-function/typescript-only"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/load-function/typescript-only'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/load-function/typescript-only'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   TypeScript Only
                 </a>
               </div>
@@ -126,36 +131,39 @@
                   '/examples/component-wrapper'
                 )
                   ? 'bg-muted font-semibold'
-                  : ''}">
+                  : ''}"
+              >
                 Component Wrapper
               </a>
-              <div class="ml-3 mt-1 space-y-1 border-l-2 border-muted pl-3">
+              <div class="mt-1 ml-3 space-y-1 border-l-2 border-muted pl-3">
                 <a
                   href="/examples/component-wrapper/valibot"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/component-wrapper/valibot'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/component-wrapper/valibot'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   Valibot
                 </a>
                 <a
                   href="/examples/component-wrapper/zod"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/component-wrapper/zod'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/component-wrapper/zod'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   Zod
                 </a>
                 <a
                   href="/examples/component-wrapper/typescript-only"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname ===
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
                   '/examples/component-wrapper/typescript-only'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   TypeScript Only
                 </a>
               </div>
@@ -170,17 +178,19 @@
                   '/examples/snippet'
                 )
                   ? 'bg-muted font-semibold'
-                  : ''}">
+                  : ''}"
+              >
                 Snippet
               </a>
-              <div class="ml-3 mt-1 space-y-1 border-l-2 border-muted pl-3">
+              <div class="mt-1 ml-3 space-y-1 border-l-2 border-muted pl-3">
                 <a
                   href="/examples/snippet/full-example"
                   onclick={closeMobileMenu}
-                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page
-                    .url.pathname === '/examples/snippet/full-example'
+                  class="block rounded px-3 py-2 text-xs hover:bg-muted {page.url.pathname ===
+                  '/examples/snippet/full-example'
                     ? 'bg-muted font-semibold'
-                    : ''}">
+                    : ''}"
+                >
                   Full Example
                 </a>
               </div>
@@ -195,7 +205,8 @@
                   '/examples/advanced'
                 )
                   ? 'bg-muted font-semibold'
-                  : ''}">
+                  : ''}"
+              >
                 Advanced
               </a>
             </div>
@@ -209,7 +220,7 @@
 
     <!-- Main Content Area -->
     <article class="flex-1 lg:w-0" data-pagefind-meta="category:Example">
-      <div class="w-full px-4 py-6 lg:py-12 lg:max-w-5xl space-y-6">
+      <div class="w-full space-y-6 px-4 py-6 lg:max-w-5xl lg:py-12">
         <!-- Breadcrumbs Navigation -->
         <BreadcrumbsRegion />
 
@@ -228,8 +239,7 @@
         <LayoutRegion name="statsHeader" />
 
         <!-- Page Content -->
-        <div
-          class="prose prose-slate dark:prose-invert max-w-none rounded-lg border bg-card p-6">
+        <div class="prose max-w-none rounded-lg border bg-card p-6 prose-slate dark:prose-invert">
           {@render children()}
         </div>
 

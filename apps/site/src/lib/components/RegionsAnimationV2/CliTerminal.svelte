@@ -32,7 +32,7 @@
       promptLine,
       commandText,
       promptResponses,
-      fileOutputs,
+      fileOutputs
     };
   }
 </script>
@@ -41,7 +41,8 @@
   class="terminal-frame"
   bind:this={terminalFrame}
   style:width="{width}px"
-  style:height="{height}px">
+  style:height="{height}px"
+>
   <!-- Terminal header with stoplight buttons -->
   <div class="terminal-header">
     <div class="stoplight">
@@ -77,7 +78,7 @@
   @reference "../../../app.css";
 
   .terminal-frame {
-    @apply bg-slate-900 rounded-lg;
+    @apply rounded-lg bg-slate-900;
     border: 1px solid rgba(100, 116, 139, 0.3);
     box-shadow:
       0 8px 16px rgba(0, 0, 0, 0.4),
@@ -123,7 +124,7 @@
   }
 
   .terminal-title {
-    @apply text-slate-400 text-xs font-medium;
+    @apply text-xs font-medium text-slate-400;
     margin-left: auto;
     margin-right: auto;
   }
@@ -131,7 +132,7 @@
   .terminal-content {
     flex: 1;
     padding: 16px;
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 13px;
     line-height: 1.6;
     @apply text-slate-300;
@@ -146,7 +147,7 @@
   }
 
   .prompt-symbol {
-    @apply text-green-400 font-bold;
+    @apply font-bold text-green-400;
   }
 
   .command-text {
@@ -159,8 +160,14 @@
   }
 
   @keyframes blink {
-    0%, 50% { opacity: 1; }
-    51%, 100% { opacity: 0; }
+    0%,
+    50% {
+      opacity: 1;
+    }
+    51%,
+    100% {
+      opacity: 0;
+    }
   }
 
   .prompt-responses {
@@ -209,6 +216,6 @@
 
   :global(.terminal-content .file-success) {
     margin-top: 8px;
-    @apply text-green-400 font-medium;
+    @apply font-medium text-green-400;
   }
 </style>

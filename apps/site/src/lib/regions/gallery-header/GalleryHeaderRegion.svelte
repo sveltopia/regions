@@ -1,7 +1,7 @@
 <script lang="ts">
   import { LayoutRegion } from '@sveltopia/regions';
   import { galleryHeaderSchema, type GalleryHeaderData } from './galleryHeaderSchema';
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
 </script>
 
 <LayoutRegion name="galleryHeader" schema={galleryHeaderSchema}>

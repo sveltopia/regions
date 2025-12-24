@@ -11,29 +11,36 @@ import { toCamelCase, toPascalCase } from '../utils/files.js';
  *   <PageHeader title="My Page" description="Welcome!" />
  *
  * Instead of user writing:
- *   useLayoutRegions({ pageHeader: { title: "My Page", description: "Welcome!" } })
+ *   useLayoutRegions(() => ({ pageHeader: { title: "My Page", description: "Welcome!" } }))
  */
 export function generateWrapperComponent(
 	regionName: string,
-	fields: FieldDefinition[]
+	fields: FieldDefinition[],
+	validator?: 'valibot' | 'zod'
 ): string {
-	const componentName = toPascalCase(regionName);
 	const schemaName = `${toCamelCase(regionName)}Schema`;
+	const typeName = `${toPascalCase(regionName)}Data`;
 	const regionKey = toCamelCase(regionName);
 
-	// Generate props type: { title: string; description?: string }
-	const propsType = fields
-		.map((f) => `${f.name}${f.optional ? '?' : ''}: ${f.type === 'array' ? 'string[]' : 'string'}`)
-		.join('; ');
+	// Generate props destructuring: { title, description }
+	const propsDestructure = fields.map((f) => f.name).join(', ');
+
+	// Determine where to import the type from
+	// With validator: type is in schema file (e.g., catalogHeaderSchema.ts)
+	// Without validator (TS-only): type is in separate file (e.g., CatalogHeaderData.ts)
+	const typeImport = validator
+		? `import type { ${typeName} } from './${schemaName}';`
+		: `import type { ${typeName} } from './${typeName}';`;
 
 	return `<script lang="ts">
   import { useLayoutRegions } from '@sveltopia/regions';
+  ${typeImport}
 
-  let props = $props<{ ${propsType} }>();
+  let { ${propsDestructure} }: ${typeName} = $props();
 
-  useLayoutRegions({
-    ${regionKey}: props
-  });
+  useLayoutRegions(() => ({
+    ${regionKey}: { ${propsDestructure} }
+  }));
 </script>
 
 <!-- This component automatically sets the '${regionName}' region when mounted -->

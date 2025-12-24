@@ -1,16 +1,7 @@
 <script lang="ts">
-  import CodeViewer from "$lib/components/CodeViewer.svelte";
-  import KeyConcept from "$lib/components/KeyConcept.svelte";
-  import {
-    CircleAlert,
-    Star,
-    Check,
-    Server,
-    Box,
-    FileCode,
-    Code,
-    ArrowRight,
-  } from "lucide-svelte";
+  import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import { CircleAlert, Star, Check, Server, Box, FileCode, Code, ArrowRight } from 'lucide-svelte';
 
   const loadFunctionCode = `export const load = () => ({
   regions: {
@@ -39,11 +30,10 @@ useLayoutRegions({
 {/snippet}`;
 </script>
 
-<div class="prose dark:prose-invert max-w-none">
+<div class="prose max-w-none dark:prose-invert">
   <h1>Strategy Comparison</h1>
   <p class="lead">
-    Choose the right approach for your use case. All three strategies are
-    type-safe and flexible.
+    Choose the right approach for your use case. All three strategies are type-safe and flexible.
   </p>
 
   <h2>Quick Decision Matrix</h2>
@@ -53,62 +43,55 @@ useLayoutRegions({
       <table class="w-full border-collapse">
         <thead>
           <tr class="border-b">
-            <th class="text-left p-3 font-semibold">Use Case</th>
-            <th class="text-left p-3 font-semibold">Recommended Strategy</th>
-            <th class="text-left p-3 font-semibold">Why</th>
+            <th class="p-3 text-left font-semibold">Use Case</th>
+            <th class="p-3 text-left font-semibold">Recommended Strategy</th>
+            <th class="p-3 text-left font-semibold">Why</th>
           </tr>
         </thead>
         <tbody class="text-sm">
           <tr class="border-b">
             <td class="p-3">Page titles, meta tags</td>
             <td class="p-3">
-              <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Load Function</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-400">Load Function</span>
             </td>
             <td class="p-3 text-muted-foreground">SEO, zero layout shift</td>
           </tr>
           <tr class="border-b">
             <td class="p-3">Breadcrumbs, navigation</td>
             <td class="p-3">
-              <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Load Function</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-400">Load Function</span>
             </td>
-            <td class="p-3 text-muted-foreground"
-              >Server-rendered, always visible</td>
+            <td class="p-3 text-muted-foreground">Server-rendered, always visible</td>
           </tr>
           <tr class="border-b">
             <td class="p-3">Simple header/footer content</td>
             <td class="p-3">
               <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Component Wrapper</span>
+                >Component Wrapper</span
+              >
             </td>
             <td class="p-3 text-muted-foreground">Clean API, easy to use</td>
           </tr>
           <tr class="border-b">
             <td class="p-3">Action buttons with handlers</td>
             <td class="p-3">
-              <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Snippet</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-400">Snippet</span>
             </td>
-            <td class="p-3 text-muted-foreground"
-              >Access to page state/handlers</td>
+            <td class="p-3 text-muted-foreground">Access to page state/handlers</td>
           </tr>
           <tr class="border-b">
             <td class="p-3">Forms, counters, toggles</td>
             <td class="p-3">
-              <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Snippet</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-400">Snippet</span>
             </td>
             <td class="p-3 text-muted-foreground">Reactive, interactive UI</td>
           </tr>
           <tr class="border-b">
             <td class="p-3">Dashboard stats</td>
             <td class="p-3">
-              <span class="font-semibold text-indigo-600 dark:text-indigo-400"
-                >Snippet</span>
+              <span class="font-semibold text-indigo-600 dark:text-indigo-400">Snippet</span>
             </td>
-            <td class="p-3 text-muted-foreground"
-              >Real-time updates, state access</td>
+            <td class="p-3 text-muted-foreground">Real-time updates, state access</td>
           </tr>
         </tbody>
       </table>
@@ -121,36 +104,30 @@ useLayoutRegions({
     <!-- Load Function -->
     <div class="rounded-lg bg-indigo-500/5 p-6">
       <div class="mb-4">
-        <h3 class="text-lg font-semibold mb-2">1. Load Function (SSR)</h3>
-        <p class="text-sm text-muted-foreground mb-4">
-          Return region data from your page's load function. Best for SEO and
-          server-side rendering.
+        <h3 class="mb-2 text-lg font-semibold">1. Load Function (SSR)</h3>
+        <p class="mb-4 text-sm text-muted-foreground">
+          Return region data from your page's load function. Best for SEO and server-side rendering.
         </p>
-        <CodeViewer
-          filename="+page.server.ts"
-          language="typescript"
-          code={loadFunctionCode} />
-        <div
-          class="mt-3 rounded-lg bg-indigo-500/5 border border-indigo-500/20 p-3">
+        <CodeViewer filename="+page.server.ts" language="typescript" code={loadFunctionCode} />
+        <div class="mt-3 rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-3">
           <p class="text-xs text-muted-foreground">
             <strong>Note:</strong> Also works in
             <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>
             files. See
-            <a
-              href="/docs/advanced"
-              class="text-indigo-600 dark:text-indigo-400 hover:underline"
-              >Advanced Patterns</a> for layout-level regions and inheritance.
+            <a href="/docs/advanced" class="text-indigo-600 hover:underline dark:text-indigo-400"
+              >Advanced Patterns</a
+            > for layout-level regions and inheritance.
           </p>
         </div>
       </div>
 
-      <div class="grid md:grid-cols-2 gap-3 mt-6">
+      <div class="mt-6 grid gap-3 md:grid-cols-2">
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <Check class="h-4 w-4 text-green-600 dark:text-green-400" />
             Best For:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• SEO-critical content</li>
             <li>• Page titles and meta tags</li>
             <li>• Breadcrumb navigation</li>
@@ -159,10 +136,10 @@ useLayoutRegions({
           </ul>
         </div>
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <CircleAlert class="h-4 w-4 text-amber-600 dark:text-amber-500" /> Limitations:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• Can't access page state</li>
             <li>• No reactive updates</li>
             <li>• Data must be serializable</li>
@@ -172,7 +149,8 @@ useLayoutRegions({
 
       <a
         href="/examples/load-function"
-        class="inline-flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline mt-4">
+        class="mt-4 inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline dark:text-indigo-400"
+      >
         View Examples →
       </a>
     </div>
@@ -180,26 +158,21 @@ useLayoutRegions({
     <!-- Component Wrapper -->
     <div class="rounded-lg bg-indigo-500/5 p-6">
       <div class="mb-4">
-        <h3 class="text-lg font-semibold mb-2">
-          2. Component Wrapper (Client-Side)
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">
-          Use a wrapper component with props. Simple, clean API that works like
-          any Svelte component.
+        <h3 class="mb-2 text-lg font-semibold">2. Component Wrapper (Client-Side)</h3>
+        <p class="mb-4 text-sm text-muted-foreground">
+          Use a wrapper component with props. Simple, clean API that works like any Svelte
+          component.
         </p>
-        <CodeViewer
-          filename="+page.svelte"
-          language="svelte"
-          code={pageComponentCode} />
+        <CodeViewer filename="+page.svelte" language="svelte" code={pageComponentCode} />
       </div>
 
-      <div class="grid md:grid-cols-2 gap-3 mt-6">
+      <div class="mt-6 grid gap-3 md:grid-cols-2">
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <Check class="h-4 w-4 text-green-600 dark:text-green-400" />
             Best For:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• Simple, static content</li>
             <li>• Client-only pages</li>
             <li>• Rapid development</li>
@@ -208,10 +181,10 @@ useLayoutRegions({
           </ul>
         </div>
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <CircleAlert class="h-4 w-4 text-amber-600 dark:text-amber-500" /> Limitations:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• Client-side only (no SSR)</li>
             <li>• Not ideal for SEO</li>
             <li>• Requires separate files</li>
@@ -221,7 +194,8 @@ useLayoutRegions({
 
       <a
         href="/examples/component-wrapper"
-        class="inline-flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline mt-4">
+        class="mt-4 inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline dark:text-indigo-400"
+      >
         View Examples →
       </a>
     </div>
@@ -229,26 +203,20 @@ useLayoutRegions({
     <!-- Snippet -->
     <div class="rounded-lg bg-indigo-500/5 p-6">
       <div class="mb-4">
-        <h3 class="text-lg font-semibold mb-2">
-          3. Snippet (Maximum Flexibility)
-        </h3>
-        <p class="text-sm text-muted-foreground mb-4">
-          Define snippets inline with full access to page state. Perfect for
-          interactive UIs.
+        <h3 class="mb-2 text-lg font-semibold">3. Snippet (Maximum Flexibility)</h3>
+        <p class="mb-4 text-sm text-muted-foreground">
+          Define snippets inline with full access to page state. Perfect for interactive UIs.
         </p>
-        <CodeViewer
-          filename="+page.svelte"
-          language="svelte"
-          code={snippetCode} />
+        <CodeViewer filename="+page.svelte" language="svelte" code={snippetCode} />
       </div>
 
-      <div class="grid md:grid-cols-2 gap-3 mt-6">
+      <div class="mt-6 grid gap-3 md:grid-cols-2">
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <Check class="h-4 w-4 text-green-600 dark:text-green-400" />
             Best For:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• Interactive UI (forms, counters)</li>
             <li>• Access to page state</li>
             <li>• Event handlers from page</li>
@@ -257,10 +225,10 @@ useLayoutRegions({
           </ul>
         </div>
         <div class="rounded-lg bg-indigo-500/10 p-5">
-          <p class="font-semibold mb-3 flex items-center gap-2">
+          <p class="mb-3 flex items-center gap-2 font-semibold">
             <CircleAlert class="h-4 w-4 text-amber-600 dark:text-amber-500" /> Limitations:
           </p>
-          <ul class="text-sm text-muted-foreground space-y-1.5">
+          <ul class="space-y-1.5 text-sm text-muted-foreground">
             <li>• Client-side only</li>
             <li>• More complex setup</li>
             <li>• TypeScript only (no runtime validation)</li>
@@ -270,16 +238,16 @@ useLayoutRegions({
 
       <a
         href="/examples/snippet"
-        class="inline-flex items-center gap-2 text-sm text-indigo-600 dark:text-indigo-400 hover:underline mt-4">
+        class="mt-4 inline-flex items-center gap-2 text-sm text-indigo-600 hover:underline dark:text-indigo-400"
+      >
         View Examples →
       </a>
     </div>
   </div>
 
   <KeyConcept>
-    <strong>You can mix strategies!</strong> Use load functions for SEO content,
-    component wrappers for simple regions, and snippets for interactive UI. All three
-    work together seamlessly.
+    <strong>You can mix strategies!</strong> Use load functions for SEO content, component wrappers for
+    simple regions, and snippets for interactive UI. All three work together seamlessly.
   </KeyConcept>
 
   <h2>Decision Flowchart</h2>
@@ -288,46 +256,38 @@ useLayoutRegions({
     <div class="space-y-4 text-sm">
       <div class="flex items-start gap-3">
         <div
-          class="rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400 shrink-0">
+          class="shrink-0 rounded-full bg-indigo-500/10 px-3 py-1 text-xs font-semibold text-indigo-600 dark:text-indigo-400"
+        >
           START
         </div>
-        <p class="pt-1">
-          Does this content need to be in the initial HTML (SEO)?
-        </p>
+        <p class="pt-1">Does this content need to be in the initial HTML (SEO)?</p>
       </div>
 
       <div class="ml-8 space-y-3">
         <div class="flex items-start gap-3">
-          <span class="text-indigo-600 dark:text-indigo-400 shrink-0"
-            >↳ YES</span>
+          <span class="shrink-0 text-indigo-600 dark:text-indigo-400">↳ YES</span>
           <p>
-            <span class="font-semibold">Use Load Function</span> - Server-rendered,
-            SEO-friendly
+            <span class="font-semibold">Use Load Function</span> - Server-rendered, SEO-friendly
           </p>
         </div>
 
         <div class="flex items-start gap-3">
-          <span class="text-indigo-600 dark:text-indigo-400 shrink-0"
-            >↳ NO</span>
+          <span class="shrink-0 text-indigo-600 dark:text-indigo-400">↳ NO</span>
           <p>Does it need access to page state or handlers?</p>
         </div>
 
         <div class="ml-8 space-y-3">
           <div class="flex items-start gap-3">
-            <span class="text-indigo-600 dark:text-indigo-400 shrink-0"
-              >↳ YES</span>
+            <span class="shrink-0 text-indigo-600 dark:text-indigo-400">↳ YES</span>
             <p>
-              <span class="font-semibold">Use Snippet</span> - Full state access,
-              maximum flexibility
+              <span class="font-semibold">Use Snippet</span> - Full state access, maximum flexibility
             </p>
           </div>
 
           <div class="flex items-start gap-3">
-            <span class="text-indigo-600 dark:text-indigo-400 shrink-0"
-              >↳ NO</span>
+            <span class="shrink-0 text-indigo-600 dark:text-indigo-400">↳ NO</span>
             <p>
-              <span class="font-semibold">Use Component Wrapper</span> - Simple,
-              clean API
+              <span class="font-semibold">Use Component Wrapper</span> - Simple, clean API
             </p>
           </div>
         </div>
@@ -339,8 +299,8 @@ useLayoutRegions({
 
   <div class="not-prose space-y-4">
     <div class="rounded-lg border p-4">
-      <h3 class="font-semibold mb-2">E-Commerce Product Page</h3>
-      <ul class="text-sm text-muted-foreground space-y-1">
+      <h3 class="mb-2 font-semibold">E-Commerce Product Page</h3>
+      <ul class="space-y-1 text-sm text-muted-foreground">
         <li>
           • <strong>Load Function:</strong> Product title, meta description, breadcrumbs
         </li>
@@ -354,11 +314,10 @@ useLayoutRegions({
     </div>
 
     <div class="rounded-lg border p-4">
-      <h3 class="font-semibold mb-2">Blog Post</h3>
-      <ul class="text-sm text-muted-foreground space-y-1">
+      <h3 class="mb-2 font-semibold">Blog Post</h3>
+      <ul class="space-y-1 text-sm text-muted-foreground">
         <li>
-          • <strong>Load Function:</strong> Post title, author, publish date, meta
-          tags
+          • <strong>Load Function:</strong> Post title, author, publish date, meta tags
         </li>
         <li>
           • <strong>Component Wrapper:</strong> Table of contents, author bio
@@ -370,8 +329,8 @@ useLayoutRegions({
     </div>
 
     <div class="rounded-lg border p-4">
-      <h3 class="font-semibold mb-2">Dashboard</h3>
-      <ul class="text-sm text-muted-foreground space-y-1">
+      <h3 class="mb-2 font-semibold">Dashboard</h3>
+      <ul class="space-y-1 text-sm text-muted-foreground">
         <li>
           • <strong>Load Function:</strong> Page title, breadcrumbs
         </li>
@@ -388,10 +347,10 @@ useLayoutRegions({
     <table class="w-full border-collapse text-sm">
       <thead>
         <tr class="border-b">
-          <th class="text-left p-3">Metric</th>
-          <th class="text-center p-3">Load Function</th>
-          <th class="text-center p-3">Component Wrapper</th>
-          <th class="text-center p-3">Snippet</th>
+          <th class="p-3 text-left">Metric</th>
+          <th class="p-3 text-center">Load Function</th>
+          <th class="p-3 text-center">Component Wrapper</th>
+          <th class="p-3 text-center">Snippet</th>
         </tr>
       </thead>
       <tbody>
@@ -486,69 +445,69 @@ useLayoutRegions({
 
   <h2>Next Steps</h2>
 
-  <div class="not-prose grid gap-4 md:grid-cols-2 mt-6">
+  <div class="not-prose mt-6 grid gap-4 md:grid-cols-2">
     <a
       href="/examples/load-function"
-      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10">
-      <div class="flex items-start justify-between mb-3">
+      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10"
+    >
+      <div class="mb-3 flex items-start justify-between">
         <div class="rounded-lg bg-indigo-500/10 p-2">
           <Server class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
         </div>
         <ArrowRight
-          class="h-5 w-5 text-indigo-600 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+          class="h-5 w-5 -translate-x-2 text-indigo-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:text-indigo-400"
+        />
       </div>
-      <h3 class="text-lg font-semibold mb-2">Load Function Examples</h3>
-      <p class="text-sm text-muted-foreground">
-        See SSR examples with all three validators
-      </p>
+      <h3 class="mb-2 text-lg font-semibold">Load Function Examples</h3>
+      <p class="text-sm text-muted-foreground">See SSR examples with all three validators</p>
     </a>
 
     <a
       href="/examples/component-wrapper"
-      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10">
-      <div class="flex items-start justify-between mb-3">
+      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10"
+    >
+      <div class="mb-3 flex items-start justify-between">
         <div class="rounded-lg bg-indigo-500/10 p-2">
           <Box class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
         </div>
         <ArrowRight
-          class="h-5 w-5 text-indigo-600 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+          class="h-5 w-5 -translate-x-2 text-indigo-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:text-indigo-400"
+        />
       </div>
-      <h3 class="text-lg font-semibold mb-2">Component Wrapper Examples</h3>
-      <p class="text-sm text-muted-foreground">
-        Explore the CLI-generated component pattern
-      </p>
+      <h3 class="mb-2 text-lg font-semibold">Component Wrapper Examples</h3>
+      <p class="text-sm text-muted-foreground">Explore the CLI-generated component pattern</p>
     </a>
 
     <a
       href="/examples/snippet"
-      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10">
-      <div class="flex items-start justify-between mb-3">
+      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10"
+    >
+      <div class="mb-3 flex items-start justify-between">
         <div class="rounded-lg bg-indigo-500/10 p-2">
           <FileCode class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
         </div>
         <ArrowRight
-          class="h-5 w-5 text-indigo-600 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+          class="h-5 w-5 -translate-x-2 text-indigo-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:text-indigo-400"
+        />
       </div>
-      <h3 class="text-lg font-semibold mb-2">Snippet Examples</h3>
-      <p class="text-sm text-muted-foreground">
-        Learn the three snippet superpowers
-      </p>
+      <h3 class="mb-2 text-lg font-semibold">Snippet Examples</h3>
+      <p class="text-sm text-muted-foreground">Learn the three snippet superpowers</p>
     </a>
 
     <a
       href="/docs/api-reference"
-      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10">
-      <div class="flex items-start justify-between mb-3">
+      class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10"
+    >
+      <div class="mb-3 flex items-start justify-between">
         <div class="rounded-lg bg-indigo-500/10 p-2">
           <Code class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
         </div>
         <ArrowRight
-          class="h-5 w-5 text-indigo-600 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+          class="h-5 w-5 -translate-x-2 text-indigo-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:text-indigo-400"
+        />
       </div>
-      <h3 class="text-lg font-semibold mb-2">API Reference</h3>
-      <p class="text-sm text-muted-foreground">
-        Complete reference for all exports and types
-      </p>
+      <h3 class="mb-2 text-lg font-semibold">API Reference</h3>
+      <p class="text-sm text-muted-foreground">Complete reference for all exports and types</p>
     </a>
   </div>
 </div>

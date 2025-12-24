@@ -1,7 +1,7 @@
 <script lang="ts">
-  import CodeViewer from "$lib/components/CodeViewer.svelte";
-  import KeyConcept from "$lib/components/KeyConcept.svelte";
-  import { CheckCircle2, XCircle } from "lucide-svelte";
+  import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import { CheckCircle2, XCircle } from 'lucide-svelte';
 
   const layoutServerCode = `import type { LayoutServerLoad } from './$types';
 
@@ -83,7 +83,7 @@ ${' <'}/script>
 {@render children()}`;
 </script>
 
-<div class="prose dark:prose-invert max-w-none">
+<div class="prose max-w-none dark:prose-invert">
   <KeyConcept>
     <strong>Live Demo:</strong> The three regions at the top of this page demonstrate inheritance (blue),
     override (purple), and addition (green) patterns working together.
@@ -92,8 +92,8 @@ ${' <'}/script>
   <h2>How It Works</h2>
 
   <p>
-    SvelteKit's <code>parent()</code> function allows child load functions to access data
-    from parent layouts. We use this to create a flexible inheritance system for regions:
+    SvelteKit's <code>parent()</code> function allows child load functions to access data from parent
+    layouts. We use this to create a flexible inheritance system for regions:
   </p>
 
   <ol>
@@ -106,10 +106,10 @@ ${' <'}/script>
 
   <div class="space-y-8">
     <div>
-      <h3 class="text-lg font-semibold mb-3">1. Parent Layout Defines Regions</h3>
-      <p class="text-sm text-muted-foreground mb-4">
-        The parent layout's load function defines initial region data that will be available
-        to all child pages.
+      <h3 class="mb-3 text-lg font-semibold">1. Parent Layout Defines Regions</h3>
+      <p class="mb-4 text-sm text-muted-foreground">
+        The parent layout's load function defines initial region data that will be available to all
+        child pages.
       </p>
       <CodeViewer
         filename="routes/examples/advanced/+layout.server.ts"
@@ -119,10 +119,10 @@ ${' <'}/script>
     </div>
 
     <div>
-      <h3 class="text-lg font-semibold mb-3">2. Child Page Inherits and Modifies</h3>
-      <p class="text-sm text-muted-foreground mb-4">
-        The page calls <code>await parent()</code> to get parent data, then uses the spread
-        operator to inherit regions before defining its own.
+      <h3 class="mb-3 text-lg font-semibold">2. Child Page Inherits and Modifies</h3>
+      <p class="mb-4 text-sm text-muted-foreground">
+        The page calls <code>await parent()</code> to get parent data, then uses the spread operator to
+        inherit regions before defining its own.
       </p>
       <CodeViewer
         filename="routes/examples/advanced/+page.server.ts"
@@ -132,8 +132,8 @@ ${' <'}/script>
     </div>
 
     <div>
-      <h3 class="text-lg font-semibold mb-3">3. Layout Defines Region Slots</h3>
-      <p class="text-sm text-muted-foreground mb-4">
+      <h3 class="mb-3 text-lg font-semibold">3. Layout Defines Region Slots</h3>
+      <p class="mb-4 text-sm text-muted-foreground">
         The layout defines where regions appear. The same <code>&lt;LayoutRegion&gt;</code>
         components receive different data depending on which page is active.
       </p>
@@ -149,34 +149,28 @@ ${' <'}/script>
 
   <div class="not-prose space-y-4">
     <div class="rounded-lg border border-blue-500/20 bg-blue-500/5 p-4">
-      <p class="text-sm font-semibold text-blue-700 dark:text-blue-400 mb-2">
-        Inheritance (Blue)
-      </p>
+      <p class="mb-2 text-sm font-semibold text-blue-700 dark:text-blue-400">Inheritance (Blue)</p>
       <p class="text-sm">
-        The <strong>sharedNav</strong> region is defined in the parent layout and inherited
-        by the page without modification. It appears on all pages in this section.
+        The <strong>sharedNav</strong> region is defined in the parent layout and inherited by the page
+        without modification. It appears on all pages in this section.
       </p>
     </div>
 
     <div class="rounded-lg border border-purple-500/20 bg-purple-500/5 p-4">
-      <p class="text-sm font-semibold text-purple-700 dark:text-purple-400 mb-2">
+      <p class="mb-2 text-sm font-semibold text-purple-700 dark:text-purple-400">
         Override (Purple)
       </p>
       <p class="text-sm">
-        The <strong>layoutInfo</strong> region is defined in the parent layout but
-        overridden by the page. The page spreads parent regions first, then redefines
-        this region with new data.
+        The <strong>layoutInfo</strong> region is defined in the parent layout but overridden by the page.
+        The page spreads parent regions first, then redefines this region with new data.
       </p>
     </div>
 
     <div class="rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-      <p class="text-sm font-semibold text-green-700 dark:text-green-400 mb-2">
-        Addition (Green)
-      </p>
+      <p class="mb-2 text-sm font-semibold text-green-700 dark:text-green-400">Addition (Green)</p>
       <p class="text-sm">
-        The <strong>pageOnlyRegion</strong> doesn't exist in the parent layout. It's
-        defined only by this page, demonstrating how pages can add new regions alongside
-        inherited ones.
+        The <strong>pageOnlyRegion</strong> doesn't exist in the parent layout. It's defined only by this
+        page, demonstrating how pages can add new regions alongside inherited ones.
       </p>
     </div>
   </div>
@@ -184,32 +178,38 @@ ${' <'}/script>
   <h2>Order Matters</h2>
 
   <KeyConcept>
-    <strong>Always spread parent regions first!</strong> Spreading after your definitions
-    will erase your changes.
+    <strong>Always spread parent regions first!</strong> Spreading after your definitions will erase your
+    changes.
   </KeyConcept>
 
-  <div class="grid md:grid-cols-2 gap-4 mb-6">
+  <div class="mb-6 grid gap-4 md:grid-cols-2">
     <div class="rounded-lg border border-green-500/20 bg-green-500/5 p-4">
-      <p class="text-sm font-semibold text-green-700 dark:text-green-400 mb-2 flex items-center gap-2">
+      <p
+        class="mb-2 flex items-center gap-2 text-sm font-semibold text-green-700 dark:text-green-400"
+      >
         <CheckCircle2 class="h-4 w-4" />
         Correct
       </p>
-      <pre class="text-xs overflow-x-auto"><code>{`regions: {
+      <pre class="overflow-x-auto text-xs"><code
+          >{`regions: {
   ...(parentData.regions || {}),
   layoutInfo: { /* override */ }
-}`}</code></pre>
+}`}</code
+        ></pre>
     </div>
 
     <div class="rounded-lg border border-red-500/20 bg-red-500/5 p-4">
-      <p class="text-sm font-semibold text-red-700 dark:text-red-400 mb-2 flex items-center gap-2">
+      <p class="mb-2 flex items-center gap-2 text-sm font-semibold text-red-700 dark:text-red-400">
         <XCircle class="h-4 w-4" />
         Wrong
       </p>
-      <pre class="text-xs overflow-x-auto"><code>{`regions: {
+      <pre class="overflow-x-auto text-xs"><code
+          >{`regions: {
   layoutInfo: { /* override */ },
   ...(parentData.regions || {})
   // This erases your override!
-}`}</code></pre>
+}`}</code
+        ></pre>
     </div>
   </div>
 
@@ -221,16 +221,16 @@ ${' <'}/script>
       <code>/products/[category]/[id]</code>
     </li>
     <li>
-      <strong>Section-wide data:</strong> When all pages in a section share common regions
-      (navigation, breadcrumbs, etc.)
+      <strong>Section-wide data:</strong> When all pages in a section share common regions (navigation,
+      breadcrumbs, etc.)
     </li>
     <li>
-      <strong>Progressive enhancement:</strong> When child pages need to extend or modify
-      parent data while preserving some of it
+      <strong>Progressive enhancement:</strong> When child pages need to extend or modify parent data
+      while preserving some of it
     </li>
     <li>
-      <strong>Flexible overrides:</strong> When some pages need to completely replace parent
-      regions while others keep them
+      <strong>Flexible overrides:</strong> When some pages need to completely replace parent regions while
+      others keep them
     </li>
   </ul>
 
@@ -239,7 +239,7 @@ ${' <'}/script>
   <div class="not-prose">
     <a
       href="/docs/advanced"
-      class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:underline"
+      class="inline-flex items-center gap-2 text-indigo-600 hover:underline dark:text-indigo-400"
     >
       Read the full Advanced documentation →
     </a>

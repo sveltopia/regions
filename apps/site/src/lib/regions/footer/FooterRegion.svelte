@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import { footerSchema, type FooterData } from "./footerSchema";
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
-  import PrevNext from "$lib/components/PrevNext.svelte";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { footerSchema, type FooterData } from './footerSchema';
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
+  import PrevNext from '$lib/components/PrevNext.svelte';
 
   interface Props {
     showIndicator?: boolean;

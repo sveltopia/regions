@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import { pageHeaderSchema, type PageHeaderData } from "./pageHeaderSchema";
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { pageHeaderSchema, type PageHeaderData } from './pageHeaderSchema';
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
 
   interface Props {
     showIndicator?: boolean;
@@ -33,8 +33,7 @@
         <div class="text-sm text-muted-foreground italic">
           <p>No page header data provided - showing fallback content.</p>
           <p class="mt-1 text-xs">
-            This demonstrates the fallback feature when a page doesn't set
-            region data.
+            This demonstrates the fallback feature when a page doesn't set region data.
           </p>
         </div>
       </RegionIndicator>
@@ -42,8 +41,7 @@
       <div class="text-sm text-muted-foreground italic">
         <p>No page header data provided - showing fallback content.</p>
         <p class="mt-1 text-xs">
-          This demonstrates the fallback feature when a page doesn't set region
-          data.
+          This demonstrates the fallback feature when a page doesn't set region data.
         </p>
       </div>
     {/if}

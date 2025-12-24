@@ -1,5 +1,5 @@
 <script lang="ts">
-  import CodeViewer from "$lib/components/CodeViewer.svelte";
+  import CodeViewer from '$lib/components/CodeViewer.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const schemaCode = `import * as v from 'valibot';
@@ -33,10 +33,10 @@ export const load: PageServerLoad = async () => {
   };
 };`;
 
-  const regionConsumerCode = `${"<"}script lang="ts">
+  const regionConsumerCode = `${'<'}script lang="ts">
   import { LayoutRegion } from '@sveltopia/regions';
   import { dashboardHeaderSchema, type DashboardHeaderData } from './dashboardHeaderSchema';
-${"<"}/script>
+${'<'}/script>
 
 <LayoutRegion name="dashboardHeader" schema={dashboardHeaderSchema}>
   {#snippet children(data: Record<string, unknown>)}
@@ -53,10 +53,10 @@ ${"<"}/script>
   {/snippet}
 </LayoutRegion>`;
 
-  const componentAbstractedCode = `${"<"}script lang="ts">
+  const componentAbstractedCode = `${'<'}script lang="ts">
   import { LayoutRegion } from '@sveltopia/regions';
   import { dashboardHeaderSchema, type DashboardHeaderData } from './dashboardHeaderSchema';
-${"<"}/script>
+${'<'}/script>
 
 <LayoutRegion name="dashboardHeader" schema={dashboardHeaderSchema}>
   {#snippet children(data: Record<string, unknown>)}
@@ -73,11 +73,11 @@ ${"<"}/script>
   {/snippet}
 </LayoutRegion>`;
 
-  const cleanLayoutCode = `${"<"}script lang="ts">
+  const cleanLayoutCode = `${'<'}script lang="ts">
   import DashboardHeaderRegion from '$lib/regions/dashboard-header/DashboardHeaderRegion.svelte';
 
   let { children } = $props();
-${"<"}/script>
+${'<'}/script>
 
 <DashboardHeaderRegion />
 
@@ -89,18 +89,16 @@ ${"<"}/script>
 <h2>Load Function + Valibot Validation</h2>
 
 <div class="not-prose mb-8 rounded-lg border bg-indigo-500/5 p-6">
-  <h3 class="text-lg font-semibold mb-3">Quick Start with CLI</h3>
-  <p class="text-sm text-muted-foreground mb-4">
-    Generate this entire pattern automatically:
-  </p>
+  <h3 class="mb-3 text-lg font-semibold">Quick Start with CLI</h3>
+  <p class="mb-4 text-sm text-muted-foreground">Generate this entire pattern automatically:</p>
   <CodeViewer
     filename="terminal"
     language="bash"
-    code="npx @sveltopia/regions add dashboard-header" />
-  <p class="text-sm text-muted-foreground mt-4">
-    During the interactive prompts, select <strong>Load function</strong> strategy
-    and <strong>Valibot</strong> validator, then define your fields (title, userCount,
-    isLive).
+    code="npx @sveltopia/regions add dashboard-header"
+  />
+  <p class="mt-4 text-sm text-muted-foreground">
+    During the interactive prompts, select <strong>Load function</strong> strategy and
+    <strong>Valibot</strong> validator, then define your fields (title, userCount, isLive).
   </p>
 </div>
 
@@ -111,16 +109,15 @@ ${"<"}/script>
     <code class="not-prose">load()</code> functions to pass data from page to layout
   </li>
   <li>
-    <strong>Server-side rendered</strong> - Data is available immediately on page
-    load, no client-side fetching
+    <strong>Server-side rendered</strong> - Data is available immediately on page load, no client-side
+    fetching
   </li>
   <li>
-    <strong>Valibot validation</strong> - The LayoutRegion component automatically
-    validates incoming data against your schema (~1kb bundle)
+    <strong>Valibot validation</strong> - The LayoutRegion component automatically validates incoming
+    data against your schema (~1kb bundle)
   </li>
   <li>
-    <strong>SEO-friendly</strong> - Content is in the initial HTML response for search
-    engines
+    <strong>SEO-friendly</strong> - Content is in the initial HTML response for search engines
   </li>
   <li>
     <strong>Zero layout shift</strong> - No hydration flicker or content jumping
@@ -134,30 +131,28 @@ ${"<"}/script>
 
 <div class="space-y-8">
   <div class="space-y-6">
-    <p class="text-sm font-medium">
-      1. Define your schema with Valibot:
-    </p>
+    <p class="text-sm font-medium">1. Define your schema with Valibot:</p>
     <CodeViewer
       filename="src/lib/regions/dashboard-header/dashboardHeaderSchema.ts"
       language="typescript"
-      code={schemaCode} />
+      code={schemaCode}
+    />
   </div>
 
   <div class="space-y-6">
-    <p class="text-sm font-medium">
-      2. Return region data from your load function:
-    </p>
+    <p class="text-sm font-medium">2. Return region data from your load function:</p>
     <CodeViewer
       filename="src/routes/examples/load-function/valibot/+page.server.ts"
       language="typescript"
-      code={loadFunctionCode} />
+      code={loadFunctionCode}
+    />
   </div>
 
   <div class="space-y-6">
     <div>
       <p class="text-sm font-medium">
-        3. Consume the region in your +layout.svelte file, passing the Valibot
-        schema to LayoutRegion for automatic validation:
+        3. Consume the region in your +layout.svelte file, passing the Valibot schema to
+        LayoutRegion for automatic validation:
       </p>
       <p class="text-sm text-muted-foreground">
         <strong>Note:</strong> The
@@ -175,28 +170,31 @@ ${"<"}/script>
     <CodeViewer
       filename="src/routes/examples/load-function/valibot/+layout.svelte"
       language="svelte"
-      code={regionConsumerCode} />
+      code={regionConsumerCode}
+    />
   </div>
 
   <div class="space-y-6">
     <p class="text-sm font-medium">
-      4. Or, abstract the region to its own component for better organization
-      (this is how our CLI generates regions):
+      4. Or, abstract the region to its own component for better organization (this is how our CLI
+      generates regions):
     </p>
     <CodeViewer
       filename="src/lib/regions/dashboard-header/DashboardHeaderRegion.svelte"
       language="svelte"
-      code={componentAbstractedCode} />
+      code={componentAbstractedCode}
+    />
   </div>
 
   <div class="space-y-6">
     <p class="text-sm font-medium">
-      5. Then your +layout.svelte stays clean and organized &mdash; the region
-      is now a self-contained component with its own schema, validation, and UI.
+      5. Then your +layout.svelte stays clean and organized &mdash; the region is now a
+      self-contained component with its own schema, validation, and UI.
     </p>
     <CodeViewer
       filename="src/routes/examples/load-function/valibot/+layout.svelte"
       language="svelte"
-      code={cleanLayoutCode} />
+      code={cleanLayoutCode}
+    />
   </div>
 </div>

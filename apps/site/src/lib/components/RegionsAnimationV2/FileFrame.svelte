@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Snippet } from "svelte";
+  import type { Snippet } from 'svelte';
 
   export interface FileTab {
     filename: string;
@@ -10,19 +10,14 @@
     /** Array of tabs to display */
     tabs: FileTab[];
     /** Color of the active tab's top border (tailwind class without 'border-t-') */
-    accentColor?: "orange-600" | "indigo-600";
+    accentColor?: 'orange-600' | 'indigo-600';
     /** Optional children content for the frame body */
     children?: Snippet;
     /** Additional CSS classes */
     class?: string;
   }
 
-  let {
-    tabs,
-    accentColor = "orange-600",
-    children,
-    class: className = "",
-  }: Props = $props();
+  let { tabs, accentColor = 'orange-600', children, class: className = '' }: Props = $props();
 </script>
 
 <!--
@@ -38,8 +33,8 @@
       <div
         class="tab"
         class:active={tab.active}
-        class:accent-orange={tab.active && accentColor === "orange-600"}
-        class:accent-indigo={tab.active && accentColor === "indigo-600"}
+        class:accent-orange={tab.active && accentColor === 'orange-600'}
+        class:accent-indigo={tab.active && accentColor === 'indigo-600'}
       >
         <span class="tab-text">{tab.filename}</span>
       </div>
@@ -73,7 +68,7 @@
     height: 28px;
     display: flex;
     align-items: center;
-    @apply bg-slate-200 border border-indigo-200 dark:bg-slate-800 dark:border-indigo-400;
+    @apply border border-indigo-200 bg-slate-200 dark:border-indigo-400 dark:bg-slate-800;
     border-bottom: none;
   }
 
@@ -99,7 +94,7 @@
 
   /* Active tab base styles */
   .tab.active {
-    @apply bg-slate-50 dark:bg-slate-900 border-l border-l-indigo-400 border-r-indigo-300;
+    @apply border-l border-r-indigo-300 border-l-indigo-400 bg-slate-50 dark:bg-slate-900;
     border-top-width: 3px;
   }
 
@@ -114,7 +109,7 @@
 
   /* Cover the frame body border to create seamless connection */
   .tab.active:before {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -2px;
     left: 0;
@@ -128,14 +123,14 @@
   }
 
   .tab-text {
-    @apply text-[10px] font-mono text-slate-700 dark:text-slate-300 whitespace-nowrap;
+    @apply font-mono text-[10px] whitespace-nowrap text-slate-700 dark:text-slate-300;
   }
 
   .frame-body {
     width: 400px;
     height: 300px;
-    @apply bg-slate-50 border border-indigo-400 dark:bg-slate-900 dark:border-indigo-400;
-    @apply rounded-b-md rounded-tr-md;
+    @apply border border-indigo-400 bg-slate-50 dark:border-indigo-400 dark:bg-slate-900;
+    @apply rounded-tr-md rounded-b-md;
   }
 
   /* When first tab is active, frame body needs different rounding */

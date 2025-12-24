@@ -189,9 +189,10 @@ describe('CLI E2E Tests', () => {
 			// Check wrapper component
 			const wrapperPath = path.join(testDir, 'src/lib/regions/gallery-header/GalleryHeader.svelte');
 			const wrapperContent = await fs.readFile(wrapperPath, 'utf-8');
-			expect(wrapperContent).toContain('let props = $props<{ galleryTitle: string; imageCount: string }>()');
-			expect(wrapperContent).toContain('useLayoutRegions({');
-			expect(wrapperContent).toContain('galleryHeader: props');
+			expect(wrapperContent).toContain("import type { GalleryHeaderData } from './galleryHeaderSchema'");
+			expect(wrapperContent).toContain('let { galleryTitle, imageCount }: GalleryHeaderData = $props()');
+			expect(wrapperContent).toContain('useLayoutRegions(() => ({');
+			expect(wrapperContent).toContain('galleryHeader: { galleryTitle, imageCount }');
 
 			// Check consumer component
 			const consumerPath = path.join(testDir, 'src/lib/regions/gallery-header/GalleryHeaderRegion.svelte');

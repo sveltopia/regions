@@ -2,8 +2,8 @@
  * Breadcrumb item representing a navigation step
  */
 export interface Breadcrumb {
-	label: string;
-	href: string;
+  label: string;
+  href: string;
 }
 
 /**
@@ -30,12 +30,12 @@ export interface Breadcrumb {
  * ```
  */
 export function buildBreadcrumbsFromParents(
-	parentData: Record<string, unknown>,
-	current: Breadcrumb
+  parentData: Record<string, unknown>,
+  current: Breadcrumb
 ): Breadcrumb[] {
-	// Get breadcrumbs array from parent layouts (they build it up as they go)
-	const parentBreadcrumbs = (parentData.breadcrumbs || []) as Breadcrumb[];
+  // Get breadcrumbs array from parent layouts (they build it up as they go)
+  const parentBreadcrumbs = (parentData.breadcrumbs || []) as Breadcrumb[];
 
-	// Add current page and return
-	return [...parentBreadcrumbs, current];
+  // Add current page and return
+  return [...parentBreadcrumbs, current];
 }

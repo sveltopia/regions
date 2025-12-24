@@ -15,13 +15,13 @@ program
   .command("add <name>")
   .description("Generate a new region with schema and wrapper component")
   .action(async (name: string) => {
-    intro("🧩 Sveltopia Regions Generator");
+    intro("Sveltopia Regions Generator");
 
     try {
       await addCommand(name);
-      outro("✨ Done!");
+      outro("Done!");
     } catch (error) {
-      outro("❌ Something went wrong");
+      outro("Something went wrong");
       console.error(error);
       process.exit(1);
     }

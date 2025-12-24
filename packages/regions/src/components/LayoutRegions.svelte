@@ -9,7 +9,7 @@
     schemas?: RegionSchemas;
   }
 
-  let { children, schemas }: Props = $props();
+  let props: Props = $props();
 
   // Create reactive state for regions
   let regions = $state<Regions>({});
@@ -25,10 +25,10 @@
   }
 
   // Make everything available via context
-  // Expose regions directly, not via getter (fixes reactivity issues)
+  // Use getter for schemas to maintain reactivity
   const context = {
     regions,  // Direct reference for proper reactivity
-    schemas,
+    get schemas() { return props.schemas; },
     setRegion,
     clearRegion,
   };
@@ -37,4 +37,4 @@
 </script>
 
 <!-- Just render children - no styling here -->
-{@render children?.()}
+{@render props.children?.()}

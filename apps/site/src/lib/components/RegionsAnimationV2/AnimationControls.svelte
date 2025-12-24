@@ -1,12 +1,6 @@
 <script lang="ts">
-  import {
-    Play,
-    Pause,
-    RotateCcw,
-    ChevronLeft,
-    ChevronRight,
-  } from "lucide-svelte";
-  import type { GSAPTimeline } from "./types";
+  import { Play, Pause, RotateCcw, ChevronLeft, ChevronRight } from 'lucide-svelte';
+  import type { GSAPTimeline } from './types';
 
   interface Props {
     timeline: GSAPTimeline | null;
@@ -105,8 +99,9 @@
         </button>
         <button
           onclick={handlePlay}
-          title={isPlaying ? "Pause" : "Play"}
-          class="control-btn primary">
+          title={isPlaying ? 'Pause' : 'Play'}
+          class="control-btn primary"
+        >
           {#if isPlaying}
             <Pause size={16} />
           {:else}
@@ -117,17 +112,15 @@
 
       <!-- Frame navigation -->
       <div class="frame-nav">
-        <button
-          onclick={prevFrame}
-          disabled={currentFrame === 0}
-          class="control-btn small">
+        <button onclick={prevFrame} disabled={currentFrame === 0} class="control-btn small">
           <ChevronLeft size={14} />
         </button>
         <span class="frame-indicator">Scene {currentFrame + 1}</span>
         <button
           onclick={nextFrame}
           disabled={currentFrame >= frameLabels.length - 1}
-          class="control-btn small">
+          class="control-btn small"
+        >
           <ChevronRight size={14} />
         </button>
       </div>
@@ -145,7 +138,8 @@
         step="0.1"
         value={progress}
         oninput={handleScrub}
-        class="scrubber" />
+        class="scrubber"
+      />
     </div>
 
     <!-- Scene labels (1-indexed for user display) -->
@@ -156,7 +150,8 @@
             onclick={() => jumpToFrame(i)}
             class="frame-label"
             class:active={currentFrame === i}
-            title={label}>
+            title={label}
+          >
             {i + 1}
           </button>
         {/each}
@@ -173,8 +168,8 @@
     bottom: -70px;
     left: 50%;
     transform: translateX(-50%);
-    @apply bg-slate-800/95 backdrop-blur-sm rounded-t-lg px-4 py-3;
-    @apply border border-slate-700 border-b-0;
+    @apply rounded-t-lg bg-slate-800/95 px-4 py-3 backdrop-blur-sm;
+    @apply border border-b-0 border-slate-700;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -193,7 +188,7 @@
   }
 
   .control-btn {
-    @apply bg-slate-700 hover:bg-slate-600 text-slate-200;
+    @apply bg-slate-700 text-slate-200 hover:bg-slate-600;
     @apply rounded-md p-2 transition-colors;
     display: flex;
     align-items: center;
@@ -202,7 +197,7 @@
     cursor: pointer;
 
     &:disabled {
-      @apply opacity-40 cursor-not-allowed;
+      @apply cursor-not-allowed opacity-40;
     }
 
     &.primary {
@@ -221,13 +216,13 @@
   }
 
   .frame-indicator {
-    @apply text-xs font-mono text-slate-300;
+    @apply font-mono text-xs text-slate-300;
     min-width: 60px;
     text-align: center;
   }
 
   .progress-text {
-    @apply text-xs font-mono text-slate-400;
+    @apply font-mono text-xs text-slate-400;
     margin-left: auto;
   }
 
@@ -238,7 +233,7 @@
   .scrubber {
     width: 100%;
     height: 6px;
-    @apply bg-slate-700 rounded-full;
+    @apply rounded-full bg-slate-700;
     appearance: none;
     cursor: pointer;
 
@@ -246,7 +241,7 @@
       appearance: none;
       width: 14px;
       height: 14px;
-      @apply bg-indigo-500 rounded-full;
+      @apply rounded-full bg-indigo-500;
       cursor: grab;
 
       &:active {
@@ -258,7 +253,7 @@
     &::-moz-range-thumb {
       width: 14px;
       height: 14px;
-      @apply bg-indigo-500 rounded-full;
+      @apply rounded-full bg-indigo-500;
       border: none;
       cursor: grab;
     }
@@ -271,8 +266,8 @@
   }
 
   .frame-label {
-    @apply text-xs font-mono text-slate-400;
-    @apply bg-slate-700/50 hover:bg-slate-600 rounded px-2 py-1;
+    @apply font-mono text-xs text-slate-400;
+    @apply rounded bg-slate-700/50 px-2 py-1 hover:bg-slate-600;
     border: none;
     cursor: pointer;
     flex: 1;

@@ -1,13 +1,13 @@
-@import "tailwindcss";
-@import "tw-animate-css";
+@import 'tailwindcss';
+@import 'tw-animate-css';
 
 @custom-variant dark (&:is(.dark *));
 
-@plugin "@tailwindcss/typography";
+@plugin '@tailwindcss/typography';
 
 :root {
   --radius: 0.625rem;
-  
+
   /* Animation colors - Light mode */
   --anim-frame-bg: #ffffff;
   --anim-frame-border: #c7d2fe; /* indigo-200 */
@@ -64,7 +64,7 @@
   --anim-region-amber: #f59e0b; /* amber-500 */
   --anim-region-green: #65a30d; /* lime-600 */
   --anim-content-bg: #0f172a; /* slate-900 */
-  
+
   --background: oklch(0.129 0.042 264.695);
   --foreground: oklch(0.984 0.003 247.858);
   --card: oklch(0.208 0.042 265.755);

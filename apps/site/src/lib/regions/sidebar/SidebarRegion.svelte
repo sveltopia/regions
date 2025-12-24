@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import { sidebarSchema, type SidebarData } from "./sidebarSchema";
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { sidebarSchema, type SidebarData } from './sidebarSchema';
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
 </script>
 
 <LayoutRegion name="sidebar" schema={sidebarSchema}>

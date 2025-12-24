@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { browser, dev } from "$app/environment";
-  import { onMount } from "svelte";
-  import gsap from "gsap";
-  import { MousePointer, RotateCcw } from "lucide-svelte";
-  import AnimationControls from "./AnimationControls.svelte";
-  import { FRAME_LABELS, DURATIONS, type GSAPTimeline } from "./types";
+  import { browser, dev } from '$app/environment';
+  import { onMount } from 'svelte';
+  import gsap from 'gsap';
+  import { MousePointer, RotateCcw } from 'lucide-svelte';
+  import AnimationControls from './AnimationControls.svelte';
+  import { FRAME_LABELS, type GSAPTimeline } from './types';
 
   /**
    * RegionsAnimation V2: Visual storytelling with 3-act structure
@@ -32,103 +32,115 @@
   // Wider frames (412.5px) with 25px margins and 25px gap
   const POSITIONS = {
     // X positions (percentage of 900px)
-    cliX: "2.78%", // 25/900
-    layoutX: "51.39%", // 462.5/900
-    browserCenterX: "27.08%", // 243.75/900 (centered)
-    browserRightX: "85%", // off-screen right for Scene 3 entry
+    cliX: '2.78%', // 25/900
+    layoutX: '51.39%', // 462.5/900
+    browserCenterX: '27.08%', // 243.75/900 (centered)
+    browserRightX: '85%', // off-screen right for Scene 3 entry
     // Y positions (percentage of 500px)
-    browserY: "20%", // 100/500
-    cliY: "20%", // 100/500 - same as browser
-    layoutY: "20%", // 100/500 - same as browser
+    browserY: '20%', // 100/500
+    cliY: '20%', // 100/500 - same as browser
+    layoutY: '20%', // 100/500 - same as browser
     // Widths/heights (percentage)
-    browserWidth: "45.83%", // 412.5/900
-    browserHeight: "74%", // 370/500
-    frameWidth: "45.83%", // 412.5/900
-    frameHeight: "74%", // 370/500 - all frames same height
+    browserWidth: '45.83%', // 412.5/900
+    browserHeight: '74%', // 370/500
+    frameWidth: '45.83%', // 412.5/900
+    frameHeight: '74%' // 370/500 - all frames same height
   };
 
   // Timeline ref
   let timeline: GSAPTimeline | null = $state(null);
 
-  // === CAPTION REFS ===
-  // Scene 1: "SvelteKit gives us one place to render page content in a layout."
-  let caption0: HTMLDivElement;
-  let caption0Line1: HTMLSpanElement;
+  // === DOM ELEMENT REFS (grouped for $state) ===
+  // These are used with bind:this for GSAP animations
 
-  // Scene 2: "Layout Regions give us as many as we need."
-  let caption2: HTMLDivElement;
-  let caption2Line1: HTMLSpanElement;
+  // Caption refs
+  let captionRefs = $state({
+    caption0: null as HTMLDivElement | null,
+    caption0Line1: null as HTMLSpanElement | null,
+    caption2: null as HTMLDivElement | null,
+    caption2Line1: null as HTMLSpanElement | null,
+    caption3: null as HTMLDivElement | null,
+    caption3Line1: null as HTMLSpanElement | null,
+    caption3Line2: null as HTMLSpanElement | null
+  });
 
-  // Scene 3: Final payoff caption (two lines for staggered fade)
-  let caption3: HTMLDivElement;
-  let caption3Line1: HTMLSpanElement;
-  let caption3Line2: HTMLSpanElement;
+  // Browser frame refs
+  let browserRefs = $state({
+    frame: null as HTMLDivElement | null,
+    urlBar: null as HTMLDivElement | null,
+    urlText: null as HTMLSpanElement | null,
+    mouseCursor: null as HTMLDivElement | null,
+    loadingSpinner: null as SVGSVGElement | null,
+    pageLayout: null as HTMLDivElement | null
+  });
 
-  // === BROWSER FRAME REFS ===
-  let browserFrame: HTMLDivElement;
-  let urlBar: HTMLDivElement;
-  let urlText: HTMLSpanElement;
-  let mouseCursor: HTMLDivElement;
-  let loadingSpinner: SVGSVGElement;
-  let pageLayout: HTMLDivElement;
-
-  // === CLI FRAME REFS ===
-  let cliFrame: HTMLDivElement;
-  let cliCommandLine: HTMLDivElement;
-  let cliText: HTMLSpanElement; // Single element for typed text + cursor
-
-  // CLI output refs (simplified skeleton wizard)
-  let cliOutputContainer: HTMLDivElement;
-  let cliHeader: HTMLDivElement;
-  let cliSkeleton1: HTMLDivElement;
-  let cliSkeleton2: HTMLDivElement;
-  let cliSkeleton3: HTMLDivElement;
-  let cliSkeletonBar1: HTMLDivElement;
-  let cliSkeletonBar2: HTMLDivElement;
-  let cliSkeletonBar3: HTMLDivElement;
-  let cliGenerating: HTMLDivElement;
-  let cliFiles: HTMLDivElement;
-  let cliDone: HTMLDivElement;
+  // CLI frame refs
+  let cliRefs = $state({
+    frame: null as HTMLDivElement | null,
+    commandLine: null as HTMLDivElement | null,
+    text: null as HTMLSpanElement | null,
+    outputContainer: null as HTMLDivElement | null,
+    header: null as HTMLDivElement | null,
+    skeleton1: null as HTMLDivElement | null,
+    skeleton2: null as HTMLDivElement | null,
+    skeleton3: null as HTMLDivElement | null,
+    skeletonBar1: null as HTMLDivElement | null,
+    skeletonBar2: null as HTMLDivElement | null,
+    skeletonBar3: null as HTMLDivElement | null,
+    generating: null as HTMLDivElement | null,
+    files: null as HTMLDivElement | null,
+    done: null as HTMLDivElement | null
+  });
 
   // Layout panel refs (+layout.svelte that appears alongside CLI)
-  let layoutPanel: HTMLDivElement;
-  let layoutPanelContent: HTMLDivElement;
-  let layoutRegionsWrapper: HTMLDivElement;
-  let layoutRegionsTag: HTMLDivElement;
-  let layoutRegionHeader: HTMLDivElement;
-  let layoutRegionSidebar: HTMLDivElement;
-  let layoutRegionFooter: HTMLDivElement;
-  let layoutRenderChildren: HTMLDivElement;
+  let layoutPanelRefs = $state({
+    panel: null as HTMLDivElement | null,
+    content: null as HTMLDivElement | null,
+    regionsWrapper: null as HTMLDivElement | null,
+    regionsTag: null as HTMLDivElement | null,
+    regionHeader: null as HTMLDivElement | null,
+    regionSidebar: null as HTMLDivElement | null,
+    regionFooter: null as HTMLDivElement | null,
+    renderChildren: null as HTMLDivElement | null
+  });
 
   // Layout regions (hardcoded - turn orange in Frame 1)
-  let layoutHeader: HTMLDivElement;
-  let layoutSidebar: HTMLDivElement;
-  let layoutFooter: HTMLDivElement;
+  let layoutRefs = $state({
+    header: null as HTMLDivElement | null,
+    sidebar: null as HTMLDivElement | null,
+    footer: null as HTMLDivElement | null
+  });
 
   // Content regions (page-specific - get colored in Frame 2+)
-  let pageHeader: HTMLDivElement;
-  let mainContent: HTMLDivElement;
-  let pageFooter: HTMLDivElement;
-  let sidebarBlock1: HTMLDivElement;
-  let sidebarBlock2: HTMLDivElement;
+  let contentRefs = $state({
+    pageHeader: null as HTMLDivElement | null,
+    mainContent: null as HTMLDivElement | null,
+    pageFooter: null as HTMLDivElement | null,
+    sidebarBlock1: null as HTMLDivElement | null,
+    sidebarBlock2: null as HTMLDivElement | null
+  });
 
   // Fill overlay refs (for bottom-to-top fill animation)
-  let fillLayoutHeader: HTMLDivElement;
-  let fillSidebarBlock1: HTMLDivElement;
-  let fillLayoutFooter: HTMLDivElement;
-  let fillPageHeader: HTMLDivElement;
-  let fillSidebarBlock2: HTMLDivElement;
-  let fillPageFooter: HTMLDivElement;
-  let fillMainContent: HTMLDivElement;
+  let fillRefs = $state({
+    layoutHeader: null as HTMLDivElement | null,
+    sidebarBlock1: null as HTMLDivElement | null,
+    layoutFooter: null as HTMLDivElement | null,
+    pageHeader: null as HTMLDivElement | null,
+    sidebarBlock2: null as HTMLDivElement | null,
+    pageFooter: null as HTMLDivElement | null,
+    mainContent: null as HTMLDivElement | null
+  });
 
   // Idle animation state
   let lastTracedIndex = -1;
 
   // Pulse overlay refs for idle animation shimmer (all 4 region boxes)
-  let pulseOverlayGreen: HTMLDivElement;
-  let pulseOverlayPurple: HTMLDivElement;
-  let pulseOverlayBlue: HTMLDivElement;
-  let pulseOverlayAmber: HTMLDivElement;
+  let pulseRefs = $state({
+    green: null as HTMLDivElement | null,
+    purple: null as HTMLDivElement | null,
+    blue: null as HTMLDivElement | null,
+    amber: null as HTMLDivElement | null
+  });
 
   // Reduced motion support
   let prefersReducedMotion = $state(false);
@@ -144,14 +156,14 @@
 
   $effect(() => {
     if (browser) {
-      const mediaQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+      const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
       prefersReducedMotion = mediaQuery.matches;
 
       const handler = (e: MediaQueryListEvent) => {
         prefersReducedMotion = e.matches;
       };
-      mediaQuery.addEventListener("change", handler);
-      return () => mediaQuery.removeEventListener("change", handler);
+      mediaQuery.addEventListener('change', handler);
+      return () => mediaQuery.removeEventListener('change', handler);
     }
   });
 
@@ -161,101 +173,104 @@
     // === INITIAL STATES ===
 
     // Caption 0: "SvelteKit gives us one place to render page content in a layout."
-    gsap.set(caption0, { opacity: 1, visibility: "visible" });
-    gsap.set(caption0Line1, { clipPath: "inset(0 100% 0 0)" });
+    gsap.set(captionRefs.caption0, { opacity: 1, visibility: 'visible' });
+    gsap.set(captionRefs.caption0Line1, { clipPath: 'inset(0 100% 0 0)' });
 
     // Caption 2: "Layout Regions gives us as many as we need." - hidden initially
-    gsap.set(caption2, { opacity: 0, visibility: "visible" });
-    gsap.set(caption2Line1, { clipPath: "inset(0 100% 0 0)" });
+    gsap.set(captionRefs.caption2, { opacity: 0, visibility: 'visible' });
+    gsap.set(captionRefs.caption2Line1, { clipPath: 'inset(0 100% 0 0)' });
 
     // Caption 3: Final payoff - both lines hidden initially (will fade in)
-    gsap.set(caption3, { opacity: 0, visibility: "visible" });
-    gsap.set([caption3Line1, caption3Line2], { opacity: 0 });
+    gsap.set(captionRefs.caption3, { opacity: 0, visibility: 'visible' });
+    gsap.set([captionRefs.caption3Line1, captionRefs.caption3Line2], { opacity: 0 });
 
     // CLI frame: below canvas, hidden
-    gsap.set(cliFrame, {
+    gsap.set(cliRefs.frame, {
       y: 100,
       opacity: 0,
-      visibility: "visible",
+      visibility: 'visible'
     });
 
     // Layout panel: off to the right, hidden
-    gsap.set(layoutPanel, {
+    gsap.set(layoutPanelRefs.panel, {
       x: 60,
       opacity: 0,
-      visibility: "visible",
+      visibility: 'visible'
     });
     // Hide everything except render children initially
-    gsap.set(layoutRegionsWrapper, { opacity: 0 });
-    gsap.set(layoutRegionsTag, { opacity: 0 });
-    gsap.set([layoutRegionHeader, layoutRegionSidebar, layoutRegionFooter], {
-      opacity: 0,
-      y: 10,
-      scale: 0.95,
-    });
+    gsap.set(layoutPanelRefs.regionsWrapper, { opacity: 0 });
+    gsap.set(layoutPanelRefs.regionsTag, { opacity: 0 });
+    gsap.set(
+      [layoutPanelRefs.regionHeader, layoutPanelRefs.regionSidebar, layoutPanelRefs.regionFooter],
+      {
+        opacity: 0,
+        y: 10,
+        scale: 0.95
+      }
+    );
 
     // CLI text: starts with just cursor
-    if (cliText) cliText.innerHTML = '<span class="cli-cursor">▌</span>';
+    if (cliRefs.text) cliRefs.text.innerHTML = '<span class="cli-cursor">▌</span>';
 
     // CLI output: all lines hidden initially
     // Container hidden until command is typed
-    gsap.set(cliOutputContainer, { opacity: 0 });
+    gsap.set(cliRefs.outputContainer, { opacity: 0 });
 
     // Individual CLI output lines - must be set explicitly for GSAP to manage them
-    gsap.set([cliHeader, cliGenerating, cliFiles, cliDone], { opacity: 0 });
+    gsap.set([cliRefs.header, cliRefs.generating, cliRefs.files, cliRefs.done], { opacity: 0 });
 
     // Skeleton rows: hidden AND clipped for wipe-in effect
-    gsap.set([cliSkeleton1, cliSkeleton2, cliSkeleton3], {
+    gsap.set([cliRefs.skeleton1, cliRefs.skeleton2, cliRefs.skeleton3], {
       opacity: 0,
-      clipPath: "inset(0 100% 0 0)",
+      clipPath: 'inset(0 100% 0 0)'
     });
 
     // Fill overlays: start clipped from top (hidden) - will reveal bottom-to-top like buckets
     gsap.set(
       [
-        fillLayoutHeader,
-        fillSidebarBlock1,
-        fillLayoutFooter,
-        fillPageHeader,
-        fillSidebarBlock2,
-        fillPageFooter,
-        fillMainContent,
+        fillRefs.layoutHeader,
+        fillRefs.sidebarBlock1,
+        fillRefs.layoutFooter,
+        fillRefs.pageHeader,
+        fillRefs.sidebarBlock2,
+        fillRefs.pageFooter,
+        fillRefs.mainContent
       ],
-      { clipPath: "inset(100% 0 0 0)" }
+      { clipPath: 'inset(100% 0 0 0)' }
     );
 
     // Browser: below canvas, hidden (visibility set to visible for GSAP)
-    gsap.set(browserFrame, {
+    gsap.set(browserRefs.frame, {
       y: 120,
       opacity: 0,
-      visibility: "visible",
+      visibility: 'visible'
     });
 
     // Browser loading elements: hidden initially
-    gsap.set(mouseCursor, {
+    gsap.set(browserRefs.mouseCursor, {
       x: 350, // Off right edge
       y: 15, // Near URL bar height
-      opacity: 0,
+      opacity: 0
     });
 
-    gsap.set(loadingSpinner, {
+    gsap.set(browserRefs.loadingSpinner, {
       opacity: 0,
-      rotation: 0,
+      rotation: 0
     });
 
     // Page layout: hidden initially (wipes down after URL loads)
-    gsap.set(pageLayout, {
-      clipPath: "inset(0 0 100% 0)", // Hidden from bottom
+    gsap.set(browserRefs.pageLayout, {
+      clipPath: 'inset(0 0 100% 0)' // Hidden from bottom
     });
 
     // URL text: start empty
-    if (urlText) {
-      urlText.textContent = "";
+    if (browserRefs.urlText) {
+      browserRefs.urlText.textContent = '';
     }
 
     // Create timeline (always paused initially, delay handles autoPlay)
     const tl = gsap.timeline({
-      paused: true,
+      paused: true
     });
 
     // Delay start to let page settle (prevents jumpy animation on initial render)
@@ -271,16 +286,15 @@
 
     // Helper function to create and animate particles
     const createParticles = (
-      fromEl: HTMLElement,
-      toEl: HTMLElement,
+      fromEl: HTMLElement | null,
+      toEl: HTMLElement | null,
       color: string,
       onComplete: () => void
     ) => {
+      if (!fromEl || !toEl) return;
       const fromRect = fromEl.getBoundingClientRect();
       const toRect = toEl.getBoundingClientRect();
-      const canvasRect = document
-        .querySelector(".animation-canvas")
-        ?.getBoundingClientRect();
+      const canvasRect = document.querySelector('.animation-canvas')?.getBoundingClientRect();
 
       if (!canvasRect) return;
 
@@ -291,13 +305,13 @@
 
       const particleCount = 24;
       const particles: HTMLDivElement[] = [];
-      const container = document.querySelector(".animation-canvas");
+      const container = document.querySelector('.animation-canvas');
 
       if (!container) return;
 
       for (let i = 0; i < particleCount; i++) {
-        const particle = document.createElement("div");
-        particle.className = "particle";
+        const particle = document.createElement('div');
+        particle.className = 'particle';
         const size = 4 + Math.random() * 4; // 4-8px varied sizes
         particle.style.cssText = `
           position: absolute;
@@ -327,7 +341,7 @@
           opacity: 1,
           duration: 0.2, // Faster travel (was 0.35)
           delay: delay,
-          ease: "power2.out",
+          ease: 'power2.out'
         });
 
         gsap.to(particle, {
@@ -336,19 +350,19 @@
           opacity: 0,
           duration: 0.15, // Faster fade (was 0.3)
           delay: delay + 0.2,
-          ease: "power2.in",
+          ease: 'power2.in',
           onComplete: () => {
             particle.remove();
             if (i === particleCount - 1) {
               onComplete();
             }
-          },
+          }
         });
       });
     };
 
     // URL for typing animation
-    const fullUrl = "regions.sveltopia.com";
+    const fullUrl = 'regions.sveltopia.com';
 
     // =========================================================================
     // SCENE 1: THE PROBLEM (~4s)
@@ -358,193 +372,160 @@
 
     // Browser bounces in from bottom (with blank content area)
     tl.to(
-      browserFrame,
+      browserRefs.frame,
       {
         y: 0,
         opacity: 1,
         duration: 0.5,
-        ease: "back.out(1.7)",
+        ease: 'back.out(1.7)'
       },
       FRAME_LABELS[0]
     );
 
     // Caption wipes in smoothly after browser intro finishes
     tl.to(
-      caption0Line1,
-      { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power2.out" },
+      captionRefs.caption0Line1,
+      { clipPath: 'inset(0 0% 0 0)', duration: 0.5, ease: 'power2.out' },
       `${FRAME_LABELS[0]}+=0.5`
     );
 
     // Brief pause for reading, then mouse moves to URL bar
+    tl.to(browserRefs.mouseCursor, { opacity: 1, duration: 0.1 }, `${FRAME_LABELS[0]}+=1.0`);
     tl.to(
-      mouseCursor,
-      { opacity: 1, duration: 0.1 },
-      `${FRAME_LABELS[0]}+=1.0`
-    );
-    tl.to(
-      mouseCursor,
-      { x: 180, y: 12, duration: 0.25, ease: "power2.out" },
+      browserRefs.mouseCursor,
+      { x: 180, y: 12, duration: 0.25, ease: 'power2.out' },
       `${FRAME_LABELS[0]}+=1.05`
     );
 
     // URL bar highlights
-    tl.call(
-      () => urlBar?.classList.add("active"),
-      [],
-      `${FRAME_LABELS[0]}+=1.25`
-    );
+    tl.call(() => browserRefs.urlBar?.classList.add('active'), [], `${FRAME_LABELS[0]}+=1.25`);
 
     // URL types in
     tl.to(
-      urlText,
+      browserRefs.urlText,
       {
         duration: 0.5,
-        ease: "none",
+        ease: 'none',
         onUpdate: function () {
           const progress = this.progress();
           const charsToShow = Math.floor(progress * fullUrl.length);
-          if (urlText) {
-            urlText.textContent =
-              fullUrl.substring(0, charsToShow) +
-              (charsToShow < fullUrl.length ? "|" : "");
+          if (browserRefs.urlText) {
+            browserRefs.urlText.textContent =
+              fullUrl.substring(0, charsToShow) + (charsToShow < fullUrl.length ? '|' : '');
           }
         },
         onComplete: () => {
-          if (urlText) urlText.textContent = fullUrl;
-        },
+          if (browserRefs.urlText) browserRefs.urlText.textContent = fullUrl;
+        }
       },
       `${FRAME_LABELS[0]}+=1.3`
     );
 
     // Cursor fades out
-    tl.to(
-      mouseCursor,
-      { opacity: 0, duration: 0.1 },
-      `${FRAME_LABELS[0]}+=1.85`
-    );
+    tl.to(browserRefs.mouseCursor, { opacity: 0, duration: 0.1 }, `${FRAME_LABELS[0]}+=1.85`);
 
     // Loading spinner
+    tl.to(browserRefs.loadingSpinner, { opacity: 1, duration: 0.1 }, `${FRAME_LABELS[0]}+=1.9`);
     tl.to(
-      loadingSpinner,
-      { opacity: 1, duration: 0.1 },
+      browserRefs.loadingSpinner,
+      { rotation: 360, duration: 0.4, ease: 'linear' },
       `${FRAME_LABELS[0]}+=1.9`
     );
-    tl.to(
-      loadingSpinner,
-      { rotation: 360, duration: 0.4, ease: "linear" },
-      `${FRAME_LABELS[0]}+=1.9`
-    );
-    tl.to(
-      loadingSpinner,
-      { opacity: 0, duration: 0.1 },
-      `${FRAME_LABELS[0]}+=2.25`
-    );
+    tl.to(browserRefs.loadingSpinner, { opacity: 0, duration: 0.1 }, `${FRAME_LABELS[0]}+=2.25`);
 
     // Page wipes down (grey boxes appear)
     tl.to(
-      pageLayout,
-      { clipPath: "inset(0 0 0% 0)", duration: 0.4, ease: "power2.out" },
+      browserRefs.pageLayout,
+      { clipPath: 'inset(0 0 0% 0)', duration: 0.4, ease: 'power2.out' },
       `${FRAME_LABELS[0]}+=2.3`
     );
 
     // Single green slot hydrates with particles (starts as page wipe finishes)
-    tl.addLabel("scene1Hydrate", `${FRAME_LABELS[0]}+=2.65`);
+    tl.addLabel('scene1Hydrate', `${FRAME_LABELS[0]}+=2.65`);
 
     tl.call(
       () => {
         createParticles(
-          layoutRenderChildren,
-          mainContent,
-          "#84cc16", // lime-500
+          layoutPanelRefs.renderChildren,
+          contentRefs.mainContent,
+          '#84cc16', // lime-500
           () => {}
         );
       },
       [],
-      "scene1Hydrate"
+      'scene1Hydrate'
     );
 
     tl.to(
-      fillMainContent,
-      { clipPath: "inset(0% 0 0 0)", duration: 0.35, ease: "power2.out" },
-      "scene1Hydrate+=0.15"
+      fillRefs.mainContent,
+      { clipPath: 'inset(0% 0 0 0)', duration: 0.35, ease: 'power2.out' },
+      'scene1Hydrate+=0.15'
     );
 
     // Brief pause on Scene 1
-    tl.addLabel("scene1End", "scene1Hydrate+=0.5");
+    tl.addLabel('scene1End', 'scene1Hydrate+=0.5');
 
     // =========================================================================
     // SCENE 2: THE SOLUTION (~3s)
     // CLI + layout panel enter, quick text swap, single generation, regions cascade
     // =========================================================================
-    tl.addLabel(FRAME_LABELS[1], "scene1End+=0.3");
+    tl.addLabel(FRAME_LABELS[1], 'scene1End+=0.3');
 
     // Fade out caption 0
-    tl.to(
-      caption0,
-      { opacity: 0, duration: 0.2, ease: "power2.out" },
-      FRAME_LABELS[1]
-    );
+    tl.to(captionRefs.caption0, { opacity: 0, duration: 0.2, ease: 'power2.out' }, FRAME_LABELS[1]);
 
     // Browser fades and drops out
     tl.to(
-      browserFrame,
-      { y: 50, opacity: 0, duration: 0.4, ease: "power2.in" },
+      browserRefs.frame,
+      { y: 50, opacity: 0, duration: 0.4, ease: 'power2.in' },
       FRAME_LABELS[1]
     );
 
     // Reset URL bar for Scene 3
     tl.call(
       () => {
-        if (urlBar) urlBar.classList.remove("active");
-        if (urlText) urlText.textContent = "";
+        if (browserRefs.urlBar) browserRefs.urlBar.classList.remove('active');
+        if (browserRefs.urlText) browserRefs.urlText.textContent = '';
       },
       [],
       `${FRAME_LABELS[1]}+=0.3`
     );
 
     // Reset main content fill
-    tl.set(
-      fillMainContent,
-      { clipPath: "inset(100% 0 0 0)" },
-      `${FRAME_LABELS[1]}+=0.3`
-    );
+    tl.set(fillRefs.mainContent, { clipPath: 'inset(100% 0 0 0)' }, `${FRAME_LABELS[1]}+=0.3`);
 
     // CLI enters from bottom
     tl.to(
-      cliFrame,
-      { y: 0, opacity: 1, duration: 0.4, ease: "back.out(1.5)" },
+      cliRefs.frame,
+      { y: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.5)' },
       `${FRAME_LABELS[1]}+=0.5`
     );
 
     // Layout panel enters from right
     tl.to(
-      layoutPanel,
-      { x: 0, opacity: 1, duration: 0.4, ease: "back.out(1.5)" },
+      layoutPanelRefs.panel,
+      { x: 0, opacity: 1, duration: 0.4, ease: 'back.out(1.5)' },
       `${FRAME_LABELS[1]}+=0.6`
     );
 
     // Show render children when panel enters (green slot is always there)
-    tl.to(
-      layoutRenderChildren,
-      { opacity: 1, duration: 0.2 },
-      `${FRAME_LABELS[1]}+=0.8`
-    );
+    tl.to(layoutPanelRefs.renderChildren, { opacity: 1, duration: 0.2 }, `${FRAME_LABELS[1]}+=0.8`);
 
     // Show caption 2 AFTER frames animate in (around 1.1s)
-    tl.set(caption2, { opacity: 1 }, `${FRAME_LABELS[1]}+=1.1`);
+    tl.set(captionRefs.caption2, { opacity: 1 }, `${FRAME_LABELS[1]}+=1.1`);
     tl.to(
-      caption2Line1,
-      { clipPath: "inset(0 0% 0 0)", duration: 0.6, ease: "power2.out" },
+      captionRefs.caption2Line1,
+      { clipPath: 'inset(0 0% 0 0)', duration: 0.6, ease: 'power2.out' },
       `${FRAME_LABELS[1]}+=1.1`
     );
 
     // === CLI TYPING ANIMATION WITH ARGUMENT SWAP ===
     // Start after caption appears
-    tl.addLabel("cliType", `${FRAME_LABELS[1]}+=1.6`);
+    tl.addLabel('cliType', `${FRAME_LABELS[1]}+=1.6`);
 
     // Command parts for argument swapping
-    const cliBase = "npx @sveltopia/regions add ";
-    const cliArgs = ["page-header", "custom-sidebar", "page-footer"];
+    const cliBase = 'npx @sveltopia/regions add ';
+    const cliArgs = ['page-header', 'custom-sidebar', 'page-footer'];
     const cursor = '<span class="cli-cursor">▌</span>';
 
     // Helper to render command with highlighted argument
@@ -558,10 +539,10 @@
     // Reset to just cursor at start
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = cursor;
+        if (cliRefs.text) cliRefs.text.innerHTML = cursor;
       },
       [],
-      "cliType"
+      'cliType'
     );
 
     // Type the base command first
@@ -569,18 +550,18 @@
       {},
       {
         duration: 0.5,
-        ease: "steps(" + cliBase.length + ")",
+        ease: 'steps(' + cliBase.length + ')',
         onUpdate: function () {
           const progress = this.progress();
           const chars = Math.floor(progress * cliBase.length);
           const typed = cliBase.substring(0, chars);
-          if (cliText) cliText.innerHTML = typed + cursor;
+          if (cliRefs.text) cliRefs.text.innerHTML = typed + cursor;
         },
         onComplete: () => {
-          if (cliText) cliText.innerHTML = cliBase + cursor;
-        },
+          if (cliRefs.text) cliRefs.text.innerHTML = cliBase + cursor;
+        }
       },
-      "cliType"
+      'cliType'
     );
 
     // Type first argument (page-header)
@@ -588,327 +569,312 @@
       {},
       {
         duration: 0.25,
-        ease: "steps(" + cliArgs[0].length + ")",
+        ease: 'steps(' + cliArgs[0].length + ')',
         onUpdate: function () {
           const progress = this.progress();
           const chars = Math.floor(progress * cliArgs[0].length);
           const typed = cliArgs[0].substring(0, chars);
-          if (cliText) cliText.innerHTML = cliBase + typed + cursor;
+          if (cliRefs.text) cliRefs.text.innerHTML = cliBase + typed + cursor;
         },
         onComplete: () => {
-          if (cliText) cliText.innerHTML = renderCommand(cliArgs[0]);
-        },
+          if (cliRefs.text) cliRefs.text.innerHTML = renderCommand(cliArgs[0]);
+        }
       },
-      "cliType+=0.55"
+      'cliType+=0.55'
     );
 
     // Quick swap to custom-sidebar
-    tl.addLabel("argSwap1", "cliType+=0.85");
+    tl.addLabel('argSwap1', 'cliType+=0.85');
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = renderCommand(cliArgs[1], true);
+        if (cliRefs.text) cliRefs.text.innerHTML = renderCommand(cliArgs[1], true);
       },
       [],
-      "argSwap1"
+      'argSwap1'
     );
     // Remove highlight
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = renderCommand(cliArgs[1]);
+        if (cliRefs.text) cliRefs.text.innerHTML = renderCommand(cliArgs[1]);
       },
       [],
-      "argSwap1+=0.1"
+      'argSwap1+=0.1'
     );
 
     // Quick swap to page-footer
-    tl.addLabel("argSwap2", "argSwap1+=0.2");
+    tl.addLabel('argSwap2', 'argSwap1+=0.2');
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = renderCommand(cliArgs[2], true);
+        if (cliRefs.text) cliRefs.text.innerHTML = renderCommand(cliArgs[2], true);
       },
       [],
-      "argSwap2"
+      'argSwap2'
     );
     // Remove highlight
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = renderCommand(cliArgs[2]);
+        if (cliRefs.text) cliRefs.text.innerHTML = renderCommand(cliArgs[2]);
       },
       [],
-      "argSwap2+=0.15"
+      'argSwap2+=0.15'
     );
 
     // Hide cursor after final argument
-    tl.addLabel("typingDone", "argSwap2+=0.15");
+    tl.addLabel('typingDone', 'argSwap2+=0.15');
     tl.call(
       () => {
-        if (cliText) cliText.innerHTML = `${cliBase}${cliArgs[2]}`;
+        if (cliRefs.text) cliRefs.text.innerHTML = `${cliBase}${cliArgs[2]}`;
       },
       [],
-      "typingDone"
+      'typingDone'
     );
 
     // === CLI OUTPUT (nearly instant) ===
-    tl.addLabel("cliOutput", "typingDone+=0.05");
+    tl.addLabel('cliOutput', 'typingDone+=0.05');
 
     // Show CLI output container
-    tl.to(cliOutputContainer, { opacity: 1, duration: 0.1 }, "cliOutput");
+    tl.to(cliRefs.outputContainer, { opacity: 1, duration: 0.1 }, 'cliOutput');
 
     // Header appears
-    tl.to(cliHeader, { opacity: 1, duration: 0.15 }, "cliOutput+=0.05");
+    tl.to(cliRefs.header, { opacity: 1, duration: 0.15 }, 'cliOutput+=0.05');
 
     // Skeleton bars wipe in
     tl.to(
-      cliSkeleton1,
-      { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.15 },
-      "cliOutput+=0.15"
+      cliRefs.skeleton1,
+      { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 0.15 },
+      'cliOutput+=0.15'
     );
     tl.to(
-      cliSkeleton2,
-      { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.15 },
-      "cliOutput+=0.25"
+      cliRefs.skeleton2,
+      { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 0.15 },
+      'cliOutput+=0.25'
     );
     tl.to(
-      cliSkeleton3,
-      { opacity: 1, clipPath: "inset(0 0% 0 0)", duration: 0.15 },
-      "cliOutput+=0.35"
+      cliRefs.skeleton3,
+      { opacity: 1, clipPath: 'inset(0 0% 0 0)', duration: 0.15 },
+      'cliOutput+=0.35'
     );
 
     // Generating...
-    tl.to(cliGenerating, { opacity: 1, duration: 0.1 }, "cliOutput+=0.5");
+    tl.to(cliRefs.generating, { opacity: 1, duration: 0.1 }, 'cliOutput+=0.5');
 
     // Files created
-    tl.to(cliFiles, { opacity: 1, duration: 0.1 }, "cliOutput+=0.7");
+    tl.to(cliRefs.files, { opacity: 1, duration: 0.1 }, 'cliOutput+=0.7');
 
     // Done!
-    tl.to(cliDone, { opacity: 1, duration: 0.1 }, "cliOutput+=0.85");
+    tl.to(cliRefs.done, { opacity: 1, duration: 0.1 }, 'cliOutput+=0.85');
 
     // === LAYOUT REGIONS APPEAR AFTER CLI COMPLETES ===
     // Show wrapper and tag after "Done!"
-    tl.to(
-      layoutRegionsWrapper,
-      { opacity: 1, duration: 0.15 },
-      "cliOutput+=0.95"
-    );
-    tl.to(
-      layoutRegionsTag,
-      { opacity: 1, duration: 0.15 },
-      "cliOutput+=1.0"
-    );
+    tl.to(layoutPanelRefs.regionsWrapper, { opacity: 1, duration: 0.15 }, 'cliOutput+=0.95');
+    tl.to(layoutPanelRefs.regionsTag, { opacity: 1, duration: 0.15 }, 'cliOutput+=1.0');
 
     // === REGIONS CASCADE INTO LAYOUT PANEL ===
-    tl.addLabel("regionsCascade", "cliOutput+=1.15");
+    tl.addLabel('regionsCascade', 'cliOutput+=1.15');
 
-    // pageHeader region appears
+    // contentRefs.pageHeader region appears
     tl.to(
-      layoutRegionHeader,
-      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.3)" },
-      "regionsCascade"
+      layoutPanelRefs.regionHeader,
+      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'back.out(1.3)' },
+      'regionsCascade'
     );
 
     // customSidebar region appears
     tl.to(
-      layoutRegionSidebar,
-      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.3)" },
-      "regionsCascade+=0.2"
+      layoutPanelRefs.regionSidebar,
+      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'back.out(1.3)' },
+      'regionsCascade+=0.2'
     );
 
-    // pageFooter region appears
+    // contentRefs.pageFooter region appears
     tl.to(
-      layoutRegionFooter,
-      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: "back.out(1.3)" },
-      "regionsCascade+=0.4"
+      layoutPanelRefs.regionFooter,
+      { opacity: 1, y: 0, scale: 1, duration: 0.25, ease: 'back.out(1.3)' },
+      'regionsCascade+=0.4'
     );
 
     // Brief pause before Scene 3
-    tl.addLabel("scene2End", "regionsCascade+=0.4");
+    tl.addLabel('scene2End', 'regionsCascade+=0.4');
 
     // =========================================================================
     // SCENE 3: THE PAYOFF (~3-4s)
     // CLI fades, layout slides left, browser enters, all regions hydrate
     // =========================================================================
-    tl.addLabel(FRAME_LABELS[2], "scene2End+=0.2");
+    tl.addLabel(FRAME_LABELS[2], 'scene2End+=0.2');
 
     // Fade out caption 2
-    tl.to(
-      caption2,
-      { opacity: 0, duration: 0.2, ease: "power2.out" },
-      FRAME_LABELS[2]
-    );
+    tl.to(captionRefs.caption2, { opacity: 0, duration: 0.2, ease: 'power2.out' }, FRAME_LABELS[2]);
 
     // Fade out CLI frame
-    tl.to(
-      cliFrame,
-      { opacity: 0, y: 20, duration: 0.4, ease: "power2.in" },
-      FRAME_LABELS[2]
-    );
+    tl.to(cliRefs.frame, { opacity: 0, y: 20, duration: 0.4, ease: 'power2.in' }, FRAME_LABELS[2]);
 
     // Slide layout panel to left
     tl.to(
-      layoutPanel,
-      { left: POSITIONS.cliX, duration: 0.5, ease: "power2.inOut" },
+      layoutPanelRefs.panel,
+      { left: POSITIONS.cliX, duration: 0.5, ease: 'power2.inOut' },
       `${FRAME_LABELS[2]}+=0.2`
     );
 
     // Browser enters from right
     tl.set(
-      browserFrame,
+      browserRefs.frame,
       { left: POSITIONS.browserRightX, y: 0, opacity: 0 },
       `${FRAME_LABELS[2]}+=0.3`
     );
     tl.to(
-      browserFrame,
+      browserRefs.frame,
       {
         left: POSITIONS.layoutX,
         opacity: 1,
         duration: 0.5,
-        ease: "power2.out",
+        ease: 'power2.out'
       },
       `${FRAME_LABELS[2]}+=0.4`
     );
 
     // Reset browser fills and layout for loading sequence
     tl.set(
-      [fillPageHeader, fillSidebarBlock2, fillPageFooter, fillMainContent],
-      { clipPath: "inset(100% 0 0 0)" },
+      [fillRefs.pageHeader, fillRefs.sidebarBlock2, fillRefs.pageFooter, fillRefs.mainContent],
+      { clipPath: 'inset(100% 0 0 0)' },
       `${FRAME_LABELS[2]}+=0.3`
     );
-    tl.set(
-      pageLayout,
-      { clipPath: "inset(0 0 100% 0)" },
-      `${FRAME_LABELS[2]}+=0.3`
-    );
+    tl.set(browserRefs.pageLayout, { clipPath: 'inset(0 0 100% 0)' }, `${FRAME_LABELS[2]}+=0.3`);
 
     // === BROWSER RELOAD SEQUENCE ===
     // URL already visible, just reload the page (saves ~1s vs typing)
-    tl.addLabel("scene3Load", `${FRAME_LABELS[2]}+=0.9`);
+    tl.addLabel('scene3Load', `${FRAME_LABELS[2]}+=0.9`);
 
     // URL already set from Scene 1, ensure it's visible
     tl.call(
       () => {
-        if (urlText) urlText.textContent = "regions.sveltopia.com";
+        if (browserRefs.urlText) browserRefs.urlText.textContent = 'regions.sveltopia.com';
       },
       [],
-      "scene3Load"
+      'scene3Load'
     );
 
     // Reset spinner rotation before animating (it's at 360 from Scene 1)
-    tl.set(loadingSpinner, { rotation: 0 }, "scene3Load");
+    tl.set(browserRefs.loadingSpinner, { rotation: 0 }, 'scene3Load');
 
     // Quick reload spinner (0.3s spin)
-    tl.to(loadingSpinner, { opacity: 1, duration: 0.1 }, "scene3Load");
+    tl.to(browserRefs.loadingSpinner, { opacity: 1, duration: 0.1 }, 'scene3Load');
     tl.to(
-      loadingSpinner,
-      { rotation: 360, duration: 0.3, ease: "linear" },
-      "scene3Load"
+      browserRefs.loadingSpinner,
+      { rotation: 360, duration: 0.3, ease: 'linear' },
+      'scene3Load'
     );
-    tl.to(loadingSpinner, { opacity: 0, duration: 0.1 }, "scene3Load+=0.3");
+    tl.to(browserRefs.loadingSpinner, { opacity: 0, duration: 0.1 }, 'scene3Load+=0.3');
 
     // Page layout wipes down immediately after spinner
     tl.to(
-      pageLayout,
-      { clipPath: "inset(0 0 0% 0)", duration: 0.4, ease: "power2.out" },
-      "scene3Load+=0.35"
+      browserRefs.pageLayout,
+      { clipPath: 'inset(0 0 0% 0)', duration: 0.4, ease: 'power2.out' },
+      'scene3Load+=0.35'
     );
 
     // === HYDRATION SEQUENCE ===
     // Order: green → amber → purple → blue (to avoid visual overlap)
     // Starts as page wipes down (page wipe is at +0.35, 0.4s duration)
-    tl.addLabel("scene3Hydrate", "scene3Load+=0.55");
+    tl.addLabel('scene3Hydrate', 'scene3Load+=0.55');
 
     // 1. Green (main content) hydrates first
     tl.call(
       () => {
-        createParticles(layoutRenderChildren, mainContent, "#84cc16", () => {});
+        createParticles(
+          layoutPanelRefs.renderChildren,
+          contentRefs.mainContent,
+          '#84cc16',
+          () => {}
+        );
       },
       [],
-      "scene3Hydrate"
+      'scene3Hydrate'
     );
     tl.to(
-      fillMainContent,
-      { clipPath: "inset(0% 0 0 0)", duration: 0.35, ease: "power2.out" },
-      "scene3Hydrate+=0.3"
+      fillRefs.mainContent,
+      { clipPath: 'inset(0% 0 0 0)', duration: 0.35, ease: 'power2.out' },
+      'scene3Hydrate+=0.3'
     );
 
     // 2. Amber (page footer) hydrates
     tl.call(
       () => {
         createParticles(
-          layoutRegionFooter,
-          pageFooter,
-          "rgb(245, 158, 11)",
+          layoutPanelRefs.regionFooter,
+          contentRefs.pageFooter,
+          'rgb(245, 158, 11)',
           () => {}
         );
       },
       [],
-      "scene3Hydrate+=0.35"
+      'scene3Hydrate+=0.35'
     );
     tl.to(
-      fillPageFooter,
-      { clipPath: "inset(0% 0 0 0)", duration: 0.35, ease: "power2.out" },
-      "scene3Hydrate+=0.65"
+      fillRefs.pageFooter,
+      { clipPath: 'inset(0% 0 0 0)', duration: 0.35, ease: 'power2.out' },
+      'scene3Hydrate+=0.65'
     );
 
     // 3. Purple (page header) hydrates
     tl.call(
       () => {
         createParticles(
-          layoutRegionHeader,
-          pageHeader,
-          "rgb(168, 85, 247)",
+          layoutPanelRefs.regionHeader,
+          contentRefs.pageHeader,
+          'rgb(168, 85, 247)',
           () => {}
         );
       },
       [],
-      "scene3Hydrate+=0.7"
+      'scene3Hydrate+=0.7'
     );
     tl.to(
-      fillPageHeader,
-      { clipPath: "inset(0% 0 0 0)", duration: 0.35, ease: "power2.out" },
-      "scene3Hydrate+=1.0"
+      fillRefs.pageHeader,
+      { clipPath: 'inset(0% 0 0 0)', duration: 0.35, ease: 'power2.out' },
+      'scene3Hydrate+=1.0'
     );
 
     // 4. Blue (sidebar) hydrates last
     tl.call(
       () => {
         createParticles(
-          layoutRegionSidebar,
-          sidebarBlock2,
-          "rgb(59, 130, 246)",
+          layoutPanelRefs.regionSidebar,
+          contentRefs.sidebarBlock2,
+          'rgb(59, 130, 246)',
           () => {}
         );
       },
       [],
-      "scene3Hydrate+=1.05"
+      'scene3Hydrate+=1.05'
     );
     tl.to(
-      fillSidebarBlock2,
-      { clipPath: "inset(0% 0 0 0)", duration: 0.35, ease: "power2.out" },
-      "scene3Hydrate+=1.35"
+      fillRefs.sidebarBlock2,
+      { clipPath: 'inset(0% 0 0 0)', duration: 0.35, ease: 'power2.out' },
+      'scene3Hydrate+=1.35'
     );
 
     // === PUNCHLINE CAPTION (after all regions hydrate) ===
-    tl.addLabel("scene3Caption", "scene3Hydrate+=1.7");
+    tl.addLabel('scene3Caption', 'scene3Hydrate+=1.7');
 
     // Show caption container
-    tl.set(caption3, { opacity: 1 }, "scene3Caption");
+    tl.set(captionRefs.caption3, { opacity: 1 }, 'scene3Caption');
 
     // Fade in "One layout,"
     tl.to(
-      caption3Line1,
-      { opacity: 1, duration: 0.6, ease: "power2.out" },
-      "scene3Caption"
+      captionRefs.caption3Line1,
+      { opacity: 1, duration: 0.6, ease: 'power2.out' },
+      'scene3Caption'
     );
 
     // Pause, then fade in "unlimited regions."
     tl.to(
-      caption3Line2,
-      { opacity: 1, duration: 0.6, ease: "power2.out" },
-      "scene3Caption+=0.7"
+      captionRefs.caption3Line2,
+      { opacity: 1, duration: 0.6, ease: 'power2.out' },
+      'scene3Caption+=0.7'
     );
 
     // Hold final state
-    tl.addLabel("end", "scene3Caption+=1.5");
+    tl.addLabel('end', 'scene3Caption+=1.5');
 
     // === IDLE ANIMATION: CSS rotating conic gradient border ===
     // Randomly applies glowing class to one box at a time
@@ -919,34 +885,34 @@
     // Box configurations for idle glow animation
     const glowBoxes = [
       {
-        container: mainContent,
-        fill: fillMainContent,
-        shimmer: pulseOverlayGreen,
-        name: "green",
+        container: contentRefs.mainContent,
+        fill: fillRefs.mainContent,
+        shimmer: pulseRefs.green,
+        name: 'green'
       },
       {
-        container: pageHeader,
-        fill: fillPageHeader,
-        shimmer: pulseOverlayPurple,
-        name: "purple",
+        container: contentRefs.pageHeader,
+        fill: fillRefs.pageHeader,
+        shimmer: pulseRefs.purple,
+        name: 'purple'
       },
       {
-        container: sidebarBlock2,
-        fill: fillSidebarBlock2,
-        shimmer: pulseOverlayBlue,
-        name: "blue",
+        container: contentRefs.sidebarBlock2,
+        fill: fillRefs.sidebarBlock2,
+        shimmer: pulseRefs.blue,
+        name: 'blue'
       },
       {
-        container: pageFooter,
-        fill: fillPageFooter,
-        shimmer: pulseOverlayAmber,
-        name: "amber",
-      },
+        container: contentRefs.pageFooter,
+        fill: fillRefs.pageFooter,
+        shimmer: pulseRefs.amber,
+        name: 'amber'
+      }
     ];
 
     // Initialize all shimmers as hidden
     glowBoxes.forEach(({ shimmer }) => {
-      gsap.set(shimmer, { opacity: 0, x: "-100%" });
+      gsap.set(shimmer, { opacity: 0, x: '-100%' });
     });
 
     // Function to shimmer a random box
@@ -962,6 +928,9 @@
 
       const { container, shimmer } = glowBoxes[index];
 
+      // Skip if refs aren't available
+      if (!container || !shimmer) return;
+
       // Calculate duration based on box width using square root scaling
       // This gives a middle ground - wider boxes are slower, but not linearly
       // Sidebar (~60px) at 0.6s is baseline, wide boxes (~240px) get ~1.2s
@@ -973,8 +942,8 @@
       // Shimmer sweep left-to-right
       gsap.fromTo(
         shimmer,
-        { opacity: 1, x: "-100%" },
-        { x: "100%", duration, ease: "power1.inOut" }
+        { opacity: 1, x: '-100%' },
+        { x: '100%', duration, ease: 'power1.inOut' }
       );
 
       // After shimmer completes, reset and schedule next
@@ -983,7 +952,7 @@
         if (!idleAnimationActive) return;
 
         // Reset shimmer
-        gsap.set(shimmer, { opacity: 0, x: "-100%" });
+        gsap.set(shimmer, { opacity: 0, x: '-100%' });
 
         // Schedule next box (random 2-3s delay)
         if (idleAnimationActive) {
@@ -1001,10 +970,14 @@
     };
 
     // Start idle animation and show restart button when main timeline completes
-    tl.call(startIdleLoop, [], "end");
-    tl.call(() => {
-      showRestartButton = true;
-    }, [], "end+=0.5");
+    tl.call(startIdleLoop, [], 'end');
+    tl.call(
+      () => {
+        showRestartButton = true;
+      },
+      [],
+      'end+=0.5'
+    );
 
     // Reset function for when animation rewinds
     const resetIdleState = () => {
@@ -1012,23 +985,23 @@
       idleAnimationActive = false;
       // Reset all shimmers
       glowBoxes.forEach(({ shimmer }) => {
-        gsap.set(shimmer, { opacity: 0, x: "-100%" });
+        gsap.set(shimmer, { opacity: 0, x: '-100%' });
       });
       lastTracedIndex = -1;
     };
 
     // Reset text content (not managed by GSAP)
     const resetTextContent = () => {
-      if (urlText) urlText.textContent = "";
-      if (cliText) cliText.innerHTML = '<span class="cli-cursor">▌</span>';
-      if (urlBar) urlBar.classList.remove("active");
+      if (browserRefs.urlText) browserRefs.urlText.textContent = '';
+      if (cliRefs.text) cliRefs.text.innerHTML = '<span class="cli-cursor">▌</span>';
+      if (browserRefs.urlBar) browserRefs.urlBar.classList.remove('active');
     };
 
     // Track if we've reset to avoid repeated resets
     let hasResetText = false;
 
     // Listen for timeline seek/restart to reset states
-    tl.eventCallback("onUpdate", () => {
+    tl.eventCallback('onUpdate', () => {
       const progress = tl.progress();
       // If we've gone back before the idle state starts, reset
       if (progress < 0.85) {
@@ -1059,300 +1032,286 @@
 -->
 <!-- Hide entirely for reduced motion (same as mobile <600px) -->
 {#if !prefersReducedMotion}
-<div class="animation-container">
-  <div class="animation-canvas">
-    <!-- === CAPTIONS === -->
-    <!-- Scene 1: "SvelteKit gives us one place to render page content in a layout." -->
-    <div class="caption caption-0" bind:this={caption0}>
-      <span class="caption-line" bind:this={caption0Line1}
-        ><span class="highlight-indigo">SvelteKit</span> gives us one place to render
-        page content in a layout.</span>
-    </div>
-
-    <!-- Scene 2: "Layout Regions give us as many as we need." -->
-    <div class="caption caption-2" bind:this={caption2}>
-      <span class="caption-line" bind:this={caption2Line1}
-        ><span class="highlight-indigo">Layout Regions</span> give us as many as
-        we need.</span>
-    </div>
-
-    <!-- Scene 3: Final payoff caption (staggered fade, same line) -->
-    <div class="caption caption-3" bind:this={caption3}>
-      <span class="caption-phrase" bind:this={caption3Line1}
-        >One <span class="highlight-indigo">layout</span>,</span>
-      <span class="caption-phrase" bind:this={caption3Line2}>
-        unlimited <span class="highlight-indigo">regions</span>.</span>
-    </div>
-
-    <!-- === BROWSER WIREFRAME === -->
-    <div class="browser-frame" bind:this={browserFrame}>
-      <!-- Chrome: stoplight + URL bar -->
-      <div class="browser-chrome">
-        <div class="stoplight">
-          <div class="stoplight-btn red"></div>
-          <div class="stoplight-btn yellow"></div>
-          <div class="stoplight-btn green"></div>
-        </div>
-        <div class="url-bar" bind:this={urlBar}>
-          <span class="url-text" bind:this={urlText}></span>
-        </div>
-        <!-- Loading spinner -->
-        <svg
-          class="loading-spinner"
-          bind:this={loadingSpinner}
-          width="16"
-          height="16"
-          viewBox="0 0 16 16"
-          fill="none">
-          <circle
-            cx="8"
-            cy="8"
-            r="6"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-dasharray="28"
-            stroke-dashoffset="8" />
-        </svg>
+  <div class="animation-container">
+    <div class="animation-canvas">
+      <!-- === CAPTIONS === -->
+      <!-- Scene 1: "SvelteKit gives us one place to render page content in a layout." -->
+      <div class="caption caption-0" bind:this={captionRefs.caption0}>
+        <span class="caption-line" bind:this={captionRefs.caption0Line1}
+          ><span class="highlight-indigo">SvelteKit</span> gives us one place to render page content in
+          a layout.</span
+        >
       </div>
 
-      <!-- Content area -->
-      <div class="browser-content">
-        <!-- Page layout wrapper (wipes down from top) -->
-        <div class="page-layout" bind:this={pageLayout}>
-          <!-- Layout header (hardcoded in layout) -->
-          <div class="layout-header" bind:this={layoutHeader}>
-            <div class="fill-overlay fill-indigo" bind:this={fillLayoutHeader}>
-            </div>
+      <!-- Scene 2: "Layout Regions give us as many as we need." -->
+      <div class="caption caption-2" bind:this={captionRefs.caption2}>
+        <span class="caption-line" bind:this={captionRefs.caption2Line1}
+          ><span class="highlight-indigo">Layout Regions</span> give us as many as we need.</span
+        >
+      </div>
+
+      <!-- Scene 3: Final payoff caption (staggered fade, same line) -->
+      <div class="caption caption-3" bind:this={captionRefs.caption3}>
+        <span class="caption-phrase" bind:this={captionRefs.caption3Line1}
+          >One <span class="highlight-indigo">layout</span>,</span
+        >
+        <span class="caption-phrase" bind:this={captionRefs.caption3Line2}>
+          unlimited <span class="highlight-indigo">regions</span>.</span
+        >
+      </div>
+
+      <!-- === BROWSER WIREFRAME === -->
+      <div class="browser-frame" bind:this={browserRefs.frame}>
+        <!-- Chrome: stoplight + URL bar -->
+        <div class="browser-chrome">
+          <div class="stoplight">
+            <div class="stoplight-btn red"></div>
+            <div class="stoplight-btn yellow"></div>
+            <div class="stoplight-btn green"></div>
           </div>
-
-          <!-- Body: sidebar + main -->
-          <div class="layout-body">
-            <!-- Sidebar -->
-            <div class="layout-sidebar" bind:this={layoutSidebar}>
-              <div class="sidebar-block" bind:this={sidebarBlock1}>
-                <div
-                  class="fill-overlay fill-indigo"
-                  bind:this={fillSidebarBlock1}>
-                </div>
-              </div>
-              <div class="sidebar-block" bind:this={sidebarBlock2}>
-                <div
-                  class="fill-overlay fill-blue"
-                  bind:this={fillSidebarBlock2}>
-                </div>
-                <div class="pulse-overlay" bind:this={pulseOverlayBlue}></div>
-              </div>
-            </div>
-
-            <!-- Main content area -->
-            <div class="layout-main">
-              <div class="page-header" bind:this={pageHeader}>
-                <div
-                  class="fill-overlay fill-purple"
-                  bind:this={fillPageHeader}>
-                </div>
-                <div class="pulse-overlay" bind:this={pulseOverlayPurple}></div>
-              </div>
-              <div class="main-content" bind:this={mainContent}>
-                <div
-                  class="fill-overlay fill-green"
-                  bind:this={fillMainContent}>
-                </div>
-                <div class="pulse-overlay" bind:this={pulseOverlayGreen}></div>
-              </div>
-              <div class="page-footer" bind:this={pageFooter}>
-                <div class="fill-overlay fill-amber" bind:this={fillPageFooter}>
-                </div>
-                <div class="pulse-overlay" bind:this={pulseOverlayAmber}></div>
-              </div>
-            </div>
+          <div class="url-bar" bind:this={browserRefs.urlBar}>
+            <span class="url-text" bind:this={browserRefs.urlText}></span>
           </div>
-
-          <!-- Layout footer (hardcoded in layout) -->
-          <div class="layout-footer" bind:this={layoutFooter}>
-            <div class="fill-overlay fill-indigo" bind:this={fillLayoutFooter}>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Mouse cursor (for interaction animation) -->
-      <div class="mouse-cursor" bind:this={mouseCursor}>
-        <MousePointer size={20} strokeWidth={2} />
-      </div>
-    </div>
-
-    <!-- === CLI FRAME (Terminal style - no tabs) === -->
-    <div class="cli-frame" bind:this={cliFrame}>
-      <!-- Chrome: 30px with stoplight only -->
-      <div class="cli-chrome">
-        <div class="stoplight">
-          <div class="stoplight-btn red"></div>
-          <div class="stoplight-btn yellow"></div>
-          <div class="stoplight-btn green"></div>
-        </div>
-      </div>
-      <!-- CLI content area -->
-      <div class="cli-content">
-        <!-- Command input line -->
-        <div class="cli-command-line" bind:this={cliCommandLine}>
+          <!-- Loading spinner -->
           <svg
-            class="cli-prompt-icon"
-            xmlns="http://www.w3.org/2000/svg"
-            width="14"
-            height="14"
-            viewBox="0 0 24 24"
+            class="loading-spinner"
+            bind:this={browserRefs.loadingSpinner}
+            width="16"
+            height="16"
+            viewBox="0 0 16 16"
             fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            stroke-linecap="round"
-            stroke-linejoin="round">
-            <path d="m9 18 6-6-6-6" />
+          >
+            <circle
+              cx="8"
+              cy="8"
+              r="6"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-dasharray="28"
+              stroke-dashoffset="8"
+            />
           </svg>
-          <span class="cli-typed" bind:this={cliText}></span>
         </div>
 
-        <!-- CLI output (skeleton "magic wand" wizard) -->
-        <div class="cli-output-container" bind:this={cliOutputContainer}>
-          <!-- Header -->
-          <div class="cli-line cli-header-line" bind:this={cliHeader}>
-            <span class="cli-border">┌</span>
-            Sveltopia Layout Regions
-          </div>
+        <!-- Content area -->
+        <div class="browser-content">
+          <!-- Page layout wrapper (wipes down from top) -->
+          <div class="page-layout" bind:this={browserRefs.pageLayout}>
+            <!-- Layout header (hardcoded in layout) -->
+            <div class="layout-header" bind:this={layoutRefs.header}>
+              <div class="fill-overlay fill-indigo" bind:this={fillRefs.layoutHeader}></div>
+            </div>
 
-          <!-- Skeleton bars (flash by quickly to show "activity") -->
-          <div class="cli-skeleton-row" bind:this={cliSkeleton1}>
-            <span class="cli-border">│</span>
-            <span class="diamond">◆</span>
-            <div
-              class="cli-skeleton-bar"
-              bind:this={cliSkeletonBar1}
-              style="width: 180px;">
+            <!-- Body: sidebar + main -->
+            <div class="layout-body">
+              <!-- Sidebar -->
+              <div class="layout-sidebar" bind:this={layoutRefs.sidebar}>
+                <div class="sidebar-block" bind:this={contentRefs.sidebarBlock1}>
+                  <div class="fill-overlay fill-indigo" bind:this={fillRefs.sidebarBlock1}></div>
+                </div>
+                <div class="sidebar-block" bind:this={contentRefs.sidebarBlock2}>
+                  <div class="fill-overlay fill-blue" bind:this={fillRefs.sidebarBlock2}></div>
+                  <div class="pulse-overlay" bind:this={pulseRefs.blue}></div>
+                </div>
+              </div>
+
+              <!-- Main content area -->
+              <div class="layout-main">
+                <div class="page-header" bind:this={contentRefs.pageHeader}>
+                  <div class="fill-overlay fill-purple" bind:this={fillRefs.pageHeader}></div>
+                  <div class="pulse-overlay" bind:this={pulseRefs.purple}></div>
+                </div>
+                <div class="main-content" bind:this={contentRefs.mainContent}>
+                  <div class="fill-overlay fill-green" bind:this={fillRefs.mainContent}></div>
+                  <div class="pulse-overlay" bind:this={pulseRefs.green}></div>
+                </div>
+                <div class="page-footer" bind:this={contentRefs.pageFooter}>
+                  <div class="fill-overlay fill-amber" bind:this={fillRefs.pageFooter}></div>
+                  <div class="pulse-overlay" bind:this={pulseRefs.amber}></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Layout footer (hardcoded in layout) -->
+            <div class="layout-footer" bind:this={layoutRefs.footer}>
+              <div class="fill-overlay fill-indigo" bind:this={fillRefs.layoutFooter}></div>
             </div>
           </div>
-          <div class="cli-skeleton-row" bind:this={cliSkeleton2}>
-            <span class="cli-border">│</span>
-            <span class="diamond">◆</span>
-            <div
-              class="cli-skeleton-bar"
-              bind:this={cliSkeletonBar2}
-              style="width: 140px;">
+        </div>
+
+        <!-- Mouse cursor (for interaction animation) -->
+        <div class="mouse-cursor" bind:this={browserRefs.mouseCursor}>
+          <MousePointer size={20} strokeWidth={2} />
+        </div>
+      </div>
+
+      <!-- === CLI FRAME (Terminal style - no tabs) === -->
+      <div class="cli-frame" bind:this={cliRefs.frame}>
+        <!-- Chrome: 30px with stoplight only -->
+        <div class="cli-chrome">
+          <div class="stoplight">
+            <div class="stoplight-btn red"></div>
+            <div class="stoplight-btn yellow"></div>
+            <div class="stoplight-btn green"></div>
+          </div>
+        </div>
+        <!-- CLI content area -->
+        <div class="cli-content">
+          <!-- Command input line -->
+          <div class="cli-command-line" bind:this={cliRefs.commandLine}>
+            <svg
+              class="cli-prompt-icon"
+              xmlns="http://www.w3.org/2000/svg"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="m9 18 6-6-6-6" />
+            </svg>
+            <span class="cli-typed" bind:this={cliRefs.text}></span>
+          </div>
+
+          <!-- CLI output (skeleton "magic wand" wizard) -->
+          <div class="cli-output-container" bind:this={cliRefs.outputContainer}>
+            <!-- Header -->
+            <div class="cli-line cli-header-line" bind:this={cliRefs.header}>
+              <span class="cli-border">┌</span>
+              Sveltopia Layout Regions
             </div>
-          </div>
-          <div class="cli-skeleton-row" bind:this={cliSkeleton3}>
-            <span class="cli-border">│</span>
-            <span class="diamond">◆</span>
-            <div
-              class="cli-skeleton-bar"
-              bind:this={cliSkeletonBar3}
-              style="width: 120px;">
+
+            <!-- Skeleton bars (flash by quickly to show "activity") -->
+            <div class="cli-skeleton-row" bind:this={cliRefs.skeleton1}>
+              <span class="cli-border">│</span>
+              <span class="diamond">◆</span>
+              <div
+                class="cli-skeleton-bar"
+                bind:this={cliRefs.skeletonBar1}
+                style="width: 180px;"
+              ></div>
             </div>
-          </div>
+            <div class="cli-skeleton-row" bind:this={cliRefs.skeleton2}>
+              <span class="cli-border">│</span>
+              <span class="diamond">◆</span>
+              <div
+                class="cli-skeleton-bar"
+                bind:this={cliRefs.skeletonBar2}
+                style="width: 140px;"
+              ></div>
+            </div>
+            <div class="cli-skeleton-row" bind:this={cliRefs.skeleton3}>
+              <span class="cli-border">│</span>
+              <span class="diamond">◆</span>
+              <div
+                class="cli-skeleton-bar"
+                bind:this={cliRefs.skeletonBar3}
+                style="width: 120px;"
+              ></div>
+            </div>
 
-          <!-- Generating shimmer -->
-          <div class="cli-generating" bind:this={cliGenerating}>
-            <span class="cli-border">│</span>
-            <span class="generating-text">Generating...</span>
-          </div>
+            <!-- Generating shimmer -->
+            <div class="cli-generating" bind:this={cliRefs.generating}>
+              <span class="cli-border">│</span>
+              <span class="generating-text">Generating...</span>
+            </div>
 
-          <!-- Files created (simplified) -->
-          <div class="cli-line cli-files-simple" bind:this={cliFiles}>
-            <span class="cli-border">│</span>
-            <span class="cli-check">✓</span>
-            <span class="cli-file-count">4 files created</span>
-          </div>
+            <!-- Files created (simplified) -->
+            <div class="cli-line cli-files-simple" bind:this={cliRefs.files}>
+              <span class="cli-border">│</span>
+              <span class="cli-check">✓</span>
+              <span class="cli-file-count">4 files created</span>
+            </div>
 
-          <!-- Done -->
-          <div class="cli-line cli-done-line" bind:this={cliDone}>
-            <span class="cli-border">└</span>
-            Done
+            <!-- Done -->
+            <div class="cli-line cli-done-line" bind:this={cliRefs.done}>
+              <span class="cli-border">└</span>
+              Done
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- === LAYOUT PANEL (+layout.svelte) === -->
+      <!-- Hybrid: CLI-style container with floating file tab -->
+      <div class="layout-panel" bind:this={layoutPanelRefs.panel}>
+        <!-- Chrome: 30px with stoplight + floating file tab -->
+        <div class="layout-chrome">
+          <div class="stoplight">
+            <div class="stoplight-btn red"></div>
+            <div class="stoplight-btn yellow"></div>
+            <div class="stoplight-btn green"></div>
+          </div>
+          <!-- Floating file tab -->
+          <div class="layout-file-tab">
+            <span class="tab-name">+layout.svelte</span>
+          </div>
+        </div>
+        <!-- Content area -->
+        <div class="layout-panel-content" bind:this={layoutPanelRefs.content}>
+          <!-- LayoutRegions wrapper (appears after generation) -->
+          <div class="layout-regions-wrapper" bind:this={layoutPanelRefs.regionsWrapper}>
+            <div class="layout-regions-tag" bind:this={layoutPanelRefs.regionsTag}>
+              &lt;LayoutRegions&gt;
+            </div>
+
+            <!-- Region slots (appear one by one) - solid colors, no borders -->
+            <div
+              class="layout-region layout-region-header"
+              bind:this={layoutPanelRefs.regionHeader}
+            >
+              <span class="region-label">contentRefs.pageHeader</span>
+              <div class="region-skeleton">
+                <div class="skeleton-bar"></div>
+                <div class="skeleton-bar short"></div>
+              </div>
+            </div>
+
+            <div
+              class="layout-region layout-region-sidebar"
+              bind:this={layoutPanelRefs.regionSidebar}
+            >
+              <span class="region-label">customSidebar</span>
+              <div class="region-skeleton">
+                <div class="skeleton-bar short"></div>
+                <div class="skeleton-bar"></div>
+              </div>
+            </div>
+
+            <div
+              class="layout-region layout-region-footer"
+              bind:this={layoutPanelRefs.regionFooter}
+            >
+              <span class="region-label">contentRefs.pageFooter</span>
+              <div class="region-skeleton">
+                <div class="skeleton-bar medium"></div>
+                <div class="skeleton-bar short"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Render children (always visible, starts green) -->
+          <div class="layout-render-children hydrated" bind:this={layoutPanelRefs.renderChildren}>
+            <span class="render-children-text">{`{@render children()}`}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dev Controls -->
+      <AnimationControls {timeline} frameLabels={[...FRAME_LABELS]} show={devMode} />
+
+      <!-- User Restart Button (fades in at end) -->
+      {#if showRestartButton && !devMode}
+        <button class="restart-button" onclick={handleRestart} title="Replay animation">
+          <RotateCcw size={32} strokeWidth={2} />
+        </button>
+      {/if}
     </div>
-
-    <!-- === LAYOUT PANEL (+layout.svelte) === -->
-    <!-- Hybrid: CLI-style container with floating file tab -->
-    <div class="layout-panel" bind:this={layoutPanel}>
-      <!-- Chrome: 30px with stoplight + floating file tab -->
-      <div class="layout-chrome">
-        <div class="stoplight">
-          <div class="stoplight-btn red"></div>
-          <div class="stoplight-btn yellow"></div>
-          <div class="stoplight-btn green"></div>
-        </div>
-        <!-- Floating file tab -->
-        <div class="layout-file-tab">
-          <span class="tab-name">+layout.svelte</span>
-        </div>
-      </div>
-      <!-- Content area -->
-      <div class="layout-panel-content" bind:this={layoutPanelContent}>
-        <!-- LayoutRegions wrapper (appears after generation) -->
-        <div class="layout-regions-wrapper" bind:this={layoutRegionsWrapper}>
-          <div class="layout-regions-tag" bind:this={layoutRegionsTag}>
-            &lt;LayoutRegions&gt;
-          </div>
-
-          <!-- Region slots (appear one by one) - solid colors, no borders -->
-          <div
-            class="layout-region layout-region-header"
-            bind:this={layoutRegionHeader}>
-            <span class="region-label">pageHeader</span>
-            <div class="region-skeleton">
-              <div class="skeleton-bar"></div>
-              <div class="skeleton-bar short"></div>
-            </div>
-          </div>
-
-          <div
-            class="layout-region layout-region-sidebar"
-            bind:this={layoutRegionSidebar}>
-            <span class="region-label">customSidebar</span>
-            <div class="region-skeleton">
-              <div class="skeleton-bar short"></div>
-              <div class="skeleton-bar"></div>
-            </div>
-          </div>
-
-          <div
-            class="layout-region layout-region-footer"
-            bind:this={layoutRegionFooter}>
-            <span class="region-label">pageFooter</span>
-            <div class="region-skeleton">
-              <div class="skeleton-bar medium"></div>
-              <div class="skeleton-bar short"></div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Render children (always visible, starts green) -->
-        <div
-          class="layout-render-children hydrated"
-          bind:this={layoutRenderChildren}>
-          <span class="render-children-text">{`{@render children()}`}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Dev Controls -->
-    <AnimationControls
-      {timeline}
-      frameLabels={[...FRAME_LABELS]}
-      show={devMode} />
-
-    <!-- User Restart Button (fades in at end) -->
-    {#if showRestartButton && !devMode}
-      <button
-        class="restart-button"
-        onclick={handleRestart}
-        title="Replay animation">
-        <RotateCcw size={32} strokeWidth={2} />
-      </button>
-    {/if}
   </div>
-</div>
 {/if}
 
 <style>
@@ -1391,7 +1350,6 @@
       display: none;
     }
   }
-
 
   /* === CAPTIONS === */
   .caption {
@@ -1779,7 +1737,7 @@
     left: 27.08%; /* 243.75/900 (centered) */
     width: 45.83%; /* 412.5/900 */
     height: 74%; /* 370/500 */
-    @apply bg-white dark:bg-slate-900 border-[5px] border-indigo-200 dark:border-indigo-800;
+    @apply border-[5px] border-indigo-200 bg-white dark:border-indigo-800 dark:bg-slate-900;
     border-radius: 10px;
     box-shadow:
       0 8px 16px rgba(0, 0, 0, 0.15),
@@ -1801,7 +1759,7 @@
     left: 2.78%; /* 25/900 */
     width: 45.83%; /* 412.5/900 */
     height: 74%; /* 370/500 - same as browser */
-    @apply bg-slate-50 dark:bg-slate-900 border-[5px] border-indigo-200 dark:border-indigo-800;
+    @apply border-[5px] border-indigo-200 bg-slate-50 dark:border-indigo-800 dark:bg-slate-900;
     border-radius: 10px;
     box-shadow:
       0 8px 16px rgba(0, 0, 0, 0.15),
@@ -1820,7 +1778,7 @@
   .cli-chrome {
     position: relative;
     height: 30px;
-    @apply bg-slate-100 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700;
+    @apply border-b border-slate-200 bg-slate-100 dark:border-slate-700 dark:bg-slate-800;
   }
 
   .cli-chrome .stoplight {
@@ -1833,8 +1791,7 @@
   .cli-content {
     padding: 16px;
     height: calc(370px - 30px);
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 12px;
   }
 
@@ -1853,17 +1810,6 @@
     @apply text-slate-800 dark:text-slate-200;
     font-size: 11.5px;
     white-space: nowrap;
-  }
-
-  .cli-cursor {
-    @apply text-indigo-600 dark:text-indigo-400;
-  }
-
-  /* Highlight for argument swap animation */
-  .cli-arg-highlight {
-    @apply bg-indigo-600/30 dark:bg-indigo-400/30;
-    border-radius: 2px;
-    padding: 0 2px;
   }
 
   /* === CLI OUTPUT (Wizard Flow) === */
@@ -1929,7 +1875,7 @@
 
   /* Shimmer effect - only when .shimmering class is present (added via JavaScript) */
   :global(.cli-skeleton-bar.shimmering)::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: 0;
@@ -1994,7 +1940,7 @@
   .browser-chrome {
     position: relative;
     height: 40px;
-    @apply bg-slate-50 dark:bg-slate-800 border-b border-slate-200 dark:border-slate-700;
+    @apply border-b border-slate-200 bg-slate-50 dark:border-slate-700 dark:bg-slate-800;
   }
 
   /* Stoplight buttons - small like Phase 1 */
@@ -2039,13 +1985,7 @@
 
   .url-text {
     font-size: 10px;
-    @apply text-slate-500 dark:text-slate-400 font-mono;
-  }
-
-  /* URL bar active/focus state */
-  .url-bar.active {
-    @apply bg-white dark:bg-slate-600;
-    box-shadow: 0 0 0 2px rgba(99, 102, 241, 0.4);
+    @apply font-mono text-slate-500 dark:text-slate-400;
   }
 
   /* Loading spinner in chrome */
@@ -2215,7 +2155,7 @@
     left: 51.39%; /* 462.5/900 */
     width: 45.83%; /* 412.5/900 */
     height: 74%; /* 370/500 - same as browser */
-    @apply bg-slate-50 dark:bg-slate-900 border-[5px] border-indigo-200 dark:border-indigo-800;
+    @apply border-[5px] border-indigo-200 bg-slate-50 dark:border-indigo-800 dark:bg-slate-900;
     border-radius: 10px;
     box-shadow:
       0 8px 16px rgba(0, 0, 0, 0.15),
@@ -2256,12 +2196,12 @@
     align-items: center;
     padding: 0 16px;
     @apply bg-slate-50 dark:bg-slate-900;
-    @apply border-l border-r border-slate-200 dark:border-slate-700;
+    @apply border-r border-l border-slate-200 dark:border-slate-700;
   }
 
   /* Orange accent bar at top - using pseudoelement for clean squared edges */
   .layout-file-tab::after {
-    content: "";
+    content: '';
     position: absolute;
     top: 0;
     left: -1px;
@@ -2272,7 +2212,7 @@
 
   /* Pseudoelement to cover bottom and connect to content */
   .layout-file-tab::before {
-    content: "";
+    content: '';
     position: absolute;
     bottom: -2px;
     left: 0;
@@ -2286,8 +2226,7 @@
   }
 
   .layout-file-tab .tab-name {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
     font-weight: 500;
     @apply text-slate-700 dark:text-slate-300;
@@ -2316,8 +2255,7 @@
   }
 
   .layout-regions-tag {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 13px;
     font-weight: 500;
     @apply text-blue-600 dark:text-blue-400;
@@ -2350,8 +2288,7 @@
   }
 
   .region-label {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 11px;
     font-weight: 600;
     @apply text-white;
@@ -2412,8 +2349,7 @@
   }
 
   .render-children-text {
-    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
-      monospace;
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
     font-size: 13px;
     font-weight: 600;
     @apply text-slate-500 dark:text-slate-400;
@@ -2459,7 +2395,10 @@
     border: none;
     cursor: pointer;
     opacity: 0.6;
-    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease;
+    transition:
+      opacity 0.2s ease,
+      transform 0.2s ease,
+      background-color 0.2s ease;
     @apply bg-slate-900/80 text-white;
     backdrop-filter: blur(4px);
     animation: fadeInRestart 0.4s ease-out;

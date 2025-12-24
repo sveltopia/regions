@@ -1,9 +1,9 @@
-import * as v from "valibot";
-import { valibot } from "@sveltopia/regions";
+import * as v from 'valibot';
+import { valibot } from '@sveltopia/regions';
 
 const _sidebarSchema = v.pipe(
   v.object({
-    items: v.array(v.string()),
+    items: v.array(v.string())
   })
 );
 

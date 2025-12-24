@@ -1,4 +1,4 @@
-import { getContext, onMount } from "svelte";
+import { getContext } from "svelte";
 import { LAYOUT_REGIONS_KEY } from "./types";
 import type { LayoutRegionsContext, RegionContent } from "./types";
 
@@ -12,28 +12,28 @@ export interface LayoutRegionsOptions {
  * Allows pages to provide content (data or UI snippets) to regions defined
  * in parent layouts. Automatically cleans up regions when the page unmounts.
  *
+ * Pass a getter function to enable reactive updates when props change.
+ *
  * Returns the context for advanced use cases (imperative region updates).
  *
  * @example
  * ```svelte
  * <script>
  *   import { useLayoutRegions } from '@sveltopia/regions';
+ *   import type { HeaderData } from './headerSchema';
  *
- *   useLayoutRegions({
- *     header: {
- *       title: 'My Page',
- *       description: 'Page description'
- *     },
- *     sidebar: sidebarSnippet
- *   });
+ *   let { title, description }: HeaderData = $props();
+ *
+ *   // Use getter function for reactive prop tracking
+ *   useLayoutRegions(() => ({
+ *     header: { title, description }
+ *   }));
  * </script>
- *
- * {#snippet sidebarSnippet()}
- *   <div>Sidebar content</div>
- * {/snippet}
  * ```
  */
-export function useLayoutRegions(options: LayoutRegionsOptions) {
+export function useLayoutRegions(
+  options: LayoutRegionsOptions | (() => LayoutRegionsOptions)
+) {
   const context = getContext<LayoutRegionsContext | undefined>(
     LAYOUT_REGIONS_KEY
   );
@@ -43,19 +43,23 @@ export function useLayoutRegions(options: LayoutRegionsOptions) {
     return;
   }
 
-  // Set regions on mount and clean up on unmount
-  // Note: For SSR-friendly data regions without FOUC, use load functions with page.data.regions
-  // This function is primarily for snippet-based regions which can't be serialized anyway
-  onMount(() => {
-    for (const [key, value] of Object.entries(options)) {
+  // Support both static objects and getter functions
+  const getOptions = typeof options === 'function' ? options : () => options;
+
+  // Use $effect for reactive tracking when getter is used
+  // This re-runs when any reactive values inside the getter change
+  $effect(() => {
+    const opts = getOptions();
+
+    for (const [key, value] of Object.entries(opts)) {
       if (value !== undefined) {
         context.setRegion(key, value);
       }
     }
 
-    // Clean up regions when component unmounts
+    // Clean up regions when component unmounts or effect re-runs
     return () => {
-      for (const key of Object.keys(options)) {
+      for (const key of Object.keys(opts)) {
         context.clearRegion(key);
       }
     };

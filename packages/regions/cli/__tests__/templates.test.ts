@@ -144,17 +144,29 @@ describe('Component Templates', () => {
 	});
 
 	describe('Wrapper Component', () => {
-		it('generates props with type annotation', () => {
-			const wrapper = generateWrapperComponent('testRegion', fields);
+		it('imports type from schema file when validator specified', () => {
+			const wrapper = generateWrapperComponent('testRegion', fields, 'valibot');
 
-			expect(wrapper).toContain('let props = $props<{ title: string; description: string }>()');
+			expect(wrapper).toContain("import type { TestRegionData } from './testRegionSchema'");
 		});
 
-		it('calls useLayoutRegions with props object', () => {
+		it('imports type from separate file when no validator (TS-only)', () => {
 			const wrapper = generateWrapperComponent('testRegion', fields);
 
-			expect(wrapper).toContain('useLayoutRegions({');
-			expect(wrapper).toContain('testRegion: props');
+			expect(wrapper).toContain("import type { TestRegionData } from './TestRegionData'");
+		});
+
+		it('uses destructured props with schema type', () => {
+			const wrapper = generateWrapperComponent('testRegion', fields, 'valibot');
+
+			expect(wrapper).toContain('let { title, description }: TestRegionData = $props()');
+		});
+
+		it('uses getter function for reactive useLayoutRegions', () => {
+			const wrapper = generateWrapperComponent('testRegion', fields, 'valibot');
+
+			expect(wrapper).toContain('useLayoutRegions(() => ({');
+			expect(wrapper).toContain('testRegion: { title, description }');
 		});
 	});
 });

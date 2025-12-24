@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { Search } from "lucide-svelte";
-  import { goto } from "$app/navigation";
+  import { Search } from 'lucide-svelte';
+  import { goto } from '$app/navigation';
 
   interface Props {
     open: boolean;
@@ -13,7 +13,7 @@
 
   let { open = $bindable(false), pagefindReady, onclose }: Props = $props();
 
-  let query = $state("");
+  let query = $state('');
   let results = $state<SearchResult[]>([]);
   let selectedIndex = $state(0);
   let loading = $state(false);
@@ -24,7 +24,7 @@
   let allowMouseSelection = $state(true);
 
   // Force reactivity by creating derived state for each result's selected status
-  let selectedUrl = $derived(results[selectedIndex]?.url ?? "");
+  let selectedUrl = $derived(results[selectedIndex]?.url ?? '');
 
   // Debounce timer
   let searchTimeout: ReturnType<typeof setTimeout> | null = null;
@@ -53,7 +53,7 @@
       selectedIndex = 0;
       allowMouseSelection = false; // Prevent mouseenter from hijacking until mouse moves
     } catch (error) {
-      console.error("Search failed:", error);
+      console.error('Search failed:', error);
       results = [];
     } finally {
       loading = false;
@@ -77,7 +77,7 @@
   }
 
   function clearAndClose() {
-    query = "";
+    query = '';
     results = [];
     selectedIndex = 0;
     close();
@@ -90,20 +90,20 @@
   }
 
   function handleKeydown(e: KeyboardEvent) {
-    if (e.key === "Escape") {
+    if (e.key === 'Escape') {
       clearAndClose();
       return;
     }
 
     if (results.length === 0) return;
 
-    if (e.key === "ArrowDown") {
+    if (e.key === 'ArrowDown') {
       e.preventDefault();
       selectedIndex = Math.min(selectedIndex + 1, results.length - 1);
-    } else if (e.key === "ArrowUp") {
+    } else if (e.key === 'ArrowUp') {
       e.preventDefault();
       selectedIndex = Math.max(selectedIndex - 1, 0);
-    } else if (e.key === "Enter") {
+    } else if (e.key === 'Enter') {
       e.preventDefault();
       if (results[selectedIndex]) {
         navigateToResult(results[selectedIndex]);
@@ -120,21 +120,21 @@
   // Focus input and handle body scroll when modal opens
   $effect(() => {
     if (open) {
-      document.body.style.overflow = "hidden";
+      document.body.style.overflow = 'hidden';
       // Focus input after a tick
       setTimeout(() => {
         inputElement?.focus();
       }, 50);
     } else {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
       // Clear search state when closing
-      query = "";
+      query = '';
       results = [];
       selectedIndex = 0;
     }
 
     return () => {
-      document.body.style.overflow = "";
+      document.body.style.overflow = '';
     };
   });
 
@@ -142,7 +142,7 @@
   $effect(() => {
     if (results.length > 0 && selectedIndex >= 0) {
       const selectedElement = document.querySelector(`[data-result-index="${selectedIndex}"]`);
-      selectedElement?.scrollIntoView({ block: "nearest" });
+      selectedElement?.scrollIntoView({ block: 'nearest' });
     }
   });
 </script>
@@ -150,19 +150,20 @@
 <div
   bind:this={modalElement}
   onclick={handleBackdropClick}
-  onkeydown={(e) => e.key === "Escape" && clearAndClose()}
+  onkeydown={(e) => e.key === 'Escape' && clearAndClose()}
   tabindex="-1"
-  class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 backdrop-blur-sm pt-[20vh]"
+  class="fixed inset-0 z-50 flex items-start justify-center bg-black/50 pt-[20vh] backdrop-blur-sm"
   class:hidden={!open}
   role="dialog"
   aria-modal="true"
-  aria-label="Search">
-  <div class="relative w-full max-w-2xl mx-4">
+  aria-label="Search"
+>
+  <div class="relative mx-4 w-full max-w-2xl">
     <!-- Search container -->
     <div
-      class="search-container rounded-xl bg-background shadow-2xl overflow-hidden"
-      style="border: 4px solid color-mix(in oklab, var(--color-indigo-500) 15%, transparent);">
-
+      class="search-container overflow-hidden rounded-xl bg-background shadow-2xl"
+      style="border: 4px solid color-mix(in oklab, var(--color-indigo-500) 15%, transparent);"
+    >
       <!-- Search input area -->
       <div class="search-input-wrapper" class:has-content={results.length > 0}>
         <Search class="search-icon h-5 w-5 text-muted-foreground" />
@@ -177,11 +178,10 @@
           autocomplete="off"
           spellcheck="false"
         />
-        <button
-          onclick={clearAndClose}
-          class="esc-button"
-          aria-label="Cancel">
-          <kbd class="pointer-events-none inline-flex h-5 select-none items-center rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground">
+        <button onclick={clearAndClose} class="esc-button" aria-label="Cancel">
+          <kbd
+            class="pointer-events-none inline-flex h-5 items-center rounded border border-border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground select-none"
+          >
             esc
           </kbd>
         </button>
@@ -192,7 +192,8 @@
         <div class="p-8 text-center text-muted-foreground">
           <p class="mb-2 font-semibold">Search only available in production build</p>
           <p class="text-sm">
-            Run <code class="rounded bg-muted px-2 py-1">npm run build && npm run preview</code> to test search functionality.
+            Run <code class="rounded bg-muted px-2 py-1">npm run build && npm run preview</code> to test
+            search functionality.
           </p>
         </div>
       {:else if loading}
@@ -208,7 +209,7 @@
       {:else if results.length > 0}
         <!-- Results list -->
         <!-- svelte-ignore a11y_no_static_element_interactions -->
-        <div class="results-container" onmousemove={() => allowMouseSelection = true}>
+        <div class="results-container" onmousemove={() => (allowMouseSelection = true)}>
           {#each results as result, index (result.url)}
             {@const isSelected = result.url === selectedUrl}
             <a
@@ -216,9 +217,15 @@
               data-result-index={index}
               class="result-item"
               class:selected={isSelected}
-              onclick={(e) => { e.preventDefault(); navigateToResult(result); }}
-              onmouseenter={() => { if (allowMouseSelection) selectedIndex = index; }}>
-              <span class="result-title">{result.meta.title || "Untitled"}</span>
+              onclick={(e) => {
+                e.preventDefault();
+                navigateToResult(result);
+              }}
+              onmouseenter={() => {
+                if (allowMouseSelection) selectedIndex = index;
+              }}
+            >
+              <span class="result-title">{result.meta.title || 'Untitled'}</span>
               {#if result.meta.category}
                 <span class="result-category">{result.meta.category}</span>
               {/if}

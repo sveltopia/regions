@@ -78,7 +78,7 @@ export async function addCommand(regionName: string) {
 
     s.stop("Files created!");
 
-    note(createdFiles.map((f) => `  ✓ ${f}`).join("\n"), "Created files");
+    note(createdFiles.map((f) => `  - ${f}`).join("\n"), "Created files");
 
     note(
       `1. Customize your snippet in:\n` +
@@ -189,7 +189,8 @@ export async function addCommand(regionName: string) {
       // Generate wrapper component
       const wrapperContent = generateWrapperComponent(
         normalizedRegionName,
-        fields
+        fields,
+        validator
       );
       const wrapperName = toPascalCase(normalizedRegionName);
       const wrapperPath = path.join(
@@ -234,7 +235,7 @@ export async function addCommand(regionName: string) {
     s.stop("Files created!");
 
     // Step 9: Show created files
-    note(createdFiles.map((f) => `  ✓ ${f}`).join("\n"), "Created files");
+    note(createdFiles.map((f) => `  - ${f}`).join("\n"), "Created files");
 
     // Step 10: Show next steps based on strategy
     if (strategy === "load-function") {

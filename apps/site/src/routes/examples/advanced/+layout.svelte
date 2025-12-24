@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
 
   let { children } = $props();
 </script>
@@ -13,7 +13,7 @@
         <RegionIndicator label="Shared Navigation (Inherited)" color="blue">
           <div class="space-y-2">
             <h3 class="font-semibold">{data.title}</h3>
-            <ul class="text-sm space-y-1">
+            <ul class="space-y-1 text-sm">
               {#each data.items as item}
                 <li>{item}</li>
               {/each}

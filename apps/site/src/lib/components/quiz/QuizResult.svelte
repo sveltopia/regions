@@ -26,30 +26,30 @@
           label: 'Learn about SvelteKit layouts',
           href: 'https://kit.svelte.dev/docs/routing#layout',
           external: true,
-          primary: true,
-        },
-      ],
+          primary: true
+        }
+      ]
     },
     'diy-capable': {
       title: 'You could build this yourself',
       description:
         "You have the skills and prefer manual control. This library would save you time, but it's not strictly necessary for your use case.",
       explanation:
-        "Since you only need simple data and prefer writing your own load functions, you can absolutely implement this pattern manually. However, the CLI scaffolding, automatic type inference, and validation patterns might still be worth exploring.",
+        'Since you only need simple data and prefer writing your own load functions, you can absolutely implement this pattern manually. However, the CLI scaffolding, automatic type inference, and validation patterns might still be worth exploring.',
       ctas: [
         {
           label: 'See what the CLI generates',
           href: '/docs/quick-start',
           external: false,
-          primary: true,
+          primary: true
         },
         {
           label: 'View manual examples',
           href: '/examples',
           external: false,
-          primary: false,
-        },
-      ],
+          primary: false
+        }
+      ]
     },
     'load-function': {
       title: 'Use the Load Function Strategy',
@@ -62,48 +62,48 @@
           label: 'Quick Start with CLI',
           href: '/docs/quick-start',
           external: false,
-          primary: true,
+          primary: true
         },
         {
           label: 'Load Function examples',
           href: '/examples/load-function',
           external: false,
-          primary: false,
+          primary: false
         },
         {
           label: 'Strategy comparison',
           href: '/docs/strategy-comparison',
           external: false,
-          primary: false,
-        },
-      ],
+          primary: false
+        }
+      ]
     },
     'load-or-component': {
       title: 'Choose: Load Function or Component Wrapper',
       description:
         'Both strategies work well for consistent, repeatable schemas. The choice depends on whether you need SSR.',
       explanation:
-        "Load Function gives you server-side rendering (SEO, no layout shift). Component Wrapper is simpler and renders client-side. Both support validation and type safety.",
+        'Load Function gives you server-side rendering (SEO, no layout shift). Component Wrapper is simpler and renders client-side. Both support validation and type safety.',
       ctas: [
         {
           label: 'Compare strategies',
           href: '/docs/strategy-comparison',
           external: false,
-          primary: true,
+          primary: true
         },
         {
           label: 'Load Function examples',
           href: '/examples/load-function',
           external: false,
-          primary: false,
+          primary: false
         },
         {
           label: 'Component Wrapper examples',
           href: '/examples/component-wrapper',
           external: false,
-          primary: false,
-        },
-      ],
+          primary: false
+        }
+      ]
     },
     snippet: {
       title: 'Use the Snippet Strategy',
@@ -116,21 +116,21 @@
           label: 'Quick Start with CLI',
           href: '/docs/quick-start',
           external: false,
-          primary: true,
+          primary: true
         },
         {
           label: 'Snippet examples',
           href: '/examples/snippet',
           external: false,
-          primary: false,
+          primary: false
         },
         {
           label: 'Strategy comparison',
           href: '/docs/strategy-comparison',
           external: false,
-          primary: false,
-        },
-      ],
+          primary: false
+        }
+      ]
     },
     component: {
       title: 'Use the Component Wrapper Strategy',
@@ -143,48 +143,48 @@
           label: 'Quick Start with CLI',
           href: '/docs/quick-start',
           external: false,
-          primary: true,
+          primary: true
         },
         {
           label: 'Component Wrapper examples',
           href: '/examples/component-wrapper',
           external: false,
-          primary: false,
+          primary: false
         },
         {
           label: 'Strategy comparison',
           href: '/docs/strategy-comparison',
           external: false,
-          primary: false,
-        },
-      ],
-    },
+          primary: false
+        }
+      ]
+    }
   };
 
-  const result = results[resultType];
+  const result = $derived(results[resultType]);
 </script>
 
 <div class="space-y-6">
   <!-- Title -->
   <div>
-    <h3 class="text-2xl font-bold mb-2">{result.title}</h3>
+    <h3 class="mb-2 text-2xl font-bold">{result.title}</h3>
     <p class="text-lg text-muted-foreground">{result.description}</p>
   </div>
 
   <!-- Explanation -->
-  <div class="rounded-lg bg-indigo-500/5 border border-indigo-500/20 p-6">
-    <h4 class="font-semibold mb-2 flex items-center gap-2 text-foreground">
+  <div class="rounded-lg border border-indigo-500/20 bg-indigo-500/5 p-6">
+    <h4 class="mb-2 flex items-center gap-2 font-semibold text-foreground">
       <BookOpen class="h-5 w-5 text-indigo-600 dark:text-indigo-400" />
       Why this recommendation?
     </h4>
-    <p class="text-sm text-muted-foreground leading-relaxed">
+    <p class="text-sm leading-relaxed text-muted-foreground">
       {result.explanation}
     </p>
   </div>
 
   <!-- CTAs -->
   <div class="space-y-3">
-    <h4 class="font-semibold text-sm text-muted-foreground">Next steps:</h4>
+    <h4 class="text-sm font-semibold text-muted-foreground">Next steps:</h4>
     <div class="flex flex-col gap-3">
       {#each result.ctas as cta}
         {#if cta.primary}
@@ -193,7 +193,8 @@
             target={cta.external ? '_blank' : undefined}
             rel={cta.external ? 'noopener noreferrer' : undefined}
             aria-label={cta.external ? `${cta.label} (opens in new window)` : cta.label}
-            class="inline-flex items-center justify-center gap-2 rounded-md bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-700 transition-colors cursor-pointer">
+            class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md bg-indigo-600 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-indigo-700"
+          >
             {cta.label}
             {#if cta.external}
               <ExternalLink class="h-4 w-4" aria-hidden="true" />
@@ -205,7 +206,8 @@
           <a
             href={cta.href}
             aria-label={cta.label}
-            class="inline-flex items-center justify-center gap-2 rounded-md border px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors cursor-pointer">
+            class="inline-flex cursor-pointer items-center justify-center gap-2 rounded-md border px-6 py-3 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground"
+          >
             <Code class="h-4 w-4" aria-hidden="true" />
             {cta.label}
           </a>

@@ -1,10 +1,7 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import {
-    settingsHeaderSchema,
-    type SettingsHeaderData,
-  } from "./settingsHeaderSchema";
-  import RegionIndicator from "$lib/components/RegionIndicator.svelte";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { settingsHeaderSchema, type SettingsHeaderData } from './settingsHeaderSchema';
+  import RegionIndicator from '$lib/components/RegionIndicator.svelte';
 </script>
 
 <LayoutRegion name="settingsHeader" schema={settingsHeaderSchema}>

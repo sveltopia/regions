@@ -1,12 +1,23 @@
 <script lang="ts">
-  import CodeViewer from "$lib/components/CodeViewer.svelte";
-  import KeyConcept from "$lib/components/KeyConcept.svelte";
-  import { ListCollapse, ArrowRight, Code, CheckCircle2, FileCode, AlertCircle, X } from "lucide-svelte";
+  import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import {
+    ListCollapse,
+    ArrowRight,
+    Code,
+    CheckCircle2,
+    FileCode,
+    AlertCircle,
+    X
+  } from 'lucide-svelte';
 </script>
 
 <svelte:head>
   <title>Advanced - Region Inheritance | @sveltopia/regions</title>
-  <meta name="description" content="Learn advanced patterns like region inheritance for nested layouts and complex routing scenarios." />
+  <meta
+    name="description"
+    content="Learn advanced patterns like region inheritance for nested layouts and complex routing scenarios."
+  />
 </svelte:head>
 
 <h1 class="mb-4 text-4xl font-bold">Advanced Patterns</h1>
@@ -16,30 +27,47 @@
 </p>
 
 <KeyConcept variant="indigo">
-  <p class="mb-2 font-semibold">
-    TL;DR - What This Page Covers
-  </p>
+  <p class="mb-2 font-semibold">TL;DR - What This Page Covers</p>
   <p class="mb-3">
-    This guide focuses on <strong>region inheritance using load functions</strong> (<code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> / <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code>). You'll learn how to use <code class="rounded bg-muted px-1 py-0.5">await parent()</code> to inherit, override, and extend regions across nested route hierarchies.
+    This guide focuses on <strong>region inheritance using load functions</strong> (<code
+      class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code
+    >
+    / <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code>). You'll learn how to use
+    <code class="rounded bg-muted px-1 py-0.5">await parent()</code> to inherit, override, and extend
+    regions across nested route hierarchies.
   </p>
   <ul class="space-y-2 text-sm">
     <li>• <strong>Best for:</strong> Server-side data fetching with nested layouts</li>
     <li>• <strong>Key technique:</strong> Spread parent regions, then add or override</li>
-    <li>• <strong>Alternative strategies:</strong> Component Wrapper and Snippet (see <a href="/docs/strategy-comparison" class="text-indigo-600 dark:text-indigo-400 hover:underline">Strategy Comparison</a>)</li>
+    <li>
+      • <strong>Alternative strategies:</strong> Component Wrapper and Snippet (see
+      <a
+        href="/docs/strategy-comparison"
+        class="text-indigo-600 hover:underline dark:text-indigo-400">Strategy Comparison</a
+      >)
+    </li>
   </ul>
 </KeyConcept>
 
 <div class="my-8">
   <h3 class="mb-3 text-lg font-semibold">Prerequisites</h3>
-  <p class="mb-3 text-sm text-muted-foreground">
-    This guide assumes you're comfortable with:
-  </p>
+  <p class="mb-3 text-sm text-muted-foreground">This guide assumes you're comfortable with:</p>
   <ul class="space-y-2 text-sm text-muted-foreground">
     <li>
-      • <strong>SvelteKit load functions</strong> - How <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> and <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code> work (<a href="https://kit.svelte.dev/docs/load" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">SvelteKit docs</a>)
+      • <strong>SvelteKit load functions</strong> - How
+      <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>
+      and <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code> work (<a
+        href="https://kit.svelte.dev/docs/load"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-indigo-600 hover:underline dark:text-indigo-400">SvelteKit docs</a
+      >)
     </li>
     <li>
-      • <strong>Basic region usage</strong> - How to define and render regions (<a href="/docs/quick-start" class="text-indigo-600 dark:text-indigo-400 hover:underline">Quick Start guide</a>)
+      • <strong>Basic region usage</strong> - How to define and render regions (<a
+        href="/docs/quick-start"
+        class="text-indigo-600 hover:underline dark:text-indigo-400">Quick Start guide</a
+      >)
     </li>
   </ul>
 </div>
@@ -66,8 +94,15 @@
       </p>
       <ul class="space-y-2">
         <li>• Runs <strong>once per layout level</strong> and applies to all child routes</li>
-        <li>• Best for data that's <strong>common across multiple pages</strong> (navigation, auth, section-wide settings)</li>
-        <li>• Can access route params if the layout is nested (e.g., <code class="rounded bg-muted px-1 py-0.5">/products/[category]/+layout.server.ts</code>)</li>
+        <li>
+          • Best for data that's <strong>common across multiple pages</strong> (navigation, auth, section-wide
+          settings)
+        </li>
+        <li>
+          • Can access route params if the layout is nested (e.g., <code
+            class="rounded bg-muted px-1 py-0.5">/products/[category]/+layout.server.ts</code
+          >)
+        </li>
         <li>• Returns data available to both the layout AND all descendant pages</li>
       </ul>
     </KeyConcept>
@@ -78,8 +113,14 @@
       </p>
       <ul class="space-y-2">
         <li>• Runs <strong>only for this specific page</strong></li>
-        <li>• Best for <strong>page-specific data fetching</strong> (product details, user profile, article content)</li>
-        <li>• Can call <code class="rounded bg-muted px-1.5 py-0.5">await parent()</code> to access all parent layout data</li>
+        <li>
+          • Best for <strong>page-specific data fetching</strong> (product details, user profile, article
+          content)
+        </li>
+        <li>
+          • Can call <code class="rounded bg-muted px-1.5 py-0.5">await parent()</code> to access all
+          parent layout data
+        </li>
         <li>• Can merge or override parent data before returning</li>
       </ul>
     </KeyConcept>
@@ -139,40 +180,70 @@ export const load = async ({ params }) => {
   <h3 class="mb-3 text-2xl font-semibold">How This Connects to Regions</h3>
 
   <p class="mb-4 text-muted-foreground">
-    Our regions system automatically reads from the <code class="rounded bg-muted px-1.5 py-0.5">regions</code> key
-    in your load function return data. This works for BOTH <code class="rounded bg-muted px-1.5 py-0.5">+layout.server.ts</code> and
+    Our regions system automatically reads from the <code class="rounded bg-muted px-1.5 py-0.5"
+      >regions</code
+    >
+    key in your load function return data. This works for BOTH
+    <code class="rounded bg-muted px-1.5 py-0.5">+layout.server.ts</code>
+    and
     <code class="rounded bg-muted px-1.5 py-0.5">+page.server.ts</code> files:
   </p>
 
   <KeyConcept variant="neutral" icon={CheckCircle2}>
-    <p class="mb-3 font-semibold">
-      Both of these work automatically:
-    </p>
+    <p class="mb-3 font-semibold">Both of these work automatically:</p>
     <ul class="space-y-2">
-      <li>• Layout load functions: <code class="rounded bg-background px-1.5 py-0.5">+layout.server.ts</code> → defines regions for entire section</li>
-      <li>• Page load functions: <code class="rounded bg-background px-1.5 py-0.5">+page.server.ts</code> → defines regions for specific page</li>
-      <li>• No <code class="rounded bg-background px-1.5 py-0.5">useLayoutRegions()</code> call needed for load function data</li>
-      <li>• <code class="rounded bg-background px-1.5 py-0.5">{'<LayoutRegion>'}</code> automatically reads from <code class="rounded bg-background px-1.5 py-0.5">page.data.regions</code></li>
+      <li>
+        • Layout load functions: <code class="rounded bg-background px-1.5 py-0.5"
+          >+layout.server.ts</code
+        > → defines regions for entire section
+      </li>
+      <li>
+        • Page load functions: <code class="rounded bg-background px-1.5 py-0.5"
+          >+page.server.ts</code
+        > → defines regions for specific page
+      </li>
+      <li>
+        • No <code class="rounded bg-background px-1.5 py-0.5">useLayoutRegions()</code> call needed for
+        load function data
+      </li>
+      <li>
+        • <code class="rounded bg-background px-1.5 py-0.5">&lt;LayoutRegion&gt;</code>
+        automatically reads from
+        <code class="rounded bg-background px-1.5 py-0.5">page.data.regions</code>
+      </li>
     </ul>
   </KeyConcept>
 
   <KeyConcept variant="slate" icon={AlertCircle}>
-    <p class="mb-2 font-semibold">
-      When to use useLayoutRegions()
-    </p>
+    <p class="mb-2 font-semibold">When to use useLayoutRegions()</p>
     <p class="mb-3">
-      The <code class="rounded bg-muted px-1.5 py-0.5">useLayoutRegions()</code> function is for <strong>programmatic region definition in Svelte components</strong>—it's NOT needed when using load functions.
+      The <code class="rounded bg-muted px-1.5 py-0.5">useLayoutRegions()</code> function is for
+      <strong>programmatic region definition in Svelte components</strong>—it's NOT needed when
+      using load functions.
     </p>
     <ul class="space-y-2 text-sm">
       <li>
-        <strong>Load Function Strategy (this page):</strong> Define regions in <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> or <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code>. Data flows to <code class="rounded bg-muted px-1 py-0.5">page.data.regions</code> automatically. No <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code> call needed.
+        <strong>Load Function Strategy (this page):</strong> Define regions in
+        <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>
+        or <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code>. Data flows to
+        <code class="rounded bg-muted px-1 py-0.5">page.data.regions</code>
+        automatically. No <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code> call needed.
       </li>
       <li>
-        <strong>Component Wrapper / Snippet Strategies:</strong> Call <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code> in your content component (e.g., <code class="rounded bg-muted px-1 py-0.5">GalleryHeader.svelte</code> or <code class="rounded bg-muted px-1 py-0.5">+page.svelte</code>) to provide region content. The <code class="rounded bg-muted px-1 py-0.5">+layout.svelte</code> contains the region slot component (e.g., <code class="rounded bg-muted px-1 py-0.5">{'<LayoutRegion>'}</code>) that renders it.
+        <strong>Component Wrapper / Snippet Strategies:</strong> Call
+        <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code>
+        in your content component (e.g.,
+        <code class="rounded bg-muted px-1 py-0.5">GalleryHeader.svelte</code>
+        or <code class="rounded bg-muted px-1 py-0.5">+page.svelte</code>) to provide region
+        content. The <code class="rounded bg-muted px-1 py-0.5">+layout.svelte</code> contains the
+        region slot component (e.g.,
+        <code class="rounded bg-muted px-1 py-0.5">&lt;LayoutRegion&gt;</code>) that renders it.
       </li>
     </ul>
     <p class="mt-3 text-sm">
-      <strong>TL;DR:</strong> If you're defining regions in load functions, you never call <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code>. For Component Wrapper/Snippet strategies, you call it in the component providing content, not in the layout.
+      <strong>TL;DR:</strong> If you're defining regions in load functions, you never call
+      <code class="rounded bg-muted px-1 py-0.5">useLayoutRegions()</code>. For Component
+      Wrapper/Snippet strategies, you call it in the component providing content, not in the layout.
     </p>
   </KeyConcept>
 
@@ -181,7 +252,8 @@ export const load = async ({ params }) => {
       href="https://kit.svelte.dev/docs/load"
       target="_blank"
       rel="noopener noreferrer"
-      class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:underline">
+      class="inline-flex items-center gap-2 text-indigo-600 hover:underline dark:text-indigo-400"
+    >
       Learn more about SvelteKit load functions →
     </a>
   </div>
@@ -198,15 +270,15 @@ export const load = async ({ params }) => {
   </p>
 
   <KeyConcept variant="indigo" icon={ListCollapse}>
-    <p class="font-semibold mb-2">
-      Live Example
-    </p>
+    <p class="mb-2 font-semibold">Live Example</p>
     <p class="mb-3">
-      See region inheritance in action with visual indicators showing inherited, overridden, and added regions.
+      See region inheritance in action with visual indicators showing inherited, overridden, and
+      added regions.
     </p>
     <a
       href="/examples/advanced"
-      class="inline-flex items-center gap-2 text-indigo-600 dark:text-indigo-400 hover:underline">
+      class="inline-flex items-center gap-2 text-indigo-600 hover:underline dark:text-indigo-400"
+    >
       View Interactive Demo →
     </a>
   </KeyConcept>
@@ -214,8 +286,8 @@ export const load = async ({ params }) => {
   <h3 class="mb-3 text-2xl font-semibold">The Pattern</h3>
 
   <p class="mb-4 text-muted-foreground">
-    Use the <code class="rounded bg-muted px-2 py-1 text-sm">parent()</code> function
-    in your load function to access parent data and merge regions:
+    Use the <code class="rounded bg-muted px-2 py-1 text-sm">parent()</code> function in your load function
+    to access parent data and merge regions:
   </p>
 
   <CodeViewer
@@ -239,14 +311,20 @@ export const load: PageServerLoad = async ({ parent, params }) => {
   />
 
   <KeyConcept variant="neutral" icon={AlertCircle}>
-    <p class="mb-2 font-semibold">
-      Important: Spread .regions, Not All Parent Data
+    <p class="mb-2 font-semibold">Important: Spread .regions, Not All Parent Data</p>
+    <p class="mb-3">
+      The <code class="rounded bg-muted px-1.5 py-0.5">parentData</code> object contains
+      <strong>all data</strong>
+      returned by parent load functions—not just regions. This might include
+      <code class="rounded bg-muted px-1 py-0.5">user</code>,
+      <code class="rounded bg-muted px-1 py-0.5">session</code>,
+      <code class="rounded bg-muted px-1 py-0.5">breadcrumbs</code>, or any other data your parent
+      layouts return.
     </p>
     <p class="mb-3">
-      The <code class="rounded bg-muted px-1.5 py-0.5">parentData</code> object contains <strong>all data</strong> returned by parent load functions—not just regions. This might include <code class="rounded bg-muted px-1 py-0.5">user</code>, <code class="rounded bg-muted px-1 py-0.5">session</code>, <code class="rounded bg-muted px-1 py-0.5">breadcrumbs</code>, or any other data your parent layouts return.
-    </p>
-    <p class="mb-3">
-      <strong>Only spread <code class="rounded bg-muted px-1.5 py-0.5">parentData.regions</code></strong>, not the entire <code class="rounded bg-muted px-1.5 py-0.5">parentData</code> object:
+      <strong
+        >Only spread <code class="rounded bg-muted px-1.5 py-0.5">parentData.regions</code></strong
+      >, not the entire <code class="rounded bg-muted px-1.5 py-0.5">parentData</code> object:
     </p>
     <div class="space-y-3 text-sm">
       <div>
@@ -264,67 +342,119 @@ export const load: PageServerLoad = async ({ parent, params }) => {
         <code class="block rounded bg-background px-2 py-1">
           {'regions: { ...parentData, pageHeader: {...} }'}
         </code>
-        <p class="mt-1 text-xs italic">This would include user, session, etc. in your regions object!</p>
+        <p class="mt-1 text-xs italic">
+          This would include user, session, etc. in your regions object!
+        </p>
       </div>
     </div>
   </KeyConcept>
 
   <KeyConcept variant="indigo">
-    <p class="font-semibold mb-2">Key Points:</p>
+    <p class="mb-2 font-semibold">Key Points:</p>
     <ul class="mt-2 space-y-3">
-      <li>• <strong>Spread first</strong>: <code class="rounded bg-muted px-1.5 py-0.5">{'...(parentData.regions || {})'}</code> preserves parent regions</li>
-      <li>• <strong>Override after</strong>: Define regions with the same name to override parent's version</li>
-      <li>• <strong>Safety fallback</strong>: <code class="rounded bg-muted px-1.5 py-0.5">{'|| {}'}</code> handles undefined parent regions</li>
+      <li>
+        • <strong>Spread first</strong>:
+        <code class="rounded bg-muted px-1.5 py-0.5">{'...(parentData.regions || {})'}</code> preserves
+        parent regions
+      </li>
+      <li>
+        • <strong>Override after</strong>: Define regions with the same name to override parent's
+        version
+      </li>
+      <li>
+        • <strong>Safety fallback</strong>:
+        <code class="rounded bg-muted px-1.5 py-0.5">{'|| {}'}</code> handles undefined parent regions
+      </li>
     </ul>
   </KeyConcept>
 
   <KeyConcept variant="neutral" icon={AlertCircle}>
-    <p class="mb-2 font-semibold">
-      Server vs Universal Load Inheritance
-    </p>
+    <p class="mb-2 font-semibold">Server vs Universal Load Inheritance</p>
     <p class="mb-3">
-      The <code class="rounded bg-muted px-1.5 py-0.5">parent()</code> function behaves differently depending on your file type:
+      The <code class="rounded bg-muted px-1.5 py-0.5">parent()</code> function behaves differently depending
+      on your file type:
     </p>
     <ul class="space-y-2">
       <li>
-        • In <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code> or <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>: Returns data only from parent <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> files
+        • In <code class="rounded bg-muted px-1 py-0.5">+page.server.ts</code> or
+        <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>: Returns data only from
+        parent <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> files
       </li>
       <li>
-        • In <code class="rounded bg-muted px-1 py-0.5">+page.ts</code> or <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code>: Returns data from parent <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code> files, OR from parent <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code> files if no <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code> shadows them
+        • In <code class="rounded bg-muted px-1 py-0.5">+page.ts</code> or
+        <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code>: Returns data from parent
+        <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code>
+        files, OR from parent <code class="rounded bg-muted px-1 py-0.5">+layout.server.ts</code>
+        files if no <code class="rounded bg-muted px-1 py-0.5">+layout.ts</code> shadows them
       </li>
     </ul>
     <p class="mt-3">
-      <strong>For this regions pattern, we recommend using <code class="rounded bg-muted px-1.5 py-0.5">.server.ts</code> files consistently for simpler, more predictable inheritance.</strong>
+      <strong
+        >For this regions pattern, we recommend using <code class="rounded bg-muted px-1.5 py-0.5"
+          >.server.ts</code
+        > files consistently for simpler, more predictable inheritance.</strong
+      >
     </p>
   </KeyConcept>
 
-  <h3 class="mb-3 mt-8 text-2xl font-semibold">How It Works</h3>
+  <h3 class="mt-8 mb-3 text-2xl font-semibold">How It Works</h3>
 
   <div class="mb-6 space-y-4 text-muted-foreground">
-    <p><strong>1. Inheritance:</strong> Child pages automatically receive all regions from parent layouts</p>
-    <p><strong>2. Override:</strong> Child can redefine a region with the same name to replace parent's version</p>
+    <p>
+      <strong>1. Inheritance:</strong> Child pages automatically receive all regions from parent layouts
+    </p>
+    <p>
+      <strong>2. Override:</strong> Child can redefine a region with the same name to replace parent's
+      version
+    </p>
     <p><strong>3. Addition:</strong> Child can add new regions alongside inherited ones</p>
   </div>
 
   <KeyConcept variant="neutral">
     <p class="mb-2 font-semibold">Example Scenario - Addition:</p>
     <ul class="space-y-3">
-      <li>• <strong>Parent layout defines:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs", "sidebar" }'}</code></li>
-      <li>• <strong>Child page defines:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "pageHeader", "footer" }'}</code></li>
-      <li>• <strong>Final merged regions:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs", "sidebar", "pageHeader", "footer" }'}</code></li>
+      <li>
+        • <strong>Parent layout defines:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs", "sidebar" }'}</code>
+      </li>
+      <li>
+        • <strong>Child page defines:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5">{'{ "pageHeader", "footer" }'}</code>
+      </li>
+      <li>
+        • <strong>Final merged regions:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5"
+          >{'{ "breadcrumbs", "sidebar", "pageHeader", "footer" }'}</code
+        >
+      </li>
     </ul>
   </KeyConcept>
 
   <KeyConcept variant="neutral">
     <p class="mb-2 font-semibold">Example Scenario - Override:</p>
     <ul class="space-y-3">
-      <li>• <strong>Parent layout defines:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs", "sidebar": { items: ["Home", "About"] } }'}</code></li>
-      <li>• <strong>Child page defines:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs", "sidebar": { items: ["Products", "Categories"] }, "pageHeader" }'}</code></li>
-      <li>• <strong>Final merged regions:</strong> <code class="rounded bg-background px-1.5 py-0.5">{'{ "breadcrumbs" (child version), "sidebar" (child version), "pageHeader" (new) }'}</code></li>
+      <li>
+        • <strong>Parent layout defines:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5"
+          >{'{ "breadcrumbs", "sidebar": { items: ["Home", "About"] } }'}</code
+        >
+      </li>
+      <li>
+        • <strong>Child page defines:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5"
+          >{'{ "breadcrumbs", "sidebar": { items: ["Products", "Categories"] }, "pageHeader" }'}</code
+        >
+      </li>
+      <li>
+        • <strong>Final merged regions:</strong>
+        <code class="rounded bg-background px-1.5 py-0.5"
+          >{'{ "breadcrumbs" (child version), "sidebar" (child version), "pageHeader" (new) }'}</code
+        >
+      </li>
     </ul>
   </KeyConcept>
 
-  <h3 class="mb-3 mt-8 text-2xl font-semibold">Complete Example</h3>
+  <h3 class="mt-8 mb-3 text-2xl font-semibold">Complete Example</h3>
 
   <p class="mb-4 text-muted-foreground">
     Here's a complete example showing region inheritance across multiple layout levels:
@@ -347,7 +477,7 @@ export const load = () => ({
 });`}
   />
 
-  <h4 class="mb-3 mt-6 text-xl font-medium">Section Layout</h4>
+  <h4 class="mt-6 mb-3 text-xl font-medium">Section Layout</h4>
   <p class="mb-4 text-sm text-muted-foreground">
     Inherits breadcrumbs, adds section-specific sidebar:
   </p>
@@ -377,7 +507,7 @@ export const load: LayoutServerLoad = async ({ parent }) => {
 };`}
   />
 
-  <h4 class="mb-3 mt-6 text-xl font-medium">Page Level</h4>
+  <h4 class="mt-6 mb-3 text-xl font-medium">Page Level</h4>
   <p class="mb-4 text-sm text-muted-foreground">
     Inherits breadcrumbs and sidebar, adds page-specific header:
   </p>
@@ -412,9 +542,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
   />
 
   <KeyConcept variant="slate" icon={CheckCircle2}>
-    <p class="font-semibold mb-2">
-      Result at /products/123:
-    </p>
+    <p class="mb-2 font-semibold">Result at /products/123:</p>
     <ul class="mt-2 space-y-3">
       <li>• <strong>breadcrumbs:</strong> Home → Products → Product Name</li>
       <li>• <strong>sidebar:</strong> Products section navigation</li>
@@ -422,7 +550,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     </ul>
   </KeyConcept>
 
-  <h3 class="mb-3 mt-8 text-2xl font-semibold">Common Patterns</h3>
+  <h3 class="mt-8 mb-3 text-2xl font-semibold">Common Patterns</h3>
 
   <div class="space-y-6">
     <div>
@@ -495,16 +623,14 @@ export const load: PageServerLoad = async ({ parent, url }) => {
     </div>
   </div>
 
-  <h3 class="mb-3 mt-8 text-2xl font-semibold">Gotchas & Best Practices</h3>
+  <h3 class="mt-8 mb-3 text-2xl font-semibold">Gotchas & Best Practices</h3>
 
   <div class="space-y-4">
     <KeyConcept variant="slate" icon={AlertCircle}>
-      <p class="mb-2 font-semibold">
-        Order Matters
-      </p>
+      <p class="mb-2 font-semibold">Order Matters</p>
       <p class="mb-4">
-        Always spread parent regions <strong>first</strong>, then define your overrides.
-        Spreading after will erase your changes!
+        Always spread parent regions <strong>first</strong>, then define your overrides. Spreading
+        after will erase your changes!
       </p>
       <CodeViewer
         language="typescript"
@@ -523,12 +649,13 @@ regions: {
     </KeyConcept>
 
     <KeyConcept variant="slate" icon={AlertCircle}>
-      <p class="mb-2 font-semibold">
-        Type Safety
-      </p>
+      <p class="mb-2 font-semibold">Type Safety</p>
       <p class="mb-4">
-        Parent data is typed as <code class="rounded bg-muted px-1.5 py-0.5">Awaited&lt;ReturnType&lt;typeof import('./$types').LayoutServerLoad&gt;&gt;</code> but regions are <code class="rounded bg-muted px-1.5 py-0.5">unknown</code>.
-        Cast parent data to access regions and use type assertions for specific region data:
+        Parent data is typed as <code class="rounded bg-muted px-1.5 py-0.5"
+          >Awaited&lt;ReturnType&lt;typeof import('./$types').LayoutServerLoad&gt;&gt;</code
+        >
+        but regions are <code class="rounded bg-muted px-1.5 py-0.5">unknown</code>. Cast parent
+        data to access regions and use type assertions for specific region data:
       </p>
       <CodeViewer
         language="typescript"
@@ -553,26 +680,28 @@ return {
     </KeyConcept>
 
     <KeyConcept variant="slate" icon={AlertCircle}>
-      <p class="mb-2 font-semibold">
-        Performance Considerations
-      </p>
+      <p class="mb-2 font-semibold">Performance Considerations</p>
       <p class="mb-3">
-        <code class="rounded bg-muted px-1.5 py-0.5">await parent()</code> waits for all parent
-        load functions to complete. This is sequential by design and usually fast, but be aware
-        of the dependency chain in deeply nested routes.
+        <code class="rounded bg-muted px-1.5 py-0.5">await parent()</code> waits for all parent load functions
+        to complete. This is sequential by design and usually fast, but be aware of the dependency chain
+        in deeply nested routes.
       </p>
       <p class="text-sm">
-        For performance optimization tips, see the <a href="https://kit.svelte.dev/docs/performance" target="_blank" rel="noopener noreferrer" class="text-indigo-600 dark:text-indigo-400 hover:underline">SvelteKit performance guide</a>.
+        For performance optimization tips, see the <a
+          href="https://kit.svelte.dev/docs/performance"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-indigo-600 hover:underline dark:text-indigo-400"
+          >SvelteKit performance guide</a
+        >.
       </p>
     </KeyConcept>
 
     <KeyConcept variant="indigo">
-      <p class="mb-2 font-semibold">
-        Pro Tip: Null to Reset
-      </p>
+      <p class="mb-2 font-semibold">Pro Tip: Null to Reset</p>
       <p class="mb-4">
-        Set a region to <code class="rounded bg-muted px-1.5 py-0.5">null</code> to explicitly
-        remove a parent's region (suppresses both content and fallback):
+        Set a region to <code class="rounded bg-muted px-1.5 py-0.5">null</code> to explicitly remove
+        a parent's region (suppresses both content and fallback):
       </p>
       <CodeViewer
         language="typescript"
@@ -586,22 +715,24 @@ return {
 </section>
 
 <!-- Next Steps -->
-<div class="prose dark:prose-invert max-w-none mt-12">
+<div class="prose mt-12 max-w-none dark:prose-invert">
   <h2>Next Steps</h2>
 </div>
 
-<div class="not-prose grid gap-4 md:grid-cols-2 mt-6">
+<div class="not-prose mt-6 grid gap-4 md:grid-cols-2">
   <a
     href="/docs/api-reference"
-    class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10">
-    <div class="flex items-start justify-between mb-3">
+    class="group block rounded-lg bg-indigo-500/5 p-6 transition-all hover:bg-indigo-500/10"
+  >
+    <div class="mb-3 flex items-start justify-between">
       <div class="rounded-lg bg-indigo-500/10 p-2">
         <Code class="h-6 w-6 text-indigo-600 dark:text-indigo-400" />
       </div>
       <ArrowRight
-        class="h-5 w-5 text-indigo-600 dark:text-indigo-400 opacity-0 -translate-x-2 transition-all group-hover:opacity-100 group-hover:translate-x-0" />
+        class="h-5 w-5 -translate-x-2 text-indigo-600 opacity-0 transition-all group-hover:translate-x-0 group-hover:opacity-100 dark:text-indigo-400"
+      />
     </div>
-    <h3 class="text-lg font-semibold mb-2">API Reference</h3>
+    <h3 class="mb-2 text-lg font-semibold">API Reference</h3>
     <p class="text-sm text-muted-foreground">
       Complete reference for all exports, types, and interfaces
     </p>

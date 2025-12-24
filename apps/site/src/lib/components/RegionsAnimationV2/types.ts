@@ -1,4 +1,4 @@
-import type gsap from "gsap";
+import type gsap from 'gsap';
 
 // GSAP Timeline type
 export type GSAPTimeline = gsap.core.Timeline;
@@ -23,9 +23,9 @@ export type GSAPTimeline = gsap.core.Timeline;
  *   - Idle state with animated shimmer
  */
 export const FRAME_LABELS = [
-  "scene1-problem", // Browser loads, single slot hydrates
-  "scene2-solution", // CLI + layout panel, regions cascade
-  "scene3-payoff", // Browser with all regions hydrating
+  'scene1-problem', // Browser loads, single slot hydrates
+  'scene2-solution', // CLI + layout panel, regions cascade
+  'scene3-payoff' // Browser with all regions hydrating
 ] as const;
 
 export type FrameLabel = (typeof FRAME_LABELS)[number];
@@ -37,14 +37,14 @@ export const DURATIONS = {
   cliOutput: 0.4, // CLI output appearing
   contentFade: 0.4, // Content fading in
   regionPulse: 0.3, // Region hydration pulse
-  browserFade: 0.5, // Browser frame appearing
+  browserFade: 0.5 // Browser frame appearing
 } as const;
 
 // Easing functions
 export const EASINGS = {
-  smooth: "power2.inOut",
-  bounce: "back.out(1.2)",
-  draw: "power1.inOut",
-  fade: "power1.out",
-  typing: "steps(1)",
+  smooth: 'power2.inOut',
+  bounce: 'back.out(1.2)',
+  draw: 'power1.inOut',
+  fade: 'power1.out',
+  typing: 'steps(1)'
 } as const;

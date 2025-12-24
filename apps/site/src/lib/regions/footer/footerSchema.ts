@@ -1,20 +1,20 @@
-import * as v from "valibot";
-import { valibot } from "@sveltopia/regions";
+import * as v from 'valibot';
+import { valibot } from '@sveltopia/regions';
 
 const _footerSchema = v.pipe(
   v.object({
     prev: v.optional(
       v.object({
         label: v.string(),
-        href: v.string(),
+        href: v.string()
       })
     ),
     next: v.optional(
       v.object({
         label: v.string(),
-        href: v.string(),
+        href: v.string()
       })
-    ),
+    )
   })
 );
 

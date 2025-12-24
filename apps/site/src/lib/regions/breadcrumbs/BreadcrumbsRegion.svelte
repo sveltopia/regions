@@ -1,15 +1,14 @@
 <script lang="ts">
-  import { LayoutRegion } from "@sveltopia/regions";
-  import { ChevronRight } from "lucide-svelte";
-  import { breadcrumbsSchema, type BreadcrumbsData } from "./breadcrumbsSchema";
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { ChevronRight } from 'lucide-svelte';
+  import { breadcrumbsSchema, type BreadcrumbsData } from './breadcrumbsSchema';
 </script>
 
 <LayoutRegion name="breadcrumbs" schema={breadcrumbsSchema}>
   {#snippet children(data: Record<string, unknown> | undefined)}
     {@const breadcrumbs = data as unknown as BreadcrumbsData}
     <nav aria-label="Breadcrumb" class="mb-4">
-      <ol
-        class="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
+      <ol class="flex flex-wrap items-center gap-1.5 text-sm text-muted-foreground">
         {#each breadcrumbs as breadcrumb, index}
           <li class="flex items-center gap-1.5">
             {#if index > 0}
@@ -22,9 +21,7 @@
               </span>
             {:else}
               <!-- Parent pages - clickable links -->
-              <a
-                href={breadcrumb.href}
-                class="transition-colors hover:text-foreground">
+              <a href={breadcrumb.href} class="transition-colors hover:text-foreground">
                 {breadcrumb.label}
               </a>
             {/if}

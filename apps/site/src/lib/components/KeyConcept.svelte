@@ -1,31 +1,32 @@
 <script lang="ts">
-  import { Lightbulb } from "lucide-svelte";
+  import { Lightbulb } from 'lucide-svelte';
+  import type { Snippet } from 'svelte';
 
   interface Props {
-    variant?: "indigo" | "neutral" | "slate" | "orange";
-    icon?: any;
+    variant?: 'indigo' | 'neutral' | 'slate' | 'orange';
+    icon?: typeof Lightbulb;
     noMargin?: boolean;
-    children: any;
+    children: Snippet;
   }
 
-  let { variant = "indigo", icon, noMargin = false, children }: Props = $props();
+  let { variant = 'indigo', icon, noMargin = false, children }: Props = $props();
 
   const variants = {
     indigo: {
-      bg: "bg-indigo-500/5",
-      iconColor: "text-indigo-600 dark:text-indigo-400"
+      bg: 'bg-indigo-500/5',
+      iconColor: 'text-indigo-600 dark:text-indigo-400'
     },
     neutral: {
-      bg: "bg-muted",
-      iconColor: "text-muted-foreground"
+      bg: 'bg-muted',
+      iconColor: 'text-muted-foreground'
     },
     slate: {
-      bg: "bg-slate-500/5",
-      iconColor: "text-slate-600 dark:text-slate-400"
+      bg: 'bg-slate-500/5',
+      iconColor: 'text-slate-600 dark:text-slate-400'
     },
     orange: {
-      bg: "bg-orange-500/5",
-      iconColor: "text-orange-600 dark:text-orange-400"
+      bg: 'bg-orange-500/5',
+      iconColor: 'text-orange-600 dark:text-orange-400'
     }
   };
 

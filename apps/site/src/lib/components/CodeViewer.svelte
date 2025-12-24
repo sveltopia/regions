@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { onMount } from "svelte";
-  import { Button } from "$lib/components/ui/button";
-  import { Copy, Check } from "@lucide/svelte";
-  import { codeToHtml } from "shiki";
-  import sveltopiaPastel from "$lib/themes/sveltopia-pastel.json";
+  import { onMount } from 'svelte';
+  import { Button } from '$lib/components/ui/button';
+  import { Copy, Check } from '@lucide/svelte';
+  import { codeToHtml } from 'shiki';
+  import sveltopiaPastel from '$lib/themes/sveltopia-pastel.json';
 
   interface Props {
     code: string;
@@ -12,30 +12,26 @@
     showLineNumbers?: boolean;
   }
 
-  let {
-    code,
-    language = "typescript",
-    filename,
-    showLineNumbers = false,
-  }: Props = $props();
+  let { code, language = 'typescript', filename, showLineNumbers = false }: Props = $props();
 
-  let highlightedCode = $state("");
+  let highlightedCode = $state('');
   let copied = $state(false);
 
   onMount(async () => {
     // Highlight code with our custom Sveltopia Pastel theme
     highlightedCode = await codeToHtml(code, {
       lang: language,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       theme: sveltopiaPastel as any,
       transformers: showLineNumbers
         ? [
             {
               line(node, line) {
                 node.properties.class = `line line-${line}`;
-              },
-            },
+              }
+            }
           ]
-        : [],
+        : []
     });
   });
 
@@ -48,14 +44,14 @@
   }
 </script>
 
-<div
-  class="code-viewer not-prose overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
+<div class="code-viewer not-prose overflow-hidden rounded-lg border border-slate-700 bg-slate-900">
   <!-- Header with filename and copy button -->
   <div
-    class="flex items-center justify-between border-b border-slate-700 bg-slate-800 px-3 py-2 md:px-4">
+    class="flex items-center justify-between border-b border-slate-700 bg-slate-800 px-3 py-2 md:px-4"
+  >
     <div class="flex items-center gap-2">
       {#if filename}
-        <span class="font-mono text-xs text-slate-400 md:text-sm truncate">{filename}</span>
+        <span class="truncate font-mono text-xs text-slate-400 md:text-sm">{filename}</span>
       {:else}
         <span class="font-mono text-xs text-slate-400 md:text-sm">{language}</span>
       {/if}
@@ -64,7 +60,8 @@
       variant="ghost"
       size="sm"
       onclick={copyCode}
-      class="h-8 px-2 text-slate-300 hover:text-slate-100 hover:bg-slate-700 cursor-pointer shrink-0">
+      class="h-8 shrink-0 cursor-pointer px-2 text-slate-300 hover:bg-slate-700 hover:text-slate-100"
+    >
       {#if copied}
         <Check class="h-4 w-4" />
         <span class="ml-1 hidden text-xs sm:inline">Copied!</span>
@@ -105,7 +102,7 @@
   }
 
   .shiki-wrapper :global(code) {
-    font-family: "Menlo", "Monaco", "Courier New", monospace;
+    font-family: 'Menlo', 'Monaco', 'Courier New', monospace;
     font-size: 0.75rem;
     display: block;
   }
