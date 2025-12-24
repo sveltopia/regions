@@ -21,20 +21,18 @@ export function generateWrapperComponent(
 	const schemaName = `${toCamelCase(regionName)}Schema`;
 	const regionKey = toCamelCase(regionName);
 
-	// Generate props destructuring: let { title, description } = $props();
-	const propsDestructure = fields.map((f) => f.name).join(', ');
-
-	// Generate the region data object: { title, description }
-	// (shorthand property syntax - same as { title: title, description: description })
-	const regionDataObject = fields.map((f) => f.name).join(', ');
+	// Generate props type: { title: string; description?: string }
+	const propsType = fields
+		.map((f) => `${f.name}${f.optional ? '?' : ''}: ${f.type === 'array' ? 'string[]' : 'string'}`)
+		.join('; ');
 
 	return `<script lang="ts">
   import { useLayoutRegions } from '@sveltopia/regions';
 
-  let { ${propsDestructure} } = $props();
+  let props = $props<{ ${propsType} }>();
 
   useLayoutRegions({
-    ${regionKey}: { ${regionDataObject} }
+    ${regionKey}: props
   });
 </script>
 

@@ -1,7 +1,7 @@
 {
   "name": "@sveltopia/regions",
   "version": "0.1.0",
-  "description": "Layout regions for SvelteKit - pass per-page content to layout regions",
+  "description": "Layout regions system for passing content from pages to layouts in SvelteKit",
   "type": "module",
   "main": "./src/index.ts",
   "bin": {
@@ -18,29 +18,43 @@
     "!src/**/*.spec.*"
   ],
   "scripts": {
-    "check": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
     "test:unit": "vitest run cli/__tests__/templates.test.ts",
-    "test:e2e": "vitest run cli/__tests__/cli.e2e.test.ts"
-  },
-  "dependencies": {
-    "@clack/prompts": "^0.11.0",
-    "commander": "^14.0.2"
+    "test:e2e": "vitest run cli/__tests__/cli.e2e.test.ts",
+    "typecheck": "tsc --noEmit",
+    "check": "tsc --noEmit",
+    "build": "echo 'Build step placeholder - add your build command here'"
   },
   "peerDependencies": {
-    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/kit": "^2.12.0",
     "svelte": "^5.0.0"
   },
   "devDependencies": {
-    "@sveltejs/kit": "^2.9.0",
-    "@types/node": "^22.0.0",
-    "svelte": "^5.11.0",
+    "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/vite-plugin-svelte": "^6.0.0",
+    "@testing-library/svelte": "^5.2.6",
+    "@types/node": "^24.9.1",
+    "@vitest/browser": "^3.2.3",
+    "@vitest/coverage-v8": "^3.2.3",
+    "jsdom": "^25.0.1",
+    "svelte": "^5.0.0",
     "tsx": "^4.20.6",
-    "typescript": "^5.7.2",
-    "vitest": "^3.2.3"
+    "typescript": "^5.9.3",
+    "valibot": "^1.1.0",
+    "vitest": "^3.2.3",
+    "vitest-browser-svelte": "^0.1.0",
+    "zod": "^3.25.76"
   },
-  "keywords": ["svelte", "sveltekit", "layout", "regions", "cli"],
+  "keywords": [
+    "svelte",
+    "sveltekit",
+    "layout",
+    "regions",
+    "context",
+    "component-communication"
+  ],
   "author": "Sveltopia",
   "license": "MIT",
   "repository": {
@@ -48,5 +62,12 @@
     "url": "https://github.com/sveltopia/regions.git",
     "directory": "packages/regions"
   },
-  "homepage": "https://regions.sveltopia.dev"
+  "homepage": "https://regions.sveltopia.dev",
+  "bugs": {
+    "url": "https://github.com/sveltopia/regions/issues"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.11.0",
+    "commander": "^14.0.2"
+  }
 }
