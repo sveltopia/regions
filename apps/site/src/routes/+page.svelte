@@ -1,2 +1,233 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<script lang="ts">
+  import CodeViewer from "$lib/components/CodeViewer.svelte";
+  import DecisionQuiz from "$lib/components/quiz/DecisionQuiz.svelte";
+  import RegionsAnimation from "$lib/components/RegionsAnimationV2/RegionsAnimation.svelte";
+  import { Code, Dice3, ShieldCheck } from "lucide-svelte";
+
+  // Code examples for each strategy
+  const loadFunctionExample = `export const load = () => ({
+  regions: {
+    pageHeader: {
+      title: 'My Page',
+      description: 'Server-rendered content'
+    }
+  }
+});`;
+
+  const pageComponentExample = `${"<"}script>
+  import PageHeader from '$lib/regions/PageHeader.svelte';
+${"<"}/script>
+
+<PageHeader
+  title="My Page"
+  description="Client-side content" />`;
+
+  const snippetExample = `${"<"}script>
+  import { useLayoutRegions } from '@sveltopia/regions';
+
+  let count = $state(0);
+
+  useLayoutRegions({
+    pageHeader: headerSnippet
+  });
+${"<"}/script>
+
+{#snippet headerSnippet()}
+  <h1>Count: {count}</h1>
+  <button onclick={() => count++}>
+    Increment
+  </button>
+{/snippet}`;
+
+  const layoutExample = `${"<"}script>
+  import { LayoutRegion } from '@sveltopia/regions';
+
+  let { children } = $props();
+${"<"}/script>
+
+<LayoutRegion name="pageHeader" {schema}>
+  {#snippet children(data)}
+    <h1>{data.title}</h1>
+    <p>{data.description}</p>
+  {/snippet}
+</LayoutRegion>
+
+<main>
+  {@render children()}
+</main>`;
+</script>
+
+<div class="w-full px-4 py-12 md:container md:mx-auto md:max-w-5xl">
+  <div class="space-y-8">
+    <!-- Hero Section -->
+    <div class="space-y-4">
+      <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">
+        @sveltopia/regions
+      </h1>
+      <p class="text-xl text-muted-foreground max-w-2xl">
+        Named content regions for SvelteKit layouts
+      </p>
+    </div>
+
+    <!-- Visual Storytelling Animation (desktop only) -->
+    <RegionsAnimation />
+
+    <!-- Features Grid -->
+    <div class="grid gap-6 md:grid-cols-3 mt-12">
+      <div class="rounded-lg bg-muted p-6">
+        <div class="mb-4">
+          <Code class="text-indigo-600 dark:text-indigo-400" size={24} />
+        </div>
+        <h3 class="font-semibold mb-2">"Front Matter" for your Pages</h3>
+        <p class="text-sm text-muted-foreground">
+          Declare metadata for each page, render them as custom regions in your
+          layouts.
+        </p>
+      </div>
+
+      <div class="rounded-lg bg-muted p-6">
+        <div class="mb-4">
+          <Dice3 class="text-indigo-600 dark:text-indigo-400" size={24} />
+        </div>
+        <h3 class="font-semibold mb-2">Three Strategies</h3>
+        <p class="text-sm text-muted-foreground">
+          Choose between load functions, wrapper components, or reactive
+          snippets.
+        </p>
+      </div>
+
+      <div class="rounded-lg bg-muted p-6">
+        <div class="mb-4">
+          <ShieldCheck class="text-indigo-600 dark:text-indigo-400" size={24} />
+        </div>
+        <h3 class="font-semibold mb-2">Type-Safe</h3>
+        <p class="text-sm text-muted-foreground">
+          Static type inference and runtime schema validation with Valibot or
+          Zod.
+        </p>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a
+        href="/docs/quick-start"
+        class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 cursor-pointer">
+        Quick Start
+      </a>
+      <a
+        href="/docs"
+        class="inline-flex items-center justify-center rounded-md border px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer">
+        Docs
+      </a>
+      <a
+        href="/examples"
+        class="inline-flex items-center justify-center rounded-md border px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer">
+        View Examples
+      </a>
+    </div>
+
+    <!-- Interactive Decision Quiz -->
+    <section class="mt-16">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold tracking-tight mb-4">
+          Are Regions Right for Your Project?
+        </h2>
+        <p class="text-xl text-muted-foreground">Take our 60-second quiz</p>
+      </div>
+
+      <DecisionQuiz />
+    </section>
+
+    <!-- Quick Examples - All 3 Strategies -->
+    <div class="mt-16 space-y-8">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Three Ways to Use Regions</h2>
+        <p class="text-muted-foreground">
+          Choose the strategy that fits your needs - all type-safe, all
+          flexible.
+        </p>
+      </div>
+
+      <!-- Strategy 1: Load Function -->
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold">1. Load Function (SSR)</h3>
+          <p class="text-sm text-muted-foreground">
+            Server-rendered with validation and type safety. Best for SEO and
+            zero layout shift.
+          </p>
+        </div>
+        <CodeViewer
+          filename="+page.server.ts"
+          language="typescript"
+          code={loadFunctionExample} />
+      </div>
+
+      <!-- Strategy 2: Component Wrapper -->
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold">
+            2. Component Wrapper (Rendered Client-Side)
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            Simple wrapper components with props. Fast and intuitive.
+          </p>
+        </div>
+        <CodeViewer
+          filename="+page.svelte"
+          language="svelte"
+          code={pageComponentExample} />
+      </div>
+
+      <!-- Strategy 3: Snippet -->
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold">
+            3. Snippet (Rendered Client-Side, Maximum Flexibility)
+          </h3>
+          <p class="text-sm text-muted-foreground">
+            Full access to page state. Perfect for interactive UIs.
+          </p>
+        </div>
+        <CodeViewer
+          filename="+page.svelte"
+          language="svelte"
+          code={snippetExample} />
+      </div>
+
+      <!-- Layout consumption example -->
+      <div class="space-y-6">
+        <div>
+          <h3 class="text-lg font-semibold">Then consume in your layout</h3>
+          <p class="text-sm text-muted-foreground">
+            All strategies use the same LayoutRegion component.
+          </p>
+        </div>
+        <CodeViewer
+          filename="+layout.svelte"
+          language="svelte"
+          code={layoutExample} />
+      </div>
+    </div>
+
+    <!-- Bottom CTA -->
+    <div class="flex flex-col sm:flex-row gap-4 mt-12">
+      <a
+        href="/docs/quick-start"
+        class="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 cursor-pointer">
+        Quick Start
+      </a>
+      <a
+        href="/docs"
+        class="inline-flex items-center justify-center rounded-md border px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer">
+        Docs
+      </a>
+      <a
+        href="/examples"
+        class="inline-flex items-center justify-center rounded-md border px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground cursor-pointer">
+        View Examples
+      </a>
+    </div>
+  </div>
+</div>
