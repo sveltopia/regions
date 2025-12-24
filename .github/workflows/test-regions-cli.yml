@@ -1,0 +1,59 @@
+name: Test Regions Package
+
+# When to run this workflow
+on:
+  push:
+    branches: ['**']  # Run on all branches
+    paths:
+      - 'packages/regions/**'  # Only when regions package changes
+      - '.github/workflows/test-regions-cli.yml'  # Or this workflow changes
+  pull_request:
+    branches: ['**']
+    paths:
+      - 'packages/regions/**'
+      - '.github/workflows/test-regions-cli.yml'
+
+# What jobs to run
+jobs:
+  test:
+    name: Test on ${{ matrix.os }}
+
+    # Run tests on multiple operating systems
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: [20.x]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      # Step 1: Check out the code
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      # Step 2: Setup pnpm
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 10
+
+      # Step 3: Set up Node.js
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'pnpm'
+
+      # Step 4: Install dependencies (from workspace root)
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # Step 5: Run type checking
+      - name: Type Check
+        working-directory: packages/regions
+        run: pnpm run typecheck
+
+      # Step 6: Run all tests (library + CLI unit + E2E)
+      - name: Run All Tests
+        working-directory: packages/regions
+        run: pnpm test
