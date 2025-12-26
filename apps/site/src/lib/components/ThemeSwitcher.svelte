@@ -3,10 +3,16 @@
   import { userPrefersMode, setMode } from 'mode-watcher';
   import { toast } from 'svelte-sonner';
   import { notificationState } from '$lib/stores/notifications.svelte';
+  import { onMount } from 'svelte';
 
   type Mode = 'light' | 'dark' | 'system';
 
   let isOpen = $state(false);
+  let mounted = $state(false);
+
+  onMount(() => {
+    mounted = true;
+  });
 
   const modeLabels: Record<Mode, string> = {
     light: 'Light',
@@ -46,7 +52,10 @@
     aria-label="Toggle theme"
     onclick={() => (isOpen = !isOpen)}
   >
-    {#if userPrefersMode.current === 'light'}
+    {#if !mounted}
+      <!-- Placeholder to prevent layout shift -->
+      <div class="h-5 w-5"></div>
+    {:else if userPrefersMode.current === 'light'}
       <Sun size={20} />
     {:else if userPrefersMode.current === 'dark'}
       <Moon size={20} />

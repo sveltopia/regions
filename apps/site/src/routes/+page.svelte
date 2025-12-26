@@ -107,7 +107,7 @@ ${'<'}/script>
     <div class="mt-12 flex flex-col gap-4 sm:flex-row">
       <a
         href="/docs/quick-start"
-        class="inline-flex cursor-pointer items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        class="inline-flex cursor-pointer items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-700"
       >
         Quick Start
       </a>
@@ -195,7 +195,7 @@ ${'<'}/script>
     <div class="mt-12 flex flex-col gap-4 sm:flex-row">
       <a
         href="/docs/quick-start"
-        class="inline-flex cursor-pointer items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+        class="inline-flex cursor-pointer items-center justify-center rounded-md bg-indigo-600 px-6 py-3 text-sm font-medium text-white hover:bg-indigo-700"
       >
         Quick Start
       </a>
