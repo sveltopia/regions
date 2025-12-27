@@ -3,15 +3,9 @@ name: Test Regions Package
 # When to run this workflow
 on:
   push:
-    branches: ['**']  # Run on all branches
-    paths:
-      - 'packages/regions/**'  # Only when regions package changes
-      - '.github/workflows/test-regions-cli.yml'  # Or this workflow changes
+    branches: ['**']
   pull_request:
     branches: ['**']
-    paths:
-      - 'packages/regions/**'
-      - '.github/workflows/test-regions-cli.yml'
 
 # What jobs to run
 jobs:

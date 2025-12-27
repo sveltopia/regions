@@ -158,7 +158,7 @@ ${'<'}/script>
           viewCount += Math.floor(Math.random() * 100);
           conversionRate = Number((Math.random() * 10).toFixed(1));
         }}
-        class="rounded bg-primary px-4 py-2 text-sm text-primary-foreground hover:bg-primary/90"
+        class="rounded bg-indigo-600 px-4 py-2 text-sm text-white hover:bg-indigo-700"
       >
         Update Stats
       </button>
