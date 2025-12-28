@@ -57,7 +57,7 @@
     >
       <!-- Mobile Header -->
       <div class="space-y-3 px-4 py-3 lg:hidden">
-        <!-- Top row: logo, Regions, Beta, hamburger (on internal pages) -->
+        <!-- Top row: logo, Regions, version, hamburger (on internal pages) -->
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-8">
             <a href="/">
@@ -67,7 +67,7 @@
               <span class="font-semibold">Regions</span>
               <span
                 class="rounded-md border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-400"
-                >Beta</span
+                >v0.1.0</span
               >
             </div>
           </div>
@@ -124,7 +124,7 @@
 
             <!-- Content area - matches article, justify-between -->
             <div class="flex flex-1 items-center justify-between">
-              <!-- Left: Layout Regions, Beta, nav -->
+              <!-- Left: Layout Regions, version, nav -->
               <div class="flex items-center gap-2 px-4">
                 <span class="font-semibold">Regions</span>
                 <span
