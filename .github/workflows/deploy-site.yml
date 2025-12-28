@@ -49,4 +49,5 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          packageManager: npm
           command: pages deploy apps/site/build --project-name=sveltopia-regions --branch=${{ github.head_ref || github.ref_name }}
