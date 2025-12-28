@@ -362,7 +362,7 @@
     };
 
     // URL for typing animation
-    const fullUrl = 'regions.sveltopia.com';
+    const fullUrl = 'regions.sveltopia.dev';
 
     // =========================================================================
     // SCENE 1: THE PROBLEM (~4s)
@@ -747,7 +747,7 @@
     // URL already set from Scene 1, ensure it's visible
     tl.call(
       () => {
-        if (browserRefs.urlText) browserRefs.urlText.textContent = 'regions.sveltopia.com';
+        if (browserRefs.urlText) browserRefs.urlText.textContent = 'regions.sveltopia.dev';
       },
       [],
       'scene3Load'
