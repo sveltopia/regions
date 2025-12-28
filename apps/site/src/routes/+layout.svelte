@@ -129,7 +129,7 @@
                 <span class="font-semibold">Regions</span>
                 <span
                   class="rounded-md border border-indigo-500/20 bg-indigo-500/10 px-2 py-0.5 text-xs font-semibold text-indigo-700 dark:text-indigo-400"
-                  >Beta</span
+                  >v0.1.0</span
                 >
                 <nav class="flex items-center space-x-1 pl-8 text-sm font-medium">
                   <a
