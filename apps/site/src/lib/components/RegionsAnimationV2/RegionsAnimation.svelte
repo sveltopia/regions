@@ -148,10 +148,160 @@
   // Restart button state
   let showRestartButton = $state(false);
 
+  // Animation viewed state (localStorage persistence)
+  const STORAGE_KEY = 'regions-animation-viewed';
+  let animationSeen = $state(false);
+
   function handleRestart() {
     if (!timeline) return;
     showRestartButton = false;
     timeline.restart();
+  }
+
+  // === IDLE ANIMATION (extracted for reuse) ===
+  let idleAnimationActive = false;
+
+  function getGlowBoxes() {
+    return [
+      {
+        container: contentRefs.mainContent,
+        fill: fillRefs.mainContent,
+        shimmer: pulseRefs.green,
+        name: 'green'
+      },
+      {
+        container: contentRefs.pageHeader,
+        fill: fillRefs.pageHeader,
+        shimmer: pulseRefs.purple,
+        name: 'purple'
+      },
+      {
+        container: contentRefs.sidebarBlock2,
+        fill: fillRefs.sidebarBlock2,
+        shimmer: pulseRefs.blue,
+        name: 'blue'
+      },
+      {
+        container: contentRefs.pageFooter,
+        fill: fillRefs.pageFooter,
+        shimmer: pulseRefs.amber,
+        name: 'amber'
+      }
+    ];
+  }
+
+  function shimmerRandomBox() {
+    if (!idleAnimationActive) return;
+
+    const glowBoxes = getGlowBoxes();
+
+    // Pick a random box, avoiding the last one
+    let index;
+    do {
+      index = Math.floor(Math.random() * glowBoxes.length);
+    } while (index === lastTracedIndex && glowBoxes.length > 1);
+    lastTracedIndex = index;
+
+    const { container, shimmer } = glowBoxes[index];
+
+    // Skip if refs aren't available
+    if (!container || !shimmer) return;
+
+    // Calculate duration based on box width using square root scaling
+    const baseWidth = 60;
+    const baseDuration = 0.6;
+    const boxWidth = container.offsetWidth;
+    const duration = baseDuration * Math.sqrt(boxWidth / baseWidth);
+
+    // Shimmer sweep left-to-right
+    gsap.fromTo(
+      shimmer,
+      { opacity: 1, x: '-100%' },
+      { x: '100%', duration, ease: 'power1.inOut' }
+    );
+
+    // After shimmer completes, reset and schedule next
+    const shimmerMs = duration * 1000 + 100;
+    setTimeout(() => {
+      if (!idleAnimationActive) return;
+
+      // Reset shimmer
+      gsap.set(shimmer, { opacity: 0, x: '-100%' });
+
+      // Schedule next box (random 2-3s delay)
+      if (idleAnimationActive) {
+        const delay = 2000 + Math.random() * 1000;
+        setTimeout(shimmerRandomBox, delay);
+      }
+    }, shimmerMs);
+  }
+
+  function startIdleLoop() {
+    idleAnimationActive = true;
+    // Initialize all shimmers as hidden
+    const glowBoxes = getGlowBoxes();
+    glowBoxes.forEach(({ shimmer }) => {
+      gsap.set(shimmer, { opacity: 0, x: '-100%' });
+    });
+    // Start first shimmer after 2 second delay
+    setTimeout(shimmerRandomBox, 2000);
+  }
+
+  function stopIdleLoop() {
+    idleAnimationActive = false;
+    const glowBoxes = getGlowBoxes();
+    glowBoxes.forEach(({ shimmer }) => {
+      gsap.set(shimmer, { opacity: 0, x: '-100%' });
+    });
+    lastTracedIndex = -1;
+  }
+
+  // Set final state for returning visitors (skips animation)
+  function setFinalState() {
+    // Hide captions 0 and 2
+    gsap.set([captionRefs.caption0, captionRefs.caption2], { opacity: 0 });
+
+    // Show final caption (caption 3)
+    gsap.set(captionRefs.caption3, { opacity: 1, visibility: 'visible' });
+    gsap.set([captionRefs.caption3Line1, captionRefs.caption3Line2], { opacity: 1 });
+
+    // Hide CLI frame
+    gsap.set(cliRefs.frame, { opacity: 0, visibility: 'hidden' });
+
+    // Layout panel: positioned on left, fully visible with all regions
+    gsap.set(layoutPanelRefs.panel, {
+      visibility: 'visible',
+      opacity: 1,
+      x: 0,
+      left: POSITIONS.cliX
+    });
+    gsap.set(layoutPanelRefs.regionsWrapper, { opacity: 1 });
+    gsap.set(layoutPanelRefs.regionsTag, { opacity: 1 });
+    gsap.set(
+      [layoutPanelRefs.regionHeader, layoutPanelRefs.regionSidebar, layoutPanelRefs.regionFooter],
+      { opacity: 1, y: 0, scale: 1 }
+    );
+    gsap.set(layoutPanelRefs.renderChildren, { opacity: 1 });
+
+    // Browser: positioned on right, page loaded with all regions filled
+    gsap.set(browserRefs.frame, {
+      visibility: 'visible',
+      opacity: 1,
+      y: 0,
+      left: POSITIONS.layoutX
+    });
+    if (browserRefs.urlText) browserRefs.urlText.textContent = 'regions.sveltopia.dev';
+    gsap.set(browserRefs.pageLayout, { clipPath: 'inset(0 0 0% 0)' });
+
+    // Fill all colored regions
+    gsap.set(
+      [fillRefs.mainContent, fillRefs.pageHeader, fillRefs.pageFooter, fillRefs.sidebarBlock2],
+      { clipPath: 'inset(0% 0 0 0)' }
+    );
+
+    // Show restart button and start idle shimmer
+    showRestartButton = true;
+    startIdleLoop();
   }
 
   $effect(() => {
@@ -169,6 +319,15 @@
 
   onMount(() => {
     if (prefersReducedMotion) return;
+
+    // Check if animation was previously viewed
+    animationSeen = localStorage.getItem(STORAGE_KEY) === 'true';
+
+    // If already seen, skip to final state
+    if (animationSeen) {
+      setFinalState();
+      return;
+    }
 
     // === INITIAL STATES ===
 
@@ -876,101 +1035,16 @@
     // Hold final state
     tl.addLabel('end', 'scene3Caption+=1.5');
 
-    // === IDLE ANIMATION: CSS rotating conic gradient border ===
-    // Randomly applies glowing class to one box at a time
-
-    // Flag to track if idle animation is active
-    let idleAnimationActive = false;
-
-    // Box configurations for idle glow animation
-    const glowBoxes = [
-      {
-        container: contentRefs.mainContent,
-        fill: fillRefs.mainContent,
-        shimmer: pulseRefs.green,
-        name: 'green'
+    // === IDLE ANIMATION & COMPLETION ===
+    // Mark animation as viewed and start idle loop when timeline completes
+    tl.call(
+      () => {
+        localStorage.setItem(STORAGE_KEY, 'true');
+        startIdleLoop();
       },
-      {
-        container: contentRefs.pageHeader,
-        fill: fillRefs.pageHeader,
-        shimmer: pulseRefs.purple,
-        name: 'purple'
-      },
-      {
-        container: contentRefs.sidebarBlock2,
-        fill: fillRefs.sidebarBlock2,
-        shimmer: pulseRefs.blue,
-        name: 'blue'
-      },
-      {
-        container: contentRefs.pageFooter,
-        fill: fillRefs.pageFooter,
-        shimmer: pulseRefs.amber,
-        name: 'amber'
-      }
-    ];
-
-    // Initialize all shimmers as hidden
-    glowBoxes.forEach(({ shimmer }) => {
-      gsap.set(shimmer, { opacity: 0, x: '-100%' });
-    });
-
-    // Function to shimmer a random box
-    const shimmerRandomBox = () => {
-      if (!idleAnimationActive) return;
-
-      // Pick a random box, avoiding the last one
-      let index;
-      do {
-        index = Math.floor(Math.random() * glowBoxes.length);
-      } while (index === lastTracedIndex && glowBoxes.length > 1);
-      lastTracedIndex = index;
-
-      const { container, shimmer } = glowBoxes[index];
-
-      // Skip if refs aren't available
-      if (!container || !shimmer) return;
-
-      // Calculate duration based on box width using square root scaling
-      // This gives a middle ground - wider boxes are slower, but not linearly
-      // Sidebar (~60px) at 0.6s is baseline, wide boxes (~240px) get ~1.2s
-      const baseWidth = 60;
-      const baseDuration = 0.6;
-      const boxWidth = container.offsetWidth;
-      const duration = baseDuration * Math.sqrt(boxWidth / baseWidth);
-
-      // Shimmer sweep left-to-right
-      gsap.fromTo(
-        shimmer,
-        { opacity: 1, x: '-100%' },
-        { x: '100%', duration, ease: 'power1.inOut' }
-      );
-
-      // After shimmer completes, reset and schedule next
-      const shimmerMs = duration * 1000 + 100; // duration + small buffer
-      setTimeout(() => {
-        if (!idleAnimationActive) return;
-
-        // Reset shimmer
-        gsap.set(shimmer, { opacity: 0, x: '-100%' });
-
-        // Schedule next box (random 2-3s delay)
-        if (idleAnimationActive) {
-          const delay = 2000 + Math.random() * 1000;
-          setTimeout(shimmerRandomBox, delay);
-        }
-      }, shimmerMs);
-    };
-
-    // Start the idle animation loop
-    const startIdleLoop = () => {
-      idleAnimationActive = true;
-      // Start first shimmer after 2 second delay
-      setTimeout(shimmerRandomBox, 2000);
-    };
-
-    // Start idle animation and show restart button when main timeline completes
-    tl.call(startIdleLoop, [], 'end');
+      [],
+      'end'
+    );
     tl.call(
       () => {
         showRestartButton = true;
@@ -982,12 +1056,7 @@
     // Reset function for when animation rewinds
     const resetIdleState = () => {
       showRestartButton = false;
-      idleAnimationActive = false;
-      // Reset all shimmers
-      glowBoxes.forEach(({ shimmer }) => {
-        gsap.set(shimmer, { opacity: 0, x: '-100%' });
-      });
-      lastTracedIndex = -1;
+      stopIdleLoop();
     };
 
     // Reset text content (not managed by GSAP)
