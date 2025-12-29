@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext, onMount } from "svelte";
+  import { getContext, onMount, untrack } from "svelte";
   import { page } from "$app/state";
   import { dev } from "$app/environment";
   import type { Snippet } from "svelte";
@@ -23,8 +23,9 @@
   );
 
   // Register this region immediately (synchronously) so it's available
-  // before any page components try to set regions
-  context?.registerRegion(name, required);
+  // before any page components try to set regions.
+  // Using untrack() because we intentionally capture initial values - these props shouldn't change.
+  untrack(() => context?.registerRegion(name, required));
 
   // Unregister when component unmounts
   onMount(() => {

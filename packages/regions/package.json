@@ -3,19 +3,24 @@
   "version": "0.1.0",
   "description": "Layout regions system for passing content from pages to layouts in SvelteKit",
   "type": "module",
-  "main": "./src/index.ts",
+  "svelte": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "bin": {
-    "regions": "./cli/index.js"
+    "regions": "./cli-dist/index.js"
   },
   "exports": {
-    ".": "./src/index.ts",
+    ".": {
+      "types": "./dist/index.d.ts",
+      "svelte": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
-    "src",
-    "cli",
-    "!src/**/*.test.*",
-    "!src/**/*.spec.*"
+    "dist",
+    "cli-dist",
+    "!dist/**/*.test.*",
+    "!dist/**/*.spec.*"
   ],
   "scripts": {
     "test": "vitest run",
@@ -25,7 +30,9 @@
     "test:e2e": "vitest run cli/__tests__/cli.e2e.test.ts",
     "typecheck": "tsc --noEmit",
     "check": "tsc --noEmit",
-    "build": "echo 'Build step placeholder - add your build command here'"
+    "build": "pnpm build:lib && pnpm build:cli",
+    "build:lib": "svelte-package -i src && rm -rf dist/__tests__ dist/__mocks__",
+    "build:cli": "tsc -p tsconfig.cli.json"
   },
   "peerDependencies": {
     "@sveltejs/kit": "^2.12.0",
@@ -33,6 +40,7 @@
   },
   "devDependencies": {
     "@sveltejs/kit": "^2.0.0",
+    "@sveltejs/package": "^2.5.7",
     "@sveltejs/vite-plugin-svelte": "^6.0.0",
     "@testing-library/svelte": "^5.2.6",
     "@types/node": "^24.9.1",
