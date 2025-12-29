@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@sveltopia/regions.svg)](https://www.npmjs.com/package/@sveltopia/regions)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-> **[Full Documentation & Examples →](https://regions.sveltopia.dev)** *(Coming Soon)*
+> **[Full Documentation & Examples →](https://regions.sveltopia.dev)**
 
 Pass content from child pages to parent layouts in SvelteKit. Server-rendered data or reactive snippets. Type-safe with optional validation.
 
@@ -411,7 +411,7 @@ See [CONTRIBUTING.md](./CONTRIBUTING.md) for detailed guidelines.
 ## Support
 
 - [GitHub Issues](https://github.com/sveltopia/regions/issues) - Bug reports and feature requests
-- [Full Documentation](https://regions.sveltopia.dev) - Comprehensive guides (Coming Soon)
+- [Full Documentation](https://regions.sveltopia.dev) - Comprehensive guides and examples
 
 ## Changelog
 
