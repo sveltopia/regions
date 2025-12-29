@@ -152,9 +152,120 @@
   const STORAGE_KEY = 'regions-animation-viewed';
   let animationSeen = $state(false);
 
+  // Set initial states for animation start (extracted for reuse in restart)
+  function setInitialStates() {
+    // Caption 0: "SvelteKit gives us one place to render page content in a layout."
+    gsap.set(captionRefs.caption0, { opacity: 1, visibility: 'visible' });
+    gsap.set(captionRefs.caption0Line1, { clipPath: 'inset(0 100% 0 0)' });
+
+    // Caption 2: "Layout Regions gives us as many as we need." - hidden initially
+    gsap.set(captionRefs.caption2, { opacity: 0, visibility: 'visible' });
+    gsap.set(captionRefs.caption2Line1, { clipPath: 'inset(0 100% 0 0)' });
+
+    // Caption 3: Final payoff - both lines hidden initially (will fade in)
+    gsap.set(captionRefs.caption3, { opacity: 0, visibility: 'visible' });
+    gsap.set([captionRefs.caption3Line1, captionRefs.caption3Line2], { opacity: 0 });
+
+    // CLI frame: below canvas, hidden
+    gsap.set(cliRefs.frame, {
+      y: 100,
+      opacity: 0,
+      visibility: 'visible'
+    });
+
+    // Layout panel: off to the right, hidden, at right position (Scene 2 start)
+    gsap.set(layoutPanelRefs.panel, {
+      x: 60,
+      opacity: 0,
+      visibility: 'visible',
+      left: POSITIONS.layoutX
+    });
+    // Hide everything except render children initially
+    gsap.set(layoutPanelRefs.regionsWrapper, { opacity: 0 });
+    gsap.set(layoutPanelRefs.regionsTag, { opacity: 0 });
+    gsap.set(
+      [layoutPanelRefs.regionHeader, layoutPanelRefs.regionSidebar, layoutPanelRefs.regionFooter],
+      {
+        opacity: 0,
+        y: 10,
+        scale: 0.95
+      }
+    );
+
+    // CLI text: starts with just cursor
+    if (cliRefs.text) cliRefs.text.innerHTML = '<span class="cli-cursor">▌</span>';
+
+    // CLI output: all lines hidden initially
+    gsap.set(cliRefs.outputContainer, { opacity: 0 });
+
+    // Individual CLI output lines
+    gsap.set([cliRefs.header, cliRefs.generating, cliRefs.files, cliRefs.done], { opacity: 0 });
+
+    // Skeleton rows: hidden AND clipped for wipe-in effect
+    gsap.set([cliRefs.skeleton1, cliRefs.skeleton2, cliRefs.skeleton3], {
+      opacity: 0,
+      clipPath: 'inset(0 100% 0 0)'
+    });
+
+    // Fill overlays: start clipped from top (hidden)
+    gsap.set(
+      [
+        fillRefs.layoutHeader,
+        fillRefs.sidebarBlock1,
+        fillRefs.layoutFooter,
+        fillRefs.pageHeader,
+        fillRefs.sidebarBlock2,
+        fillRefs.pageFooter,
+        fillRefs.mainContent
+      ],
+      { clipPath: 'inset(100% 0 0 0)' }
+    );
+
+    // Browser: below canvas, hidden, at center position (Scene 1 start)
+    gsap.set(browserRefs.frame, {
+      y: 120,
+      opacity: 0,
+      visibility: 'visible',
+      left: POSITIONS.browserCenterX
+    });
+
+    // Browser loading elements: hidden initially
+    gsap.set(browserRefs.mouseCursor, {
+      x: 350,
+      y: 15,
+      opacity: 0
+    });
+
+    gsap.set(browserRefs.loadingSpinner, {
+      opacity: 0,
+      rotation: 0
+    });
+
+    // Page layout: hidden initially
+    gsap.set(browserRefs.pageLayout, {
+      clipPath: 'inset(0 0 100% 0)'
+    });
+
+    // URL text: start empty
+    if (browserRefs.urlText) {
+      browserRefs.urlText.textContent = '';
+    }
+
+    // URL bar: remove active state
+    if (browserRefs.urlBar) {
+      browserRefs.urlBar.classList.remove('active');
+    }
+  }
+
+  function prepareRestart() {
+    stopIdleLoop();
+    setInitialStates();
+  }
+
   function handleRestart() {
     if (!timeline) return;
     showRestartButton = false;
+    prepareRestart();
     timeline.restart();
   }
 
@@ -214,11 +325,7 @@
     const duration = baseDuration * Math.sqrt(boxWidth / baseWidth);
 
     // Shimmer sweep left-to-right
-    gsap.fromTo(
-      shimmer,
-      { opacity: 1, x: '-100%' },
-      { x: '100%', duration, ease: 'power1.inOut' }
-    );
+    gsap.fromTo(shimmer, { opacity: 1, x: '-100%' }, { x: '100%', duration, ease: 'power1.inOut' });
 
     // After shimmer completes, reset and schedule next
     const shimmerMs = duration * 1000 + 100;
@@ -293,7 +400,12 @@
     if (browserRefs.urlText) browserRefs.urlText.textContent = 'regions.sveltopia.dev';
     gsap.set(browserRefs.pageLayout, { clipPath: 'inset(0 0 0% 0)' });
 
-    // Fill all colored regions
+    // Hide layout structure fills (these should stay grey, not colored)
+    gsap.set([fillRefs.layoutHeader, fillRefs.sidebarBlock1, fillRefs.layoutFooter], {
+      clipPath: 'inset(100% 0 0 0)'
+    });
+
+    // Fill region content boxes (these get colored)
     gsap.set(
       [fillRefs.mainContent, fillRefs.pageHeader, fillRefs.pageFooter, fillRefs.sidebarBlock2],
       { clipPath: 'inset(0% 0 0 0)' }
@@ -323,108 +435,13 @@
     // Check if animation was previously viewed
     animationSeen = localStorage.getItem(STORAGE_KEY) === 'true';
 
-    // If already seen, skip to final state
+    // For returning visitors, show final state immediately
+    // But continue to create timeline so restart button works
     if (animationSeen) {
       setFinalState();
-      return;
-    }
-
-    // === INITIAL STATES ===
-
-    // Caption 0: "SvelteKit gives us one place to render page content in a layout."
-    gsap.set(captionRefs.caption0, { opacity: 1, visibility: 'visible' });
-    gsap.set(captionRefs.caption0Line1, { clipPath: 'inset(0 100% 0 0)' });
-
-    // Caption 2: "Layout Regions gives us as many as we need." - hidden initially
-    gsap.set(captionRefs.caption2, { opacity: 0, visibility: 'visible' });
-    gsap.set(captionRefs.caption2Line1, { clipPath: 'inset(0 100% 0 0)' });
-
-    // Caption 3: Final payoff - both lines hidden initially (will fade in)
-    gsap.set(captionRefs.caption3, { opacity: 0, visibility: 'visible' });
-    gsap.set([captionRefs.caption3Line1, captionRefs.caption3Line2], { opacity: 0 });
-
-    // CLI frame: below canvas, hidden
-    gsap.set(cliRefs.frame, {
-      y: 100,
-      opacity: 0,
-      visibility: 'visible'
-    });
-
-    // Layout panel: off to the right, hidden
-    gsap.set(layoutPanelRefs.panel, {
-      x: 60,
-      opacity: 0,
-      visibility: 'visible'
-    });
-    // Hide everything except render children initially
-    gsap.set(layoutPanelRefs.regionsWrapper, { opacity: 0 });
-    gsap.set(layoutPanelRefs.regionsTag, { opacity: 0 });
-    gsap.set(
-      [layoutPanelRefs.regionHeader, layoutPanelRefs.regionSidebar, layoutPanelRefs.regionFooter],
-      {
-        opacity: 0,
-        y: 10,
-        scale: 0.95
-      }
-    );
-
-    // CLI text: starts with just cursor
-    if (cliRefs.text) cliRefs.text.innerHTML = '<span class="cli-cursor">▌</span>';
-
-    // CLI output: all lines hidden initially
-    // Container hidden until command is typed
-    gsap.set(cliRefs.outputContainer, { opacity: 0 });
-
-    // Individual CLI output lines - must be set explicitly for GSAP to manage them
-    gsap.set([cliRefs.header, cliRefs.generating, cliRefs.files, cliRefs.done], { opacity: 0 });
-
-    // Skeleton rows: hidden AND clipped for wipe-in effect
-    gsap.set([cliRefs.skeleton1, cliRefs.skeleton2, cliRefs.skeleton3], {
-      opacity: 0,
-      clipPath: 'inset(0 100% 0 0)'
-    });
-
-    // Fill overlays: start clipped from top (hidden) - will reveal bottom-to-top like buckets
-    gsap.set(
-      [
-        fillRefs.layoutHeader,
-        fillRefs.sidebarBlock1,
-        fillRefs.layoutFooter,
-        fillRefs.pageHeader,
-        fillRefs.sidebarBlock2,
-        fillRefs.pageFooter,
-        fillRefs.mainContent
-      ],
-      { clipPath: 'inset(100% 0 0 0)' }
-    );
-
-    // Browser: below canvas, hidden (visibility set to visible for GSAP)
-    gsap.set(browserRefs.frame, {
-      y: 120,
-      opacity: 0,
-      visibility: 'visible'
-    });
-
-    // Browser loading elements: hidden initially
-    gsap.set(browserRefs.mouseCursor, {
-      x: 350, // Off right edge
-      y: 15, // Near URL bar height
-      opacity: 0
-    });
-
-    gsap.set(browserRefs.loadingSpinner, {
-      opacity: 0,
-      rotation: 0
-    });
-
-    // Page layout: hidden initially (wipes down after URL loads)
-    gsap.set(browserRefs.pageLayout, {
-      clipPath: 'inset(0 0 100% 0)' // Hidden from bottom
-    });
-
-    // URL text: start empty
-    if (browserRefs.urlText) {
-      browserRefs.urlText.textContent = '';
+    } else {
+      // First-time visitor: set initial animation states
+      setInitialStates();
     }
 
     // Create timeline (always paused initially, delay handles autoPlay)
@@ -433,7 +450,8 @@
     });
 
     // Delay start to let page settle (prevents jumpy animation on initial render)
-    if (autoPlay) {
+    // Only auto-play for first-time visitors
+    if (autoPlay && !animationSeen) {
       gsap.delayedCall(1, () => {
         tl.play();
       });
@@ -1292,7 +1310,7 @@
             <!-- Files created (simplified) -->
             <div class="cli-line cli-files-simple" bind:this={cliRefs.files}>
               <span class="cli-border">│</span>
-              <span class="cli-check">✓</span>
+              <span class="cli-check">-</span>
               <span class="cli-file-count">4 files created</span>
             </div>
 
@@ -1333,7 +1351,7 @@
               class="layout-region layout-region-header"
               bind:this={layoutPanelRefs.regionHeader}
             >
-              <span class="region-label">contentRefs.pageHeader</span>
+              <span class="region-label">pageHeader</span>
               <div class="region-skeleton">
                 <div class="skeleton-bar"></div>
                 <div class="skeleton-bar short"></div>
@@ -1355,7 +1373,7 @@
               class="layout-region layout-region-footer"
               bind:this={layoutPanelRefs.regionFooter}
             >
-              <span class="region-label">contentRefs.pageFooter</span>
+              <span class="region-label">pageFooter</span>
               <div class="region-skeleton">
                 <div class="skeleton-bar medium"></div>
                 <div class="skeleton-bar short"></div>
@@ -1371,7 +1389,7 @@
       </div>
 
       <!-- Dev Controls -->
-      <AnimationControls {timeline} frameLabels={[...FRAME_LABELS]} show={devMode} />
+      <AnimationControls {timeline} frameLabels={[...FRAME_LABELS]} show={devMode} onRestart={prepareRestart} />
 
       <!-- User Restart Button (fades in at end) -->
       {#if showRestartButton && !devMode}
@@ -1745,16 +1763,9 @@
     }
     .region-label {
       font-size: 9px;
-      margin-bottom: 4px;
     }
     .layout-region {
       padding: 8px 10px;
-    }
-    .layout-render-children {
-      padding: 6px 10px;
-    }
-    .render-children-text {
-      font-size: 10px;
     }
   }
 
@@ -2341,6 +2352,7 @@
     display: flex;
     flex-direction: column;
     justify-content: center; /* Centers content when skeleton is hidden */
+    gap: 6px; /* Space between label and skeleton */
   }
 
   /* Solid colors, no borders */
@@ -2362,7 +2374,6 @@
     font-weight: 600;
     @apply text-white;
     display: block;
-    margin-bottom: 6px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
@@ -2402,8 +2413,10 @@
 
   .layout-render-children {
     border-radius: 6px;
-    padding: 8px 12px;
-    text-align: center;
+    padding: 10px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     @apply bg-slate-200 dark:bg-slate-700;
     transition: background-color 0.3s ease;
     flex-shrink: 0; /* Don't shrink, stay at natural height */
@@ -2422,6 +2435,16 @@
     font-size: 13px;
     font-weight: 600;
     @apply text-slate-500 dark:text-slate-400;
+  }
+
+  /* Responsive: smaller padding at narrow widths */
+  @container (max-width: 660px) {
+    .layout-render-children {
+      padding: 6px 10px;
+    }
+    .render-children-text {
+      font-size: 10px;
+    }
   }
 
   /* === IDLE STATE: Shimmer sweep effect ===
@@ -2454,7 +2477,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 100;
+    z-index: 40;
     display: flex;
     align-items: center;
     justify-content: center;

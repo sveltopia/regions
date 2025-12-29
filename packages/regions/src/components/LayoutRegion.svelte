@@ -52,7 +52,7 @@
         } catch (error) {
           const errorMessage = error instanceof Error ? error.message : String(error);
           console.error(
-            `❌ Region validation failed for "${name}"\n\n` +
+            `Region validation failed for "${name}"\n\n` +
             `Validation error:\n${errorMessage}\n\n` +
             `Tip: Check the data you're passing to useLayoutRegions({ ${name}: ... })`
           );

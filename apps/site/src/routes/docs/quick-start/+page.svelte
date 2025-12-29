@@ -11,7 +11,7 @@ yarn add @sveltopia/regions`;
 
   const cliAddCommand = `npx @sveltopia/regions add page-header`;
 
-  const cliInteractive = `┌  🧩 Sveltopia Regions Generator
+  const cliInteractive = `┌  Sveltopia Regions Generator
 │
 ◆  What strategy would you like to use?
 │  ● Load function (+page.server.ts) - Recommended for SEO, no layout shift
@@ -109,7 +109,7 @@ ${'<'}/script>
 │       import { LayoutRegions } from '@sveltopia/regions';                │
 │     ${'<'}/script>                                                            │
 │     <LayoutRegions>{@render children()}</LayoutRegions>                  │
-│     ⚠️  Required for regions to work (one-time setup)                    │
+│     Note: Required for regions to work (one-time setup)                  │
 │                                                                          │
 │  2. Add the region consumer to your +layout.svelte:                      │
 │     ${'<'}script lang="ts">                                                   │
@@ -129,7 +129,7 @@ ${'<'}/script>
 │                                                                          │
 ├──────────────────────────────────────────────────────────────────────────╯
 │
-└  ✨ Done!`;
+└  Done!`;
 </script>
 
 <div class="prose max-w-none dark:prose-invert">
