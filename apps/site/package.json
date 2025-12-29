@@ -14,7 +14,7 @@
     "lint": "prettier --check . && eslint ."
   },
   "dependencies": {
-    "@sveltopia/regions": "workspace:*",
+    "@sveltopia/regions": "^0.1.0",
     "gsap": "^3.13.0",
     "lucide-svelte": "^0.525.0",
     "valibot": "^1.1.0",
