@@ -10,7 +10,7 @@ export type { LayoutRegionsOptions } from "./useLayoutRegions.svelte";
 export { valibot, zod } from "./lib/helpers.js";
 
 // Re-export types for convenience
-export type { LayoutRegionsContext, RegionSchema, RegionSchemas, Regions, RegionContent } from "./types";
+export type { LayoutRegionsContext, RegionSchema, RegionSchemas, Regions, RegionContent, WarningsConfig } from "./types";
 
 // Type augmentation for page.data.regions (users should import this in their app.d.ts)
 export type {} from "./app.d.ts";

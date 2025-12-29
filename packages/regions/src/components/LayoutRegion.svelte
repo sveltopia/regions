@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { getContext } from "svelte";
+  import { getContext, onMount } from "svelte";
   import { page } from "$app/state";
   import { dev } from "$app/environment";
   import type { Snippet } from "svelte";
@@ -11,14 +11,25 @@
     children?: Snippet<[Record<string, unknown>?]>;  // Data parameter is optional
     fallback?: Snippet;
     schema?: RegionSchema;
+    /** Mark this region as required. Warns in dev mode if page doesn't set it. */
+    required?: boolean;
   }
 
-  let { name, children, fallback, schema }: Props = $props();
+  let { name, children, fallback, schema, required = false }: Props = $props();
 
   // Get the regions context
   const context = getContext<LayoutRegionsContext | undefined>(
     LAYOUT_REGIONS_KEY
   );
+
+  // Register this region immediately (synchronously) so it's available
+  // before any page components try to set regions
+  context?.registerRegion(name, required);
+
+  // Unregister when component unmounts
+  onMount(() => {
+    return () => context?.unregisterRegion(name);
+  });
 
   // HYBRID APPROACH: Check both page.data and context
   // 1. Try page.data.regions first (SSR-friendly for data)
