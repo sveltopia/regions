@@ -6,9 +6,10 @@
     timeline: GSAPTimeline | null;
     frameLabels?: string[];
     show?: boolean;
+    onRestart?: () => void;
   }
 
-  let { timeline, frameLabels = [], show = true }: Props = $props();
+  let { timeline, frameLabels = [], show = true, onRestart }: Props = $props();
 
   let isPlaying = $state(false);
   let progress = $state(0);
@@ -55,6 +56,7 @@
 
   function handleRestart() {
     if (!timeline) return;
+    onRestart?.();
     timeline.restart();
     // isPlaying synced from timeline.isActive() in effect
   }

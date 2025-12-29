@@ -107,7 +107,7 @@
       </ul>
     </KeyConcept>
 
-    <KeyConcept variant="slate" icon={FileCode}>
+    <KeyConcept variant="indigo" icon={FileCode}>
       <p class="mb-2 font-semibold">
         <code class="rounded bg-muted px-1.5 py-0.5">+page.server.ts</code>
       </p>
@@ -189,7 +189,7 @@ export const load = async ({ params }) => {
     <code class="rounded bg-muted px-1.5 py-0.5">+page.server.ts</code> files:
   </p>
 
-  <KeyConcept variant="neutral" icon={CheckCircle2}>
+  <KeyConcept variant="indigo" icon={CheckCircle2}>
     <p class="mb-3 font-semibold">Both of these work automatically:</p>
     <ul class="space-y-2">
       <li>
@@ -214,7 +214,7 @@ export const load = async ({ params }) => {
     </ul>
   </KeyConcept>
 
-  <KeyConcept variant="slate" icon={AlertCircle}>
+  <KeyConcept variant="indigo" icon={AlertCircle}>
     <p class="mb-2 font-semibold">When to use useLayoutRegions()</p>
     <p class="mb-3">
       The <code class="rounded bg-muted px-1.5 py-0.5">useLayoutRegions()</code> function is for
@@ -310,7 +310,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 };`}
   />
 
-  <KeyConcept variant="neutral" icon={AlertCircle}>
+  <KeyConcept variant="indigo" icon={AlertCircle}>
     <p class="mb-2 font-semibold">Important: Spread .regions, Not All Parent Data</p>
     <p class="mb-3">
       The <code class="rounded bg-muted px-1.5 py-0.5">parentData</code> object contains
@@ -368,7 +368,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     </ul>
   </KeyConcept>
 
-  <KeyConcept variant="neutral" icon={AlertCircle}>
+  <KeyConcept variant="indigo" icon={AlertCircle}>
     <p class="mb-2 font-semibold">Server vs Universal Load Inheritance</p>
     <p class="mb-3">
       The <code class="rounded bg-muted px-1.5 py-0.5">parent()</code> function behaves differently depending
@@ -410,7 +410,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     <p><strong>3. Addition:</strong> Child can add new regions alongside inherited ones</p>
   </div>
 
-  <KeyConcept variant="neutral">
+  <KeyConcept variant="indigo">
     <p class="mb-2 font-semibold">Example Scenario - Addition:</p>
     <ul class="space-y-3">
       <li>
@@ -430,7 +430,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
     </ul>
   </KeyConcept>
 
-  <KeyConcept variant="neutral">
+  <KeyConcept variant="indigo">
     <p class="mb-2 font-semibold">Example Scenario - Override:</p>
     <ul class="space-y-3">
       <li>
@@ -541,7 +541,7 @@ export const load: PageServerLoad = async ({ parent, params }) => {
 };`}
   />
 
-  <KeyConcept variant="slate" icon={CheckCircle2}>
+  <KeyConcept variant="indigo" icon={CheckCircle2}>
     <p class="mb-2 font-semibold">Result at /products/123:</p>
     <ul class="mt-2 space-y-3">
       <li>• <strong>breadcrumbs:</strong> Home → Products → Product Name</li>
@@ -626,7 +626,7 @@ export const load: PageServerLoad = async ({ parent, url }) => {
   <h3 class="mt-8 mb-3 text-2xl font-semibold">Gotchas & Best Practices</h3>
 
   <div class="space-y-4">
-    <KeyConcept variant="slate" icon={AlertCircle}>
+    <KeyConcept variant="indigo" icon={AlertCircle}>
       <p class="mb-2 font-semibold">Order Matters</p>
       <p class="mb-4">
         Always spread parent regions <strong>first</strong>, then define your overrides. Spreading
@@ -648,7 +648,7 @@ regions: {
       />
     </KeyConcept>
 
-    <KeyConcept variant="slate" icon={AlertCircle}>
+    <KeyConcept variant="indigo" icon={AlertCircle}>
       <p class="mb-2 font-semibold">Type Safety</p>
       <p class="mb-4">
         Parent data is typed as <code class="rounded bg-muted px-1.5 py-0.5"
@@ -679,7 +679,7 @@ return {
       />
     </KeyConcept>
 
-    <KeyConcept variant="slate" icon={AlertCircle}>
+    <KeyConcept variant="indigo" icon={AlertCircle}>
       <p class="mb-2 font-semibold">Performance Considerations</p>
       <p class="mb-3">
         <code class="rounded bg-muted px-1.5 py-0.5">await parent()</code> waits for all parent load functions
