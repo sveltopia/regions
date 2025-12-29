@@ -3,7 +3,7 @@ import { svelte } from '@sveltejs/vite-plugin-svelte';
 import path from 'path';
 
 export default defineConfig({
-	plugins: [svelte({ hot: false, compilerOptions: { dev: false } })],
+	plugins: [svelte({ hot: false })],
 	resolve: {
 		alias: {
 			$app: path.resolve('./src/__tests__/__mocks__/$app')

@@ -290,12 +290,12 @@ export const load = () => ({
 **`<LayoutRegions>`**
 Wraps layouts to enable regions.
 
-Props: `children?`, `schemas?`
+Props: `children?`, `schemas?`, `warnings?`
 
 **`<LayoutRegion name>`**
 Renders a specific region.
 
-Props: `name` (required), `children?`, `fallback?`, `schema?`
+Props: `name` (required), `children?`, `fallback?`, `schema?`, `required?`
 
 ### Functions
 
@@ -326,9 +326,48 @@ import type {
   LayoutRegionsContext,
   RegionSchema,
   RegionSchemas,
-  RegionContent
+  RegionContent,
+  WarningsConfig
 } from '@sveltopia/regions';
 ```
+
+## Development Warnings
+
+In development mode, the library provides helpful warnings to catch common mistakes:
+
+**Unexpected Region** (enabled by default) - Fires immediately when a page sets a region that no layout defines:
+```
+[regions] Unexpected region "typoSidebar"
+The page is setting a region that no layout is using.
+Check that <LayoutRegion name="typoSidebar" /> exists in your layout.
+```
+
+**Missing Required Region** (enabled by default) - Fires when a page doesn't set a region marked as `required`:
+```svelte
+<LayoutRegion name="header" required>
+  ...
+</LayoutRegion>
+```
+
+**Unused Region** (disabled by default) - Fires when a region is defined in the layout but no page sets it. Disabled by default because "catch-all" layouts that define all possible regions are a common valid pattern.
+
+### Configuring Warnings
+
+```svelte
+<!-- Enable strict checking (including unused regions) -->
+<LayoutRegions warnings={{ unused: true }}>
+  ...
+</LayoutRegions>
+```
+
+```svelte
+<!-- Disable all warnings -->
+<LayoutRegions warnings={false}>
+  ...
+</LayoutRegions>
+```
+
+Warnings have zero runtime cost in production (only run when `dev === true`).
 
 ## Comparison with Alternatives
 

@@ -20,7 +20,7 @@ vi.mock('$app/state', () => ({
 
 // Mock $app/environment
 vi.mock('$app/environment', () => ({
-	dev: false,
+	dev: true, // Enable dev mode for validation and warnings in tests
 	browser: true,
 	building: false,
 	version: 'test'
