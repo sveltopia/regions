@@ -21,8 +21,8 @@ importers:
   apps/site:
     dependencies:
       '@sveltopia/regions':
-        specifier: workspace:*
-        version: link:../../packages/regions
+        specifier: ^0.1.0
+        version: 0.1.0(@sveltejs/kit@2.49.2(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)))(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)))(svelte@5.46.0)
       gsap:
         specifier: ^3.13.0
         version: 3.14.2
@@ -738,6 +738,13 @@ packages:
     peerDependencies:
       svelte: ^5.0.0
       vite: ^6.3.0 || ^7.0.0
+
+  '@sveltopia/regions@0.1.0':
+    resolution: {integrity: sha512-TWnDNqMU1+mM//5WlHCLsfXKhzNsQFhV+8120aLq+J6do04AeCioHiernBPNiiAvtUqHzL3xxc2oDSO5d+RFRw==}
+    hasBin: true
+    peerDependencies:
+      '@sveltejs/kit': ^2.12.0
+      svelte: ^5.0.0
 
   '@swc/helpers@0.5.17':
     resolution: {integrity: sha512-5IKx/Y13RsYd+sauPb2x+U/xZikHjolzfuDgTAl/Tdf3Q8rslRvC19NKDLgAJQ6wsqADk10ntlv08nPFw/gO/A==}
@@ -2973,6 +2980,13 @@ snapshots:
       vitefu: 1.1.1(vite@7.3.0(@types/node@24.10.4)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
     transitivePeerDependencies:
       - supports-color
+
+  '@sveltopia/regions@0.1.0(@sveltejs/kit@2.49.2(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)))(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)))(svelte@5.46.0)':
+    dependencies:
+      '@clack/prompts': 0.11.0
+      '@sveltejs/kit': 2.49.2(@sveltejs/vite-plugin-svelte@6.2.1(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0)))(svelte@5.46.0)(vite@7.3.0(@types/node@22.19.3)(jiti@2.6.1)(lightningcss@1.30.2)(tsx@4.21.0))
+      commander: 14.0.2
+      svelte: 5.46.0
 
   '@swc/helpers@0.5.17':
     dependencies:

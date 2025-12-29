@@ -5,13 +5,11 @@ on:
     branches: [main]
     paths:
       - 'apps/site/**'
-      - 'packages/regions/**'
       - '.github/workflows/deploy-site.yml'
   pull_request:
     branches: [main]
     paths:
       - 'apps/site/**'
-      - 'packages/regions/**'
 
 jobs:
   deploy:
@@ -40,9 +38,6 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
-
-      - name: Build regions package
-        run: pnpm --filter @sveltopia/regions build
 
       - name: Build site
         run: pnpm --filter site build
