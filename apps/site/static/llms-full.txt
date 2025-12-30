@@ -1,0 +1,594 @@
+# @sveltopia/regions - Complete Reference
+
+> Named content regions for SvelteKit - pass content from child pages to parent layouts.
+
+This document provides complete documentation for AI assistants helping developers use @sveltopia/regions.
+
+---
+
+## Table of Contents
+
+1. Overview
+2. Installation & Setup
+3. Core Concepts
+4. Three Strategies
+   - Load Function (SSR)
+   - Component Wrapper
+   - Snippet
+5. API Reference
+6. CLI Tool
+7. Validation
+8. Advanced Patterns
+9. Error Handling
+10. Decision Guide
+
+---
+
+## 1. Overview
+
+SvelteKit layouts have one `{@render children()}` slot. @sveltopia/regions enables multiple named content regions, allowing pages to pass different content to different parts of a layout.
+
+**Use Cases:**
+- Page titles and breadcrumbs in layout headers
+- Sidebar content that varies by page
+- Action buttons in layout toolbars
+- Footer widgets specific to certain pages
+
+**Requirements:**
+- SvelteKit 2+
+- Svelte 5+ (uses runes syntax)
+
+---
+
+## 2. Installation & Setup
+
+### Install the Package
+
+```bash
+npm install @sveltopia/regions
+# or
+pnpm add @sveltopia/regions
+# or
+yarn add @sveltopia/regions
+```
+
+### One-Time Root Layout Setup
+
+Wrap your root layout with `LayoutRegions`:
+
+```svelte
+<!-- src/routes/+layout.svelte -->
+<script lang="ts">
+  import { LayoutRegions } from '@sveltopia/regions';
+
+  let { children } = $props();
+</script>
+
+<LayoutRegions>
+  {@render children()}
+</LayoutRegions>
+```
+
+This enables the region system throughout your app. Only needed once in the root layout.
+
+---
+
+## 3. Core Concepts
+
+### Region Flow
+
+1. **Define** - Place `<LayoutRegion name="...">` in layouts where content should appear
+2. **Populate** - Pages provide content via load functions, component wrappers, or snippets
+3. **Render** - Layout regions render the content from their child pages
+
+### The `regions` Convention
+
+When using load functions, return region data under the `regions` key:
+
+```typescript
+// +page.server.ts
+export const load = () => {
+  return {
+    regions: {
+      header: { title: 'My Page' },
+      sidebar: { items: ['a', 'b', 'c'] }
+    }
+  };
+};
+```
+
+---
+
+## 4. Three Strategies
+
+### 4.1 Load Function Strategy (SSR)
+
+**Best for:** SEO content, page titles, breadcrumbs, server-rendered data.
+
+**Page (+page.server.ts or +page.ts):**
+```typescript
+import type { PageServerLoad } from './$types';
+
+export const load: PageServerLoad = () => {
+  return {
+    regions: {
+      pageHeader: {
+        title: 'Products',
+        description: 'Browse our catalog'
+      }
+    }
+  };
+};
+```
+
+**Layout (+layout.svelte):**
+```svelte
+<script lang="ts">
+  import { LayoutRegion } from '@sveltopia/regions';
+  import { pageHeaderSchema, type PageHeaderData } from '$lib/regions/page-header/schema';
+</script>
+
+<LayoutRegion name="pageHeader" schema={pageHeaderSchema}>
+  {#snippet children(data)}
+    {@const typedData = data as unknown as PageHeaderData}
+    <h1>{typedData.title}</h1>
+    {#if typedData.description}
+      <p>{typedData.description}</p>
+    {/if}
+  {/snippet}
+</LayoutRegion>
+```
+
+**Pros:**
+- Server-side rendered (SEO friendly)
+- No layout shift
+- Data available before hydration
+
+**Cons:**
+- Cannot access client-side state
+- Data must be serializable
+
+---
+
+### 4.2 Component Wrapper Strategy
+
+**Best for:** Simple content, rapid development, clean API.
+
+**Page (+page.svelte):**
+```svelte
+<script lang="ts">
+  import { useLayoutRegions } from '@sveltopia/regions';
+
+  useLayoutRegions({
+    pageHeader: {
+      title: 'My Page',
+      description: 'Page description'
+    }
+  });
+</script>
+```
+
+**Layout (+layout.svelte):**
+```svelte
+<script lang="ts">
+  import { LayoutRegion } from '@sveltopia/regions';
+</script>
+
+<LayoutRegion name="pageHeader">
+  {#snippet children(data)}
+    <h1>{data.title}</h1>
+    <p>{data.description}</p>
+  {/snippet}
+</LayoutRegion>
+```
+
+**Pros:**
+- Simple, prop-like API
+- Quick to implement
+- CLI generates boilerplate
+
+**Cons:**
+- Client-side only
+- Not ideal for SEO
+
+---
+
+### 4.3 Snippet Strategy
+
+**Best for:** Interactive UI, forms, buttons with handlers, reactive content.
+
+**Page (+page.svelte):**
+```svelte
+<script lang="ts">
+  import { useLayoutRegions } from '@sveltopia/regions';
+
+  let count = $state(0);
+
+  useLayoutRegions({
+    actions: actionsSnippet
+  });
+</script>
+
+{#snippet actionsSnippet()}
+  <button onclick={() => count++}>
+    Clicked {count} times
+  </button>
+{/snippet}
+```
+
+**Layout (+layout.svelte):**
+```svelte
+<script lang="ts">
+  import { LayoutRegion } from '@sveltopia/regions';
+</script>
+
+<LayoutRegion name="actions" />
+```
+
+**Pros:**
+- Full access to page state and handlers
+- Reactive updates
+- Maximum flexibility
+
+**Cons:**
+- Client-side only
+- More complex setup
+
+---
+
+## 5. API Reference
+
+### LayoutRegions
+
+Root provider component. Wrap your root layout.
+
+```svelte
+<script lang="ts">
+  import { LayoutRegions } from '@sveltopia/regions';
+  let { children } = $props();
+</script>
+
+<LayoutRegions>
+  {@render children()}
+</LayoutRegions>
+```
+
+**Props:**
+- `children` - Required snippet
+
+---
+
+### LayoutRegion
+
+Consumer component. Place in layouts where region content should render.
+
+```svelte
+<LayoutRegion name="regionName" schema={optionalSchema}>
+  {#snippet children(data)}
+    <!-- Render data -->
+  {/snippet}
+  {#snippet fallback()}
+    <!-- Render when no data provided -->
+  {/snippet}
+</LayoutRegion>
+```
+
+**Props:**
+- `name` (string, required) - Region identifier
+- `schema` (RegionSchema, optional) - Validation schema
+- `children` (Snippet, optional) - Receives validated data
+- `fallback` (Snippet, optional) - Renders when no region data
+
+**Behavior:**
+- Data objects: Validates with schema, passes to children
+- Snippets: Renders directly, bypasses schema
+- No data + no fallback: Renders nothing
+
+---
+
+### useLayoutRegions
+
+Function to set region data from +page.svelte files.
+
+```typescript
+import { useLayoutRegions } from '@sveltopia/regions';
+
+// With data objects
+useLayoutRegions({
+  header: { title: 'Page Title' },
+  sidebar: { items: ['a', 'b'] }
+});
+
+// With snippets
+useLayoutRegions({
+  actions: mySnippet
+});
+```
+
+**Parameters:**
+- `regions` - Record<string, unknown | Snippet>
+
+**Notes:**
+- Call during component initialization
+- Can set multiple regions at once
+
+---
+
+### RegionSchema<T>
+
+TypeScript interface for validation schemas.
+
+```typescript
+interface RegionSchema<T> {
+  parse: (data: unknown) => T;
+}
+```
+
+Works with Valibot, Zod, or custom validators:
+
+```typescript
+// Valibot
+import * as v from 'valibot';
+
+const schema = v.object({
+  title: v.string(),
+  count: v.number()
+});
+
+export const mySchema = {
+  parse: (data: unknown) => v.parse(schema, data)
+};
+
+// Zod
+import { z } from 'zod';
+
+export const mySchema = z.object({
+  title: z.string(),
+  count: z.number()
+});
+
+// TypeScript only (no runtime validation)
+export const mySchema = {
+  parse: (data: unknown) => data as MyType
+};
+```
+
+---
+
+## 6. CLI Tool
+
+Generate complete region boilerplate:
+
+```bash
+npx @sveltopia/regions add <region-name>
+```
+
+### Interactive Prompts
+
+1. **Strategy** - Load function, Component wrapper, or Snippet
+2. **Fields** - Comma-separated field names (e.g., "title, description")
+3. **Field types** - string, number, or boolean for each
+4. **Required/Optional** - For each field
+5. **Validator** - Valibot (recommended), Zod, or TypeScript only
+6. **Load location** - +page.server.ts or +page.ts
+7. **Example path** - Where to generate example files
+
+### Generated Files
+
+For a region named "page-header" with Valibot:
+
+```
+src/lib/regions/page-header/
+├── pageHeaderSchema.ts      # Schema with types
+└── PageHeaderRegion.svelte  # Consumer component
+
+src/routes/example/
+└── +page.server.ts          # Example load function
+```
+
+---
+
+## 7. Validation
+
+### Valibot (Recommended)
+
+Smallest bundle (~1kb), modern API.
+
+```typescript
+import * as v from 'valibot';
+import { valibot } from '@sveltopia/regions';
+
+const _schema = v.object({
+  title: v.string(),
+  description: v.optional(v.string())
+});
+
+export type PageHeaderData = v.InferOutput<typeof _schema>;
+export const pageHeaderSchema = valibot<PageHeaderData>(_schema, v.parse);
+```
+
+### Zod
+
+Popular, feature-rich (~14kb).
+
+```typescript
+import { z } from 'zod';
+import { zod } from '@sveltopia/regions';
+
+const _schema = z.object({
+  title: z.string(),
+  description: z.string().optional()
+});
+
+export type PageHeaderData = z.infer<typeof _schema>;
+export const pageHeaderSchema = zod<PageHeaderData>(_schema);
+```
+
+### TypeScript Only
+
+Zero runtime cost, compile-time safety only.
+
+```typescript
+export type PageHeaderData = {
+  title: string;
+  description?: string;
+};
+
+export const pageHeaderSchema = {
+  parse: (data: unknown) => data as PageHeaderData
+};
+```
+
+---
+
+## 8. Advanced Patterns
+
+### Layout-Level Regions
+
+Use +layout.server.ts for regions shared across child pages:
+
+```typescript
+// src/routes/dashboard/+layout.server.ts
+export const load = () => {
+  return {
+    regions: {
+      breadcrumbs: [
+        { label: 'Home', href: '/' },
+        { label: 'Dashboard', href: '/dashboard' }
+      ]
+    }
+  };
+};
+```
+
+### Region Inheritance
+
+Child pages can override parent layout regions:
+
+```typescript
+// src/routes/dashboard/settings/+page.server.ts
+export const load = () => {
+  return {
+    regions: {
+      // Override breadcrumbs from parent layout
+      breadcrumbs: [
+        { label: 'Home', href: '/' },
+        { label: 'Dashboard', href: '/dashboard' },
+        { label: 'Settings', href: '/dashboard/settings' }
+      ]
+    }
+  };
+};
+```
+
+### Mixing Strategies
+
+Use different strategies for different regions:
+
+```svelte
+<script lang="ts">
+  import { useLayoutRegions } from '@sveltopia/regions';
+
+  let count = $state(0);
+
+  // Snippet for interactive toolbar
+  useLayoutRegions({
+    toolbar: toolbarSnippet
+  });
+
+  // Data is already provided via +page.server.ts load function
+  // for SEO-critical pageHeader region
+</script>
+
+{#snippet toolbarSnippet()}
+  <button onclick={() => count++}>Count: {count}</button>
+{/snippet}
+```
+
+### Fallback Content
+
+Provide default content when a region isn't populated:
+
+```svelte
+<LayoutRegion name="sidebar">
+  {#snippet children(data)}
+    <nav>{@html data.content}</nav>
+  {/snippet}
+  {#snippet fallback()}
+    <nav>
+      <a href="/docs">Documentation</a>
+      <a href="/examples">Examples</a>
+    </nav>
+  {/snippet}
+</LayoutRegion>
+```
+
+---
+
+## 9. Error Handling
+
+### Validation Errors
+
+When validation fails, LayoutRegion logs an error and renders nothing:
+
+```
+[Regions] Validation error for region "header":
+Expected string for title, received number
+```
+
+### Missing Regions
+
+If no data is provided and no fallback exists, LayoutRegion renders nothing. This is expected for optional regions.
+
+### TypeScript Errors
+
+TypeScript catches type mismatches at compile time. Runtime validation (Valibot/Zod) provides additional safety.
+
+---
+
+## 10. Decision Guide
+
+### When to Use Load Functions
+
+- Page titles, meta tags
+- Breadcrumb navigation
+- Any SEO-critical content
+- Server-fetched data
+
+### When to Use Component Wrappers
+
+- Simple, static content
+- Quick prototyping
+- Client-only pages
+- When SEO isn't critical
+
+### When to Use Snippets
+
+- Interactive UI (forms, counters)
+- Content with event handlers
+- Real-time updating content
+- Access to page state
+
+### Decision Flowchart
+
+```
+START: Does content need to be in initial HTML (SEO)?
+├── YES → Use Load Function
+└── NO → Does it need page state/handlers?
+    ├── YES → Use Snippet
+    └── NO → Use Component Wrapper
+```
+
+---
+
+## Links
+
+- Website: https://regions.sveltopia.dev
+- Documentation: https://regions.sveltopia.dev/docs
+- Examples: https://regions.sveltopia.dev/examples
+- GitHub: https://github.com/sveltopia/regions
+- npm: https://www.npmjs.com/package/@sveltopia/regions
+
+---
+
+Generated for @sveltopia/regions v0.1.0

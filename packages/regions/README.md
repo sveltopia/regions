@@ -3,6 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/@sveltopia/regions.svg)](https://www.npmjs.com/package/@sveltopia/regions)
 [![npm downloads](https://img.shields.io/npm/dm/@sveltopia/regions.svg)](https://www.npmjs.com/package/@sveltopia/regions)
 [![bundle size](https://img.shields.io/bundlephobia/minzip/@sveltopia/regions)](https://bundlephobia.com/package/@sveltopia/regions)
+[![CI](https://github.com/sveltopia/regions/actions/workflows/test-regions-cli.yml/badge.svg)](https://github.com/sveltopia/regions/actions/workflows/test-regions-cli.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
 > **[Full Documentation & Examples →](https://regions.sveltopia.dev)**

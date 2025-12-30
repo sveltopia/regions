@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import { CircleAlert, Star, Check, Server, Box, FileCode, Code, ArrowRight } from 'lucide-svelte';
 
   const loadFunctionCode = `export const load = () => ({
@@ -29,6 +30,11 @@ useLayoutRegions({
   </button>
 {/snippet}`;
 </script>
+
+<SvelteHead
+  title="Strategy Comparison - @sveltopia/regions"
+  description="Compare load functions, component wrappers, and snippets. Choose the right strategy for your use case with our decision matrix and examples."
+/>
 
 <div class="prose max-w-none dark:prose-invert">
   <h1>Strategy Comparison</h1>

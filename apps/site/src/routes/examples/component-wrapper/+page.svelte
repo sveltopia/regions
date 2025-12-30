@@ -1,3 +1,12 @@
+<script lang="ts">
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
+</script>
+
+<SvelteHead
+  title="Component Wrapper Examples - @sveltopia/regions"
+  description="Client-side wrapper components with props. Examples with Valibot, Zod, and TypeScript-only validation."
+/>
+
 <div class="prose max-w-none dark:prose-invert">
   <p>
     Client-side wrapper components with props. Learn more in the

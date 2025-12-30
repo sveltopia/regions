@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples
   const regionConsumerCode = `${'<'}script lang="ts">
@@ -35,6 +36,11 @@ ${' <'}/script>
 
 <!-- The snippet has full access to count and updates reactively -->`;
 </script>
+
+<SvelteHead
+  title="Snippet Examples - @sveltopia/regions"
+  description="Svelte 5 snippets for maximum flexibility. Access page state, event handlers, and reactive data in layout regions."
+/>
 
 <h2>Snippet Strategy</h2>
 

@@ -129,6 +129,17 @@
             >
               Advanced
             </a>
+
+            <a
+              href="/docs/llms"
+              onclick={closeMobileMenu}
+              class="block rounded px-3 py-2 text-sm font-medium hover:bg-muted {page.url
+                .pathname === '/docs/llms'
+                ? 'bg-muted font-semibold'
+                : ''}"
+            >
+              AI Docs
+            </a>
           </nav>
         </div>
       </div>
