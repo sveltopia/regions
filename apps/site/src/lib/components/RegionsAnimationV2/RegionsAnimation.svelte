@@ -625,7 +625,7 @@
         createParticles(
           layoutPanelRefs.renderChildren,
           contentRefs.mainContent,
-          '#84cc16', // lime-500
+          '#16a34a', // green-600 for contrast
           () => {}
         );
       },
@@ -960,7 +960,7 @@
         createParticles(
           layoutPanelRefs.renderChildren,
           contentRefs.mainContent,
-          '#84cc16',
+          '#16a34a', // green-600 for contrast
           () => {}
         );
       },
@@ -1389,7 +1389,12 @@
       </div>
 
       <!-- Dev Controls -->
-      <AnimationControls {timeline} frameLabels={[...FRAME_LABELS]} show={devMode} onRestart={prepareRestart} />
+      <AnimationControls
+        {timeline}
+        frameLabels={[...FRAME_LABELS]}
+        show={devMode}
+        onRestart={prepareRestart}
+      />
 
       <!-- User Restart Button (fades in at end) -->
       {#if showRestartButton && !devMode}
@@ -2225,7 +2230,7 @@
   }
 
   .fill-green {
-    @apply bg-lime-600;
+    @apply bg-green-500;
   }
 
   /* === LAYOUT PANEL (CLI-style container with floating file tab) === */
@@ -2423,11 +2428,12 @@
   }
 
   .layout-render-children.hydrated {
-    @apply bg-lime-600 dark:bg-lime-600;
+    @apply bg-green-500 dark:bg-green-500;
   }
 
   .layout-render-children.hydrated .render-children-text {
     @apply text-white;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .render-children-text {

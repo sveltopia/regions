@@ -1,8 +1,27 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import DecisionQuiz from '$lib/components/quiz/DecisionQuiz.svelte';
   import RegionsAnimation from '$lib/components/RegionsAnimationV2/RegionsAnimation.svelte';
+  import MobileAnimation from '$lib/components/RegionsAnimationV2/MobileAnimation.svelte';
   import { Code, Dice3, ShieldCheck } from 'lucide-svelte';
+
+  // Track viewport for conditional animation mounting (performance optimization)
+  // Only one animation component is mounted at a time
+  let isMobile = $state(false);
+  let mounted = $state(false);
+
+  onMount(() => {
+    const mq = window.matchMedia('(max-width: 639px)');
+    isMobile = mq.matches;
+    mounted = true;
+
+    const handler = (e: MediaQueryListEvent) => {
+      isMobile = e.matches;
+    };
+    mq.addEventListener('change', handler);
+    return () => mq.removeEventListener('change', handler);
+  });
 
   // Code examples for each strategy
   const loadFunctionExample = `export const load = () => ({
@@ -57,18 +76,25 @@ ${'<'}/script>
 </main>`;
 </script>
 
-<div class="w-full px-4 py-12 md:container md:mx-auto md:max-w-5xl">
-  <div class="space-y-8">
+<div class="w-full px-4 py-6 sm:py-8 md:container md:mx-auto md:max-w-5xl md:py-12">
+  <div class="space-y-4 sm:space-y-8">
     <!-- Hero Section -->
     <div class="space-y-4">
       <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">@sveltopia/regions</h1>
-      <p class="max-w-2xl text-xl text-muted-foreground">
+      <p class="max-w-2xl text-lg text-muted-foreground sm:text-xl">
         Named content regions for SvelteKit layouts
       </p>
     </div>
 
-    <!-- Visual Storytelling Animation (desktop only) -->
-    <RegionsAnimation />
+    <!-- Visual Storytelling Animation -->
+    <!-- Conditionally mount only one animation for performance -->
+    {#if mounted}
+      {#if isMobile}
+        <MobileAnimation />
+      {:else}
+        <RegionsAnimation />
+      {/if}
+    {/if}
 
     <!-- Features Grid -->
     <div class="mt-12 grid gap-6 md:grid-cols-3">
