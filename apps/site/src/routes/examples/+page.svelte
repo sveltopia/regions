@@ -1,6 +1,12 @@
 <script lang="ts">
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 </script>
+
+<SvelteHead
+  title="Examples - @sveltopia/regions"
+  description="Working examples of @sveltopia/regions showing all three strategies: load functions, component wrappers, and snippets. See each approach with Valibot, Zod, or TypeScript-only validation."
+/>
 
 <div class="space-y-6">
   <KeyConcept variant="orange" noMargin>

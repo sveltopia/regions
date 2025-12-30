@@ -4,6 +4,7 @@
   import DecisionQuiz from '$lib/components/quiz/DecisionQuiz.svelte';
   import RegionsAnimation from '$lib/components/RegionsAnimationV2/RegionsAnimation.svelte';
   import MobileAnimation from '$lib/components/RegionsAnimationV2/MobileAnimation.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import { Code, Dice3, ShieldCheck } from 'lucide-svelte';
 
   // Track viewport for conditional animation mounting (performance optimization)
@@ -75,6 +76,11 @@ ${'<'}/script>
   {@render children()}
 </main>`;
 </script>
+
+<SvelteHead
+  title="@sveltopia/regions - Named Content Regions for SvelteKit"
+  description="Pass content from child pages to parent layouts in SvelteKit. Three strategies: load functions for SSR, component wrappers for simplicity, or snippets for full reactivity. Type-safe with optional Valibot/Zod validation."
+/>
 
 <div class="w-full px-4 py-6 sm:py-8 md:container md:mx-auto md:max-w-5xl md:py-12">
   <div class="space-y-4 sm:space-y-8">

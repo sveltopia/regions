@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import { CheckCircle2, XCircle } from 'lucide-svelte';
 
   const layoutServerCode = `import type { LayoutServerLoad } from './$types';
@@ -82,6 +83,11 @@ ${' <'}/script>
 <!-- Page content -->
 {@render children()}`;
 </script>
+
+<SvelteHead
+  title="Advanced Examples - @sveltopia/regions"
+  description="Advanced patterns including region inheritance, layout-level regions, and region overrides in nested routes."
+/>
 
 <div class="prose max-w-none dark:prose-invert">
   <KeyConcept>

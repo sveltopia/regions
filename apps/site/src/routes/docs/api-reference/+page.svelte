@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import { Check, LayoutGrid, TrendingUp, ArrowRight } from 'lucide-svelte';
 
   const layoutRegionsCode = `${'<'}script>
@@ -105,6 +106,11 @@ export const load: PageServerLoad = () => {
   };
 };`;
 </script>
+
+<SvelteHead
+  title="API Reference - @sveltopia/regions"
+  description="Complete API reference for @sveltopia/regions. LayoutRegions, LayoutRegion, useLayoutRegions, RegionSchema, and CLI commands."
+/>
 
 <div class="prose max-w-none dark:prose-invert">
   <h1>API Reference</h1>

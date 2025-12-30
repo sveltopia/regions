@@ -1,5 +1,6 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const typeCode = `/**
@@ -69,6 +70,11 @@ ${'<'}/script>
   {@render children()}
 </main>`;
 </script>
+
+<SvelteHead
+  title="TypeScript Only Example - Load Function - @sveltopia/regions"
+  description="Load function strategy with TypeScript-only validation. Compile-time type checking with zero runtime overhead."
+/>
 
 <h2>Load Function + TypeScript Only</h2>
 

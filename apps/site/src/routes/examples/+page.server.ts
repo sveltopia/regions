@@ -4,6 +4,11 @@ export const load: PageServerLoad = async ({ parent }) => {
   const parentData = await parent();
 
   return {
+    meta: {
+      title: 'Examples - @sveltopia/regions',
+      description:
+        'Working examples of @sveltopia/regions showing all three strategies: load functions, component wrappers, and snippets. See each approach with Valibot, Zod, or TypeScript-only validation.'
+    },
     regions: {
       breadcrumbs: parentData.breadcrumbs,
       pageHeader: {

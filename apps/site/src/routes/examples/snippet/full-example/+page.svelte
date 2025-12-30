@@ -5,6 +5,7 @@
   import KeyConcept from '$lib/components/KeyConcept.svelte';
   import RegionIndicator from '$lib/components/RegionIndicator.svelte';
   import SettingsPanel from '$lib/components/snippets/SettingsPanel.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Example 1: Product Header - user interaction
   const adjectives = [
@@ -133,6 +134,11 @@ ${'<'}/script>
   {/snippet}
 </LayoutRegion>`;
 </script>
+
+<SvelteHead
+  title="Full Snippet Example - @sveltopia/regions"
+  description="Complete snippet example with reactive state, event handlers, and multiple interactive regions."
+/>
 
 {#snippet statsHeaderSnippet()}
   <RegionIndicator label="Stats Header Region (Snippet with Reactive State)" color="blue">

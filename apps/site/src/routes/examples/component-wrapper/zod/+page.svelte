@@ -2,6 +2,7 @@
   import GalleryHeader from '$lib/regions/gallery-header/GalleryHeader.svelte';
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const schemaCode = `import { z } from 'zod';
@@ -50,6 +51,11 @@ ${'<'}/script>
 
 <GalleryHeader galleryTitle="Nature Photography" imageCount={127} />`;
 </script>
+
+<SvelteHead
+  title="Zod Example - Component Wrapper - @sveltopia/regions"
+  description="Component wrapper strategy with Zod validation. Client-side props with the most popular TypeScript schema validator."
+/>
 
 <GalleryHeader galleryTitle="Nature Photography" imageCount={127} />
 

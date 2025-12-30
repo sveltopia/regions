@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import { TrendingUp, LayoutGrid, ArrowRight } from 'lucide-svelte';
 
   const installCode = `npm install @sveltopia/regions
@@ -131,6 +132,11 @@ ${'<'}/script>
 │
 └  Done!`;
 </script>
+
+<SvelteHead
+  title="Quick Start - @sveltopia/regions"
+  description="Get started with @sveltopia/regions in under 5 minutes. Use the CLI to generate your first region, or set up manually with our step-by-step guide."
+/>
 
 <div class="prose max-w-none dark:prose-invert">
   <h1>Quick Start</h1>

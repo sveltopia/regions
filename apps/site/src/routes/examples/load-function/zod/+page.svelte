@@ -1,5 +1,6 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const schemaCode = `import { z } from 'zod';
@@ -81,6 +82,11 @@ ${'<'}/script>
   {@render children()}
 </main>`;
 </script>
+
+<SvelteHead
+  title="Zod Example - Load Function - @sveltopia/regions"
+  description="Load function strategy with Zod validation. Type-safe runtime validation with the most popular TypeScript schema validator."
+/>
 
 <h2>Load Function + Zod Validation</h2>
 

@@ -1,6 +1,7 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
   import {
     ListCollapse,
     ArrowRight,
@@ -12,13 +13,10 @@
   } from 'lucide-svelte';
 </script>
 
-<svelte:head>
-  <title>Advanced - Region Inheritance | @sveltopia/regions</title>
-  <meta
-    name="description"
-    content="Learn advanced patterns like region inheritance for nested layouts and complex routing scenarios."
-  />
-</svelte:head>
+<SvelteHead
+  title="Advanced Patterns - @sveltopia/regions"
+  description="Learn advanced patterns like region inheritance for nested layouts, region overrides, and complex routing scenarios."
+/>
 
 <h1 class="mb-4 text-4xl font-bold">Advanced Patterns</h1>
 

@@ -1,6 +1,12 @@
 <script lang="ts">
   import { ArrowRight, Terminal, Info, TrendingUp, Code } from 'lucide-svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 </script>
+
+<SvelteHead
+  title="Documentation - @sveltopia/regions"
+  description="Learn how to use @sveltopia/regions to pass content from pages to layouts in SvelteKit. Quick start guide, API reference, and strategy comparison."
+/>
 
 <div class="space-y-8">
   <!-- Header -->

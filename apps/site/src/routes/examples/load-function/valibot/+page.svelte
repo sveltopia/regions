@@ -1,5 +1,6 @@
 <script lang="ts">
   import CodeViewer from '$lib/components/CodeViewer.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const schemaCode = `import * as v from 'valibot';
@@ -85,6 +86,11 @@ ${'<'}/script>
   {@render children()}
 </main>`;
 </script>
+
+<SvelteHead
+  title="Valibot Example - Load Function - @sveltopia/regions"
+  description="Load function strategy with Valibot validation. Type-safe, minimal bundle size (~1kb)."
+/>
 
 <h2>Load Function + Valibot Validation</h2>
 

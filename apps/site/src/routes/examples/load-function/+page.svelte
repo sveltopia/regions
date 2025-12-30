@@ -1,3 +1,12 @@
+<script lang="ts">
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
+</script>
+
+<SvelteHead
+  title="Load Function Examples - @sveltopia/regions"
+  description="Server-side rendering with SvelteKit load functions. Examples with Valibot, Zod, and TypeScript-only validation."
+/>
+
 <div class="prose max-w-none dark:prose-invert">
   <p>
     Server-side rendering with SvelteKit load functions. Learn more in the

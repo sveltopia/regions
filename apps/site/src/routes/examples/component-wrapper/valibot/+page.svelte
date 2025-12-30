@@ -2,6 +2,7 @@
   import CatalogHeader from '$lib/regions/catalog-header/CatalogHeader.svelte';
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const schemaCode = `import * as v from 'valibot';
@@ -52,6 +53,11 @@ ${'<'}/script>
 
 <CatalogHeader catalogName="Spring 2025 Collection" itemCount={42} />`;
 </script>
+
+<SvelteHead
+  title="Valibot Example - Component Wrapper - @sveltopia/regions"
+  description="Component wrapper strategy with Valibot validation. Client-side props with minimal bundle size (~1kb)."
+/>
 
 <CatalogHeader catalogName="Spring 2025 Collection" itemCount={42} />
 

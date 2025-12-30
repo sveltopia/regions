@@ -1,0 +1,61 @@
+# @sveltopia/regions
+
+> Named content regions for SvelteKit - pass content from child pages to parent layouts.
+
+## Overview
+
+@sveltopia/regions solves SvelteKit's single `{@render children()}` limitation by enabling multiple named content regions. Define regions in layouts, populate them from pages.
+
+## Quick Links
+
+- Documentation: https://regions.sveltopia.dev/docs
+- Full AI Reference: https://regions.sveltopia.dev/llms-full.txt
+- Examples: https://regions.sveltopia.dev/examples
+- GitHub: https://github.com/sveltopia/regions
+- npm: https://www.npmjs.com/package/@sveltopia/regions
+
+## Requirements
+
+- SvelteKit 2+
+- Svelte 5+ (uses runes)
+
+## Installation
+
+```bash
+npm install @sveltopia/regions
+```
+
+## Core Exports
+
+```typescript
+import {
+  LayoutRegions,     // Root provider - wrap your layout
+  LayoutRegion,      // Consumer - renders region content
+  useLayoutRegions,  // Function - set regions from pages
+  type RegionSchema  // TypeScript interface for validation
+} from '@sveltopia/regions';
+```
+
+## Three Strategies
+
+1. **Load Function** - Return `regions` from +page.server.ts. Best for SSR/SEO.
+2. **Component Wrapper** - Use `useLayoutRegions()` with data objects. Simple API.
+3. **Snippet** - Use `useLayoutRegions()` with Svelte 5 snippets. Full reactivity.
+
+## CLI Generator
+
+```bash
+npx @sveltopia/regions add <region-name>
+```
+
+Interactive prompts guide you through strategy, fields, types, and validation.
+
+## Validation Options
+
+- **Valibot** (recommended) - ~1kb bundle
+- **Zod** - Popular, ~14kb bundle
+- **TypeScript only** - Zero runtime cost
+
+## For Complete Documentation
+
+See the full AI reference at: https://regions.sveltopia.dev/llms-full.txt

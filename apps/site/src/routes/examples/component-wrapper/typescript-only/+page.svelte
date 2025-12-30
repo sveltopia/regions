@@ -2,6 +2,7 @@
   import ProfileHeader from '$lib/regions/profile-header/ProfileHeader.svelte';
   import CodeViewer from '$lib/components/CodeViewer.svelte';
   import KeyConcept from '$lib/components/KeyConcept.svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 
   // Code examples stored as variables to avoid TS parsing issues
   const typeCode = `/**
@@ -49,6 +50,11 @@ ${'<'}/script>
   bio="Full-stack developer passionate about building great web experiences with Svelte and TypeScript."
 />`;
 </script>
+
+<SvelteHead
+  title="TypeScript Only Example - Component Wrapper - @sveltopia/regions"
+  description="Component wrapper strategy with TypeScript-only validation. Client-side props with zero runtime overhead."
+/>
 
 <ProfileHeader
   username="johndoe"

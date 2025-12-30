@@ -6,3 +6,4 @@ Commit and create a PR:
    - Clear title using conventional format
    - Summary of all changes
    - Any testing notes or considerations
+4. Show PR summary first for review before submitting

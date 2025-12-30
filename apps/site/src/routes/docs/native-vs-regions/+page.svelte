@@ -1,6 +1,12 @@
 <script lang="ts">
   import { Check, X, ArrowRight, Terminal, TrendingUp, LayoutGrid } from 'lucide-svelte';
+  import SvelteHead from '$lib/components/SvelteHead.svelte';
 </script>
+
+<SvelteHead
+  title="Native vs Regions - @sveltopia/regions"
+  description="Compare SvelteKit's native page.data approach with @sveltopia/regions. See when to use each and what regions adds: validation, fallbacks, and snippet support."
+/>
 
 <div class="space-y-8">
   <!-- Header -->
