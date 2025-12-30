@@ -1,8 +1,10 @@
 {
   "name": "@sveltopia/regions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Layout regions system for passing content from pages to layouts in SvelteKit",
   "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
   "svelte": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
