@@ -7,12 +7,18 @@
     "check": "turbo run check",
     "lint": "turbo run lint",
     "test": "turbo run test",
-    "format": "prettier --write \"**/*.{ts,js,svelte,json,md}\""
+    "format": "prettier --write \"**/*.{ts,js,svelte,json,md}\"",
+    "prepare": "husky"
   },
   "devDependencies": {
+    "husky": "^9.1.7",
+    "lint-staged": "^16.2.7",
     "prettier": "^3.4.2",
     "prettier-plugin-svelte": "^3.3.3",
     "turbo": "^2.3.3"
+  },
+  "lint-staged": {
+    "*.{ts,js,svelte,json,md}": "prettier --write"
   },
   "packageManager": "pnpm@9.15.0",
   "pnpm": {
